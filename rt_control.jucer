@@ -4,45 +4,45 @@
               addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1">
   <MAINGROUP id="top3X7" name="rt_control">
     <GROUP id="{D0832678-8E03-71CD-4B9B-35AD38C49970}" name="Source">
-      <GROUP id="{DD676EED-1678-BCDB-35A7-29560F416709}" name="Components">
-        <GROUP id="{A6F500C8-9389-DA2A-8B51-4D575A0DEFE6}" name="Interactive"/>
-        <GROUP id="{A6F6E2EE-9A2E-7888-88A4-7904EF2118F8}" name="Visual">
-          <FILE id="vFO5y6" name="RT_Bordered_Container.cpp" compile="1" resource="0"
+      <GROUP id="{5651A27F-4AA2-41B8-03CD-DD6F4A6CECF2}" name="Components">
+        <GROUP id="{4380D52D-59C0-361D-C20F-348084A73D1A}" name="Interactive"/>
+        <GROUP id="{B623085D-177F-C2C5-65A8-A705C1D3143E}" name="Visual">
+          <FILE id="V3APJW" name="RT_Bordered_Container.cpp" compile="1" resource="0"
                 file="Source/Components/Visual/RT_Bordered_Container.cpp"/>
-          <FILE id="gpZgIZ" name="RT_Bordered_Container.h" compile="0" resource="0"
+          <FILE id="TSydD8" name="RT_Bordered_Container.h" compile="0" resource="0"
                 file="Source/Components/Visual/RT_Bordered_Container.h"/>
         </GROUP>
-        <FILE id="fpazSX" name="RT_MainWindow.cpp" compile="1" resource="0"
+        <FILE id="e2rtvq" name="RT_MainWindow.cpp" compile="1" resource="0"
               file="Source/Components/RT_MainWindow.cpp"/>
-        <FILE id="Oih60V" name="RT_MainWindow.h" compile="0" resource="0" file="Source/Components/RT_MainWindow.h"/>
+        <FILE id="tmyO7Y" name="RT_MainWindow.h" compile="0" resource="0" file="Source/Components/RT_MainWindow.h"/>
       </GROUP>
-      <GROUP id="{A1F39170-6572-87A5-59FB-F331515C0A98}" name="Managers">
-        <GROUP id="{DEC9BEB4-06F4-3B38-9F30-7BF6B6500FEA}" name="DSPStateManagers">
-          <FILE id="olTz0F" name="RT_ParameterManager.cpp" compile="1" resource="0"
+      <GROUP id="{7CFE040C-702C-3575-5C6E-B7CF62E66B3C}" name="Managers">
+        <GROUP id="{31B903C3-08FF-C6F5-7CF3-7D4C77B1C0AD}" name="DSPStateManagers">
+          <FILE id="AwAoAN" name="RT_ParameterManager.cpp" compile="1" resource="0"
                 file="Source/Managers/DSPStateManagers/RT_ParameterManager.cpp"/>
-          <FILE id="Acxxin" name="RT_ParameterManager.h" compile="0" resource="0"
+          <FILE id="c5oSS5" name="RT_ParameterManager.h" compile="0" resource="0"
                 file="Source/Managers/DSPStateManagers/RT_ParameterManager.h"/>
-          <FILE id="lcSNNm" name="RT_PropertyManager.cpp" compile="1" resource="0"
+          <FILE id="cWpg8o" name="RT_PropertyManager.cpp" compile="1" resource="0"
                 file="Source/Managers/DSPStateManagers/RT_PropertyManager.cpp"/>
-          <FILE id="gvdWzl" name="RT_PropertyManager.h" compile="0" resource="0"
+          <FILE id="AWe6nE" name="RT_PropertyManager.h" compile="0" resource="0"
                 file="Source/Managers/DSPStateManagers/RT_PropertyManager.h"/>
         </GROUP>
-        <GROUP id="{15E80E87-FC17-DF25-90C0-D22B2FA62083}" name="GUIManagers">
-          <FILE id="zWqe3B" name="RT_LookAndFeelManager.cpp" compile="1" resource="0"
+        <GROUP id="{1C30E558-FF92-B66F-B8D3-FF58FB3395FC}" name="GUIManagers">
+          <FILE id="qm4deg" name="RT_LookAndFeelManager.cpp" compile="1" resource="0"
                 file="Source/Managers/GUIManagers/RT_LookAndFeelManager.cpp"/>
-          <FILE id="rlKDse" name="RT_LookAndFeelManager.h" compile="0" resource="0"
+          <FILE id="nik7KZ" name="RT_LookAndFeelManager.h" compile="0" resource="0"
                 file="Source/Managers/GUIManagers/RT_LookAndFeelManager.h"/>
         </GROUP>
-        <GROUP id="{21636CC8-8EEC-780A-DE6D-82F464FA6BA2}" name="Interface">
-          <FILE id="STcfwV" name="RT_ProcessorInterface.cpp" compile="1" resource="0"
+        <GROUP id="{79517193-B404-8987-2A85-B2C850DFC0ED}" name="Interface">
+          <FILE id="TfhVnD" name="RT_ProcessorInterface.cpp" compile="1" resource="0"
                 file="Source/Managers/Interface/RT_ProcessorInterface.cpp"/>
-          <FILE id="ceXpUF" name="RT_ProcessorInterface.h" compile="0" resource="0"
+          <FILE id="pzWV8g" name="RT_ProcessorInterface.h" compile="0" resource="0"
                 file="Source/Managers/Interface/RT_ProcessorInterface.h"/>
         </GROUP>
-        <GROUP id="{4879F040-AB87-929C-817E-6B574124B1C2}" name="OS Managers">
-          <FILE id="FTT7oA" name="RT_FileManager.cpp" compile="1" resource="0"
+        <GROUP id="{F9150D56-551F-AF70-D970-657C9E723BA5}" name="OS Managers">
+          <FILE id="emmiAG" name="RT_FileManager.cpp" compile="1" resource="0"
                 file="Source/Managers/OS Managers/RT_FileManager.cpp"/>
-          <FILE id="vA5kk1" name="RT_FileManager.h" compile="0" resource="0"
+          <FILE id="ZhAq5z" name="RT_FileManager.h" compile="0" resource="0"
                 file="Source/Managers/OS Managers/RT_FileManager.h"/>
         </GROUP>
       </GROUP>
