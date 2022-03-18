@@ -10,8 +10,9 @@
 
 #pragma once
 #include <JuceHeader.h>
+#include "Managers/Interface/RT_ProcessorInterface.h"
 
-class RT_ProcessorBase : public juce::AudioProcessor {
+class RT_ProcessorBase : public juce::AudioProcessor, public RT_ProcessorInterface {
   
 public:
   RT_ProcessorBase();

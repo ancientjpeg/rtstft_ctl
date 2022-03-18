@@ -9,3 +9,12 @@
 */
 
 #pragma once
+
+#include <JuceHeader.h>
+#include "../../Managers/Interface/RT_ProcessorInterface.h"
+
+class RT_BorderedContainer : juce::Component {
+public:
+  RT_BorderedContainer(RT_ProcessorInterface)
+  void paint(juce::Graphics &g) override;
+};

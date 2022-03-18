@@ -9,3 +9,7 @@
 */
 
 #include "RT_Bordered_Container.h"
+
+void paint(juce::Graphics &g) {
+  g.fillAll(juce::)
+}

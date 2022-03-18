@@ -28,10 +28,10 @@
                 file="Source/Managers/DSPStateManagers/RT_PropertyManager.h"/>
         </GROUP>
         <GROUP id="{1C30E558-FF92-B66F-B8D3-FF58FB3395FC}" name="GUIManagers">
-          <FILE id="qm4deg" name="RT_LookAndFeelManager.cpp" compile="1" resource="0"
-                file="Source/Managers/GUIManagers/RT_LookAndFeelManager.cpp"/>
-          <FILE id="nik7KZ" name="RT_LookAndFeelManager.h" compile="0" resource="0"
-                file="Source/Managers/GUIManagers/RT_LookAndFeelManager.h"/>
+          <FILE id="qm4deg" name="RT_StyleManager.cpp" compile="1" resource="0"
+                file="Source/Managers/GUIManagers/RT_StyleManager.cpp"/>
+          <FILE id="nik7KZ" name="RT_StyleManager.h" compile="0" resource="0"
+                file="Source/Managers/GUIManagers/RT_StyleManager.h"/>
         </GROUP>
         <GROUP id="{79517193-B404-8987-2A85-B2C850DFC0ED}" name="Interface">
           <FILE id="TfhVnD" name="RT_ProcessorInterface.cpp" compile="1" resource="0"
@@ -58,6 +58,45 @@
             file="Source/RT_ProcessorEditor.cpp"/>
       <FILE id="VHSUs0" name="RT_ProcessorEditor.h" compile="0" resource="0"
             file="Source/RT_ProcessorEditor.h"/>
+    </GROUP>
+    <GROUP id="{37D090C2-12C5-2595-B0B4-1EA2DE6D0F6A}" name="RTSTFT_src">
+      <GROUP id="{0D5BA3CA-CE98-0188-F4BC-CA2F739C8C3C}" name="pffft">
+        <FILE id="tzzhxP" name="fftpack.c" compile="1" resource="0" file="RTSTFT/src/pffft/fftpack.c"/>
+        <FILE id="l2VtN7" name="fftpack.h" compile="0" resource="0" file="RTSTFT/src/pffft/fftpack.h"/>
+        <FILE id="UGWN9w" name="pffft.c" compile="1" resource="0" file="RTSTFT/src/pffft/pffft.c"/>
+        <FILE id="I5EXbl" name="pffft.h" compile="0" resource="0" file="RTSTFT/src/pffft/pffft.h"/>
+        <FILE id="w8LZ2E" name="README.md" compile="0" resource="1" file="RTSTFT/src/pffft/README.md"/>
+        <FILE id="gvq0mS" name="test_pffft.c" compile="1" resource="0" file="RTSTFT/src/pffft/test_pffft.c"/>
+      </GROUP>
+      <GROUP id="{3658EB62-4BA6-8BBF-A087-C6FE550B8AB9}" name="rt_parser">
+        <FILE id="DEMh32" name="rt_parser.c" compile="1" resource="0" file="RTSTFT/src/rt_parser/rt_parser.c"/>
+        <FILE id="nHHwTa" name="rt_parser.h" compile="0" resource="0" file="RTSTFT/src/rt_parser/rt_parser.h"/>
+        <FILE id="GVC4Ly" name="rt_parser_cmd_table.c" compile="1" resource="0"
+              file="RTSTFT/src/rt_parser/rt_parser_cmd_table.c"/>
+        <FILE id="F1lNEe" name="rt_parser_exec.c" compile="1" resource="0"
+              file="RTSTFT/src/rt_parser/rt_parser_exec.c"/>
+        <FILE id="L9UpL8" name="rt_parser_lex.c" compile="1" resource="0" file="RTSTFT/src/rt_parser/rt_parser_lex.c"/>
+        <FILE id="xO7aa5" name="rt_parser_parse.c" compile="1" resource="0"
+              file="RTSTFT/src/rt_parser/rt_parser_parse.c"/>
+      </GROUP>
+      <FILE id="Ri31Ug" name="rt_API.c" compile="1" resource="0" file="RTSTFT/src/rt_API.c"/>
+      <FILE id="NJRUH3" name="rt_chan.c" compile="1" resource="0" file="RTSTFT/src/rt_chan.c"/>
+      <FILE id="rcc0PU" name="rt_core.c" compile="1" resource="0" file="RTSTFT/src/rt_core.c"/>
+      <FILE id="KFd09a" name="rt_fifo.c" compile="1" resource="0" file="RTSTFT/src/rt_fifo.c"/>
+      <FILE id="IZdOCE" name="rt_fifo.h" compile="0" resource="0" file="RTSTFT/src/rt_fifo.h"/>
+      <FILE id="iLGmIH" name="rt_framebuf.c" compile="1" resource="0" file="RTSTFT/src/rt_framebuf.c"/>
+      <FILE id="A4F1Vc" name="rt_framebuf.h" compile="0" resource="0" file="RTSTFT/src/rt_framebuf.h"/>
+      <FILE id="yk1NGc" name="rt_globals.h" compile="0" resource="0" file="RTSTFT/src/rt_globals.h"/>
+      <FILE id="hPpLdp" name="rt_holder.c" compile="1" resource="0" file="RTSTFT/src/rt_holder.c"/>
+      <FILE id="Q6p8Gs" name="rt_internal_API.h" compile="0" resource="0"
+            file="RTSTFT/src/rt_internal_API.h"/>
+      <FILE id="WVyz81" name="rt_manip.c" compile="1" resource="0" file="RTSTFT/src/rt_manip.c"/>
+      <FILE id="oAktNX" name="rt_math.c" compile="1" resource="0" file="RTSTFT/src/rt_math.c"/>
+      <FILE id="DfY97c" name="rt_structs.h" compile="0" resource="0" file="RTSTFT/src/rt_structs.h"/>
+      <FILE id="f1NQNm" name="rtstft.h" compile="0" resource="0" file="RTSTFT/src/rtstft.h"/>
+      <FILE id="ydByaJ" name="tests.c" compile="1" resource="0" file="RTSTFT/src/tests.c"/>
+      <FILE id="Nsx6hE" name="wavfile.c" compile="1" resource="0" file="RTSTFT/src/wavfile.c"/>
+      <FILE id="KTLPuT" name="wavfile.h" compile="0" resource="0" file="RTSTFT/src/wavfile.h"/>
     </GROUP>
   </MAINGROUP>
   <JUCEOPTIONS JUCE_STRICT_REFCOUNTEDPOINTER="1" JUCE_VST3_CAN_REPLACE_VST2="0"/>
