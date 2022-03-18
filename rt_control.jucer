@@ -4,100 +4,61 @@
               addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1">
   <MAINGROUP id="top3X7" name="rt_control">
     <GROUP id="{D0832678-8E03-71CD-4B9B-35AD38C49970}" name="Source">
-      <GROUP id="{7E83A3EB-06BE-89A5-ACC9-D6D63F859324}" name="Components">
-        <GROUP id="{0A93998A-2627-01C8-181A-DE5AAB15FA66}" name="Visual">
-          <FILE id="RDhikD" name="RT_Bordered_Container.cpp" compile="1" resource="0"
+      <GROUP id="{DD676EED-1678-BCDB-35A7-29560F416709}" name="Components">
+        <GROUP id="{A6F500C8-9389-DA2A-8B51-4D575A0DEFE6}" name="Interactive"/>
+        <GROUP id="{A6F6E2EE-9A2E-7888-88A4-7904EF2118F8}" name="Visual">
+          <FILE id="vFO5y6" name="RT_Bordered_Container.cpp" compile="1" resource="0"
                 file="Source/Components/Visual/RT_Bordered_Container.cpp"/>
-          <FILE id="X78WBk" name="RT_Bordered_Container.h" compile="0" resource="0"
+          <FILE id="gpZgIZ" name="RT_Bordered_Container.h" compile="0" resource="0"
                 file="Source/Components/Visual/RT_Bordered_Container.h"/>
         </GROUP>
-        <GROUP id="{9A9DEF97-C286-BB6A-6C33-92C755F067D7}" name="Interactive"/>
-        <FILE id="CjBM35" name="RT_MainWindow.cpp" compile="1" resource="0"
+        <FILE id="fpazSX" name="RT_MainWindow.cpp" compile="1" resource="0"
               file="Source/Components/RT_MainWindow.cpp"/>
-        <FILE id="rIv11Y" name="RT_MainWindow.h" compile="0" resource="0" file="Source/Components/RT_MainWindow.h"/>
+        <FILE id="Oih60V" name="RT_MainWindow.h" compile="0" resource="0" file="Source/Components/RT_MainWindow.h"/>
       </GROUP>
-      <GROUP id="{37D090C2-12C5-2595-B0B4-1EA2DE6D0F6A}" name="rtstft">
-        <GROUP id="{0D5BA3CA-CE98-0188-F4BC-CA2F739C8C3C}" name="pffft">
-          <FILE id="EDTPva" name="fftpack.c" compile="1" resource="0" file="../RTSTFT/src/pffft/fftpack.c"/>
-          <FILE id="wOKEs8" name="fftpack.h" compile="0" resource="0" file="../RTSTFT/src/pffft/fftpack.h"/>
-          <FILE id="uBCHPM" name="pffft.c" compile="1" resource="0" file="../RTSTFT/src/pffft/pffft.c"/>
-          <FILE id="igmee9" name="pffft.h" compile="0" resource="0" file="../RTSTFT/src/pffft/pffft.h"/>
-          <FILE id="JoeIvR" name="README.md" compile="0" resource="1" file="../RTSTFT/src/pffft/README.md"/>
-          <FILE id="kQ1Fon" name="test_pffft.c" compile="1" resource="0" file="../RTSTFT/src/pffft/test_pffft.c"/>
-        </GROUP>
-        <GROUP id="{3658EB62-4BA6-8BBF-A087-C6FE550B8AB9}" name="rt_parser">
-          <FILE id="moj3cV" name="rt_parser.c" compile="1" resource="0" file="../RTSTFT/src/rt_parser/rt_parser.c"/>
-          <FILE id="DQ3Aoc" name="rt_parser.h" compile="0" resource="0" file="../RTSTFT/src/rt_parser/rt_parser.h"/>
-          <FILE id="o6X30a" name="rt_parser_cmd_table.c" compile="1" resource="0"
-                file="../RTSTFT/src/rt_parser/rt_parser_cmd_table.c"/>
-          <FILE id="PU1smW" name="rt_parser_exec.c" compile="1" resource="0"
-                file="../RTSTFT/src/rt_parser/rt_parser_exec.c"/>
-          <FILE id="aPfv01" name="rt_parser_lex.c" compile="1" resource="0" file="../RTSTFT/src/rt_parser/rt_parser_lex.c"/>
-          <FILE id="cktXiO" name="rt_parser_parse.c" compile="1" resource="0"
-                file="../RTSTFT/src/rt_parser/rt_parser_parse.c"/>
-        </GROUP>
-        <FILE id="yI5fQE" name="rt_API.c" compile="1" resource="0" file="../RTSTFT/src/rt_API.c"/>
-        <FILE id="SnuQz0" name="rt_chan.c" compile="1" resource="0" file="../RTSTFT/src/rt_chan.c"/>
-        <FILE id="ZX2Zzr" name="rt_core.c" compile="1" resource="0" file="../RTSTFT/src/rt_core.c"/>
-        <FILE id="jM5ooY" name="rt_fifo.c" compile="1" resource="0" file="../RTSTFT/src/rt_fifo.c"/>
-        <FILE id="RPozx3" name="rt_fifo.h" compile="0" resource="0" file="../RTSTFT/src/rt_fifo.h"/>
-        <FILE id="zPT5PX" name="rt_framebuf.c" compile="1" resource="0" file="../RTSTFT/src/rt_framebuf.c"/>
-        <FILE id="TKbyvB" name="rt_framebuf.h" compile="0" resource="0" file="../RTSTFT/src/rt_framebuf.h"/>
-        <FILE id="xwPctH" name="rt_globals.h" compile="0" resource="0" file="../RTSTFT/src/rt_globals.h"/>
-        <FILE id="HChveS" name="rt_holder.c" compile="1" resource="0" file="../RTSTFT/src/rt_holder.c"/>
-        <FILE id="qpyW4w" name="rt_internal_API.h" compile="0" resource="0"
-              file="../RTSTFT/src/rt_internal_API.h"/>
-        <FILE id="QikY7R" name="rt_manip.c" compile="1" resource="0" file="../RTSTFT/src/rt_manip.c"/>
-        <FILE id="Wejsru" name="rt_math.c" compile="1" resource="0" file="../RTSTFT/src/rt_math.c"/>
-        <FILE id="hyA9mR" name="rt_structs.h" compile="0" resource="0" file="../RTSTFT/src/rt_structs.h"/>
-        <FILE id="K0iARy" name="rtstft.h" compile="0" resource="0" file="../RTSTFT/src/rtstft.h"/>
-        <FILE id="lq9i3u" name="tests.c" compile="0" resource="0" file="../RTSTFT/src/tests.c"/>
-        <FILE id="WolSsl" name="wavfile.c" compile="0" resource="0" file="../RTSTFT/src/wavfile.c"/>
-        <FILE id="LG3tX2" name="wavfile.h" compile="0" resource="0" file="../RTSTFT/src/wavfile.h"/>
-      </GROUP>
-      <GROUP id="{C56840C8-A347-D885-8224-EF7D74EE4308}" name="Managers">
-        <GROUP id="{83034645-13FB-6D49-8204-CA326C8EBB90}" name="GUIManagers">
-          <FILE id="HlpdyC" name="RT_LookAndFeelManager.cpp" compile="1" resource="0"
-                file="Source/Managers/GUIManagers/RT_LookAndFeelManager.cpp"/>
-          <FILE id="nlLqNB" name="RT_LookAndFeelManager.h" compile="0" resource="0"
-                file="Source/Managers/GUIManagers/RT_LookAndFeelManager.h"/>
-        </GROUP>
-        <GROUP id="{172CB937-AEB5-7D16-A395-7D7794A35FEB}" name="DSPStateManagers">
-          <FILE id="sEIr4V" name="RT_ParameterManager.cpp" compile="1" resource="0"
+      <GROUP id="{A1F39170-6572-87A5-59FB-F331515C0A98}" name="Managers">
+        <GROUP id="{DEC9BEB4-06F4-3B38-9F30-7BF6B6500FEA}" name="DSPStateManagers">
+          <FILE id="olTz0F" name="RT_ParameterManager.cpp" compile="1" resource="0"
                 file="Source/Managers/DSPStateManagers/RT_ParameterManager.cpp"/>
-          <FILE id="mXzfqm" name="RT_ParameterManager.h" compile="0" resource="0"
+          <FILE id="Acxxin" name="RT_ParameterManager.h" compile="0" resource="0"
                 file="Source/Managers/DSPStateManagers/RT_ParameterManager.h"/>
-          <FILE id="eYH6uS" name="RT_PropertyManager.cpp" compile="1" resource="0"
+          <FILE id="lcSNNm" name="RT_PropertyManager.cpp" compile="1" resource="0"
                 file="Source/Managers/DSPStateManagers/RT_PropertyManager.cpp"/>
-          <FILE id="ERJFL6" name="RT_PropertyManager.h" compile="0" resource="0"
+          <FILE id="gvdWzl" name="RT_PropertyManager.h" compile="0" resource="0"
                 file="Source/Managers/DSPStateManagers/RT_PropertyManager.h"/>
         </GROUP>
-        <GROUP id="{4AB0C499-E46B-7308-543C-5EA3D543066C}" name="Interface">
-          <FILE id="KsU13V" name="RT_ProcessorInterface.cpp" compile="1" resource="0"
+        <GROUP id="{15E80E87-FC17-DF25-90C0-D22B2FA62083}" name="GUIManagers">
+          <FILE id="zWqe3B" name="RT_LookAndFeelManager.cpp" compile="1" resource="0"
+                file="Source/Managers/GUIManagers/RT_LookAndFeelManager.cpp"/>
+          <FILE id="rlKDse" name="RT_LookAndFeelManager.h" compile="0" resource="0"
+                file="Source/Managers/GUIManagers/RT_LookAndFeelManager.h"/>
+        </GROUP>
+        <GROUP id="{21636CC8-8EEC-780A-DE6D-82F464FA6BA2}" name="Interface">
+          <FILE id="STcfwV" name="RT_ProcessorInterface.cpp" compile="1" resource="0"
                 file="Source/Managers/Interface/RT_ProcessorInterface.cpp"/>
-          <FILE id="JIUqih" name="RT_ProcessorInterface.h" compile="0" resource="0"
+          <FILE id="ceXpUF" name="RT_ProcessorInterface.h" compile="0" resource="0"
                 file="Source/Managers/Interface/RT_ProcessorInterface.h"/>
         </GROUP>
-        <GROUP id="{BD5115C3-C961-016F-6775-F8033B78956D}" name="OS Managers">
-          <FILE id="KrYoP9" name="RT_FileManager.cpp" compile="1" resource="0"
+        <GROUP id="{4879F040-AB87-929C-817E-6B574124B1C2}" name="OS Managers">
+          <FILE id="FTT7oA" name="RT_FileManager.cpp" compile="1" resource="0"
                 file="Source/Managers/OS Managers/RT_FileManager.cpp"/>
-          <FILE id="o2PDJs" name="RT_FileManager.h" compile="0" resource="0"
+          <FILE id="vA5kk1" name="RT_FileManager.h" compile="0" resource="0"
                 file="Source/Managers/OS Managers/RT_FileManager.h"/>
         </GROUP>
       </GROUP>
+      <FILE id="KwoobJ" name="RT_AudioProcessor.cpp" compile="1" resource="0"
+            file="Source/RT_AudioProcessor.cpp"/>
+      <FILE id="RTm8SB" name="RT_AudioProcessor.h" compile="0" resource="0"
+            file="Source/RT_AudioProcessor.h"/>
+      <FILE id="btxJ85" name="RT_ProcessorBase.cpp" compile="1" resource="0"
+            file="Source/RT_ProcessorBase.cpp"/>
+      <FILE id="WymFS3" name="RT_ProcessorBase.h" compile="0" resource="0"
+            file="Source/RT_ProcessorBase.h"/>
+      <FILE id="tzXnRa" name="RT_ProcessorEditor.cpp" compile="1" resource="0"
+            file="Source/RT_ProcessorEditor.cpp"/>
+      <FILE id="VHSUs0" name="RT_ProcessorEditor.h" compile="0" resource="0"
+            file="Source/RT_ProcessorEditor.h"/>
     </GROUP>
-    <FILE id="XWTiIM" name="RT_AudioProcessor.cpp" compile="1" resource="0"
-          file="Source/RT_AudioProcessor.cpp"/>
-    <FILE id="M6PWgz" name="RT_AudioProcessor.h" compile="0" resource="0"
-          file="Source/RT_AudioProcessor.h"/>
-    <FILE id="HPofAQ" name="RT_ProcessorBase.cpp" compile="1" resource="0"
-          file="Source/RT_ProcessorBase.cpp"/>
-    <FILE id="UBGCve" name="RT_ProcessorBase.h" compile="0" resource="0"
-          file="Source/RT_ProcessorBase.h"/>
-    <FILE id="RafdGt" name="RT_ProcessorEditor.cpp" compile="1" resource="0"
-          file="Source/RT_ProcessorEditor.cpp"/>
-    <FILE id="U14QU0" name="RT_ProcessorEditor.h" compile="0" resource="0"
-          file="Source/RT_ProcessorEditor.h"/>
   </MAINGROUP>
   <JUCEOPTIONS JUCE_STRICT_REFCOUNTEDPOINTER="1" JUCE_VST3_CAN_REPLACE_VST2="0"/>
   <EXPORTFORMATS>
