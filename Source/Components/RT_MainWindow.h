@@ -11,13 +11,19 @@
 #pragma once
 
 #include "../Managers/Interface/RT_ProcessorInterface.h"
+#include "Layout/RT_FFTDisplayContainer.h"
+#include "Layout/RT_GUIControlsContainer.h"
 #include "RT_Component.h"
 #include <JuceHeader.h>
 
 class RT_MainWindow : public RT_Component {
 
+  RT_ProcessorInterface  *mInterface;
+  RT_GUIControlsContainer mGUIControlsContainer;
+  RT_FFTDisplayContainer  mFFTDisplayContainer;
+
 public:
-  RT_MainWindow();
+  RT_MainWindow(RT_ProcessorInterface *inInterface);
   void paint(juce::Graphics &g) override;
   void resized() override;
 };

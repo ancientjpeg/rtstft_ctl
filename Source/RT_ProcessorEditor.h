@@ -27,7 +27,6 @@ public:
 
 private:
   RT_ProcessorInterface *mInterface;
-  int                    mBorderSize;
   RT_MainWindow          mMainWindow;
 
   JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(RT_ProcessorEditor)

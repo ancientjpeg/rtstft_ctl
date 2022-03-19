@@ -2,7 +2,7 @@
 
 <JUCERPROJECT id="Ez8Xaa" name="rt_control" projectType="audioplug" useAppConfig="0"
               addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1"
-              cppLanguageStandard="20">
+              cppLanguageStandard="20" companyName="sound_ctl">
   <MAINGROUP id="top3X7" name="rt_control">
     <GROUP id="{37D090C2-12C5-2595-B0B4-1EA2DE6D0F6A}" name="RTSTFT_src">
       <GROUP id="{0D5BA3CA-CE98-0188-F4BC-CA2F739C8C3C}" name="pffft">
@@ -45,6 +45,16 @@
     </GROUP>
     <GROUP id="{5EC28A37-6422-C3D1-513E-C10C5E4E9791}" name="Source">
       <GROUP id="{E9A15101-0B05-499F-B395-DAA70255F666}" name="Components">
+        <GROUP id="{7E1A4226-6906-1CFF-015A-9BE241E986A8}" name="Layout">
+          <FILE id="Bp91Lb" name="RT_FFTDisplayContainer.cpp" compile="1" resource="0"
+                file="Source/Components/Layout/RT_FFTDisplayContainer.cpp"/>
+          <FILE id="OaCZzL" name="RT_FFTDisplayContainer.h" compile="0" resource="0"
+                file="Source/Components/Layout/RT_FFTDisplayContainer.h"/>
+          <FILE id="xcNBwj" name="RT_GUIControlsContainer.cpp" compile="1" resource="0"
+                file="Source/Components/Layout/RT_GUIControlsContainer.cpp"/>
+          <FILE id="riYSLa" name="RT_GUIControlsContainer.h" compile="0" resource="0"
+                file="Source/Components/Layout/RT_GUIControlsContainer.h"/>
+        </GROUP>
         <GROUP id="{07A2DC33-AEA2-1F87-D5B1-31130BD8B1C4}" name="Interactive"/>
         <FILE id="yygWdn" name="RT_Component.cpp" compile="1" resource="0"
               file="Source/Components/RT_Component.cpp"/>
