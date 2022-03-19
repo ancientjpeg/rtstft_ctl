@@ -10,5 +10,5 @@
 
 #include "RT_ParameterManager.h"
 
-RT_ParameterManager::RT_ParameterManager() {}
+RT_ParameterManager::RT_ParameterManager(RT_ProcessorInterface *mInterface) {}
 RT_ParameterManager::~RT_ParameterManager() {}

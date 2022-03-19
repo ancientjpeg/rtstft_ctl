@@ -22,8 +22,9 @@ RT_ProcessorBase::RT_ProcessorBase()
 #endif
             .withOutput("Output", juce::AudioChannelSet::stereo(), true)
 #endif
-    )
+            ),
 #endif
+      mRTSTFTManager(this), mParameterManager(this), mPropertyManager(this)
 {
 }
 
@@ -35,6 +36,8 @@ RT_LookAndFeel::Manager *RT_ProcessorBase::getLookAndFeelManager()
 {
   return &mLookAndFeelManager;
 }
+
+RTSTFT_Manager *RT_ProcessorBase::getRTSTFTManager() { return &mRTSTFTManager; }
 
 //==============================================================================
 const juce::String RT_ProcessorBase::getName() const { return JucePlugin_Name; }

@@ -14,6 +14,6 @@
 
 class RT_ParameterManager {
 public:
-  RT_ParameterManager();
+  RT_ParameterManager(RT_ProcessorInterface *mInterface);
   ~RT_ParameterManager();
 };

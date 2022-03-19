@@ -101,6 +101,12 @@
                 file="Source/Managers/OS Managers/RT_FileManager.h"/>
         </GROUP>
       </GROUP>
+      <GROUP id="{5A4EBC78-0DD3-53D4-E95C-D71D1FE29F42}" name="Utilities">
+        <FILE id="YT7UMT" name="RT_MathUtilities.cpp" compile="1" resource="0"
+              file="Source/Utilities/RT_MathUtilities.cpp"/>
+        <FILE id="CCT3cw" name="RT_MathUtilities.h" compile="0" resource="0"
+              file="Source/Utilities/RT_MathUtilities.h"/>
+      </GROUP>
       <FILE id="ktOiNl" name="RT_AudioProcessor.cpp" compile="1" resource="0"
             file="Source/RT_AudioProcessor.cpp"/>
       <FILE id="gyYy7t" name="RT_AudioProcessor.h" compile="0" resource="0"

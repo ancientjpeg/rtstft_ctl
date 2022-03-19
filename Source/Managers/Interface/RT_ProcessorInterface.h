@@ -13,6 +13,7 @@
 class RT_ProcessorBase;
 class RT_PropertyManager;
 class RT_ParameterManager;
+class RTSTFT_Manager;
 namespace RT_LookAndFeel {
 class Manager;
 }
@@ -23,4 +24,5 @@ public:
   virtual ~RT_ProcessorInterface() {}
   virtual RT_ProcessorBase        *getProcessor()          = 0;
   virtual RT_LookAndFeel::Manager *getLookAndFeelManager() = 0;
+  virtual RTSTFT_Manager          *getRTSTFTManager()      = 0;
 };

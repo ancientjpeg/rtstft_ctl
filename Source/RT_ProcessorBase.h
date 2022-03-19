@@ -9,16 +9,18 @@
 */
 
 #pragma once
+#include "Managers/DSPStateManagers/RTSTFT_Manager.h"
 #include "Managers/DSPStateManagers/RT_ParameterManager.h"
 #include "Managers/DSPStateManagers/RT_PropertyManager.h"
-#include "Managers/LookAndFeelManagement/RT_LookAndFeelManagement.h"
 #include "Managers/Interface/RT_ProcessorInterface.h"
+#include "Managers/LookAndFeelManagement/RT_LookAndFeelManagement.h"
 #include <JuceHeader.h>
 #include <JucePluginDefines.h>
 
 class RT_ProcessorBase : public RT_ProcessorInterface,
                          public juce::AudioProcessor {
 
+  RTSTFT_Manager          mRTSTFTManager;
   RT_LookAndFeel::Manager mLookAndFeelManager;
   RT_ParameterManager     mParameterManager;
   RT_PropertyManager      mPropertyManager;
@@ -30,6 +32,7 @@ public:
   //==============================================================================
   RT_ProcessorBase        *getProcessor() override;
   RT_LookAndFeel::Manager *getLookAndFeelManager() override;
+  RTSTFT_Manager          *getRTSTFTManager() override;
 
   //==============================================================================
   juce::AudioProcessorEditor *createEditor() override;
