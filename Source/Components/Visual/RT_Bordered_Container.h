@@ -10,14 +10,14 @@
 
 #pragma once
 
-#include "../../Managers/Interface/RT_ProcessorInterface.h"
+#include "../RT_Component.h"
 #include <JuceHeader.h>
 
-class RT_BorderedContainer : juce::Component {
-  unsigned int           mBorderSize;
-  RT_ProcessorInterface *mInterface;
+class RT_BorderedContainer : public RT_Component {
+  unsigned int mBorderSize;
 
 public:
-  RT_BorderedContainer(RT_ProcessorInterface *inInterface, int inBorderWidth);
+  RT_BorderedContainer(int inBorderSize);
   void paint(juce::Graphics &g) override;
+  void resized() override;
 };
