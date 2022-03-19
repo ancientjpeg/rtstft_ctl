@@ -1,60 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <JUCERPROJECT id="Ez8Xaa" name="rt_control" projectType="audioplug" useAppConfig="0"
-              addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1">
+              addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1"
+              cppLanguageStandard="20">
   <MAINGROUP id="top3X7" name="rt_control">
-    <GROUP id="{D0832678-8E03-71CD-4B9B-35AD38C49970}" name="Source">
-      <GROUP id="{5651A27F-4AA2-41B8-03CD-DD6F4A6CECF2}" name="Components">
-        <GROUP id="{4380D52D-59C0-361D-C20F-348084A73D1A}" name="Interactive"/>
-        <GROUP id="{B623085D-177F-C2C5-65A8-A705C1D3143E}" name="Visual"/>
-        <FILE id="FIJit6" name="RT_Component.cpp" compile="1" resource="0"
-              file="Source/Components/RT_Component.cpp"/>
-        <FILE id="x4Gx79" name="RT_Component.h" compile="0" resource="0" file="Source/Components/RT_Component.h"/>
-        <FILE id="e2rtvq" name="RT_MainWindow.cpp" compile="1" resource="0"
-              file="Source/Components/RT_MainWindow.cpp"/>
-        <FILE id="tmyO7Y" name="RT_MainWindow.h" compile="0" resource="0" file="Source/Components/RT_MainWindow.h"/>
-      </GROUP>
-      <GROUP id="{7CFE040C-702C-3575-5C6E-B7CF62E66B3C}" name="Managers">
-        <GROUP id="{31B903C3-08FF-C6F5-7CF3-7D4C77B1C0AD}" name="DSPStateManagers">
-          <FILE id="AwAoAN" name="RT_ParameterManager.cpp" compile="1" resource="0"
-                file="Source/Managers/DSPStateManagers/RT_ParameterManager.cpp"/>
-          <FILE id="c5oSS5" name="RT_ParameterManager.h" compile="0" resource="0"
-                file="Source/Managers/DSPStateManagers/RT_ParameterManager.h"/>
-          <FILE id="cWpg8o" name="RT_PropertyManager.cpp" compile="1" resource="0"
-                file="Source/Managers/DSPStateManagers/RT_PropertyManager.cpp"/>
-          <FILE id="AWe6nE" name="RT_PropertyManager.h" compile="0" resource="0"
-                file="Source/Managers/DSPStateManagers/RT_PropertyManager.h"/>
-        </GROUP>
-        <GROUP id="{1C30E558-FF92-B66F-B8D3-FF58FB3395FC}" name="GUIManagers">
-          <FILE id="qm4deg" name="RT_StyleManager.cpp" compile="1" resource="0"
-                file="Source/Managers/GUIManagers/RT_StyleManager.cpp"/>
-          <FILE id="nik7KZ" name="RT_StyleManager.h" compile="0" resource="0"
-                file="Source/Managers/GUIManagers/RT_StyleManager.h"/>
-        </GROUP>
-        <GROUP id="{79517193-B404-8987-2A85-B2C850DFC0ED}" name="Interface">
-          <FILE id="pzWV8g" name="RT_ProcessorInterface.h" compile="0" resource="0"
-                file="Source/Managers/Interface/RT_ProcessorInterface.h"/>
-        </GROUP>
-        <GROUP id="{F9150D56-551F-AF70-D970-657C9E723BA5}" name="OS Managers">
-          <FILE id="emmiAG" name="RT_FileManager.cpp" compile="1" resource="0"
-                file="Source/Managers/OS Managers/RT_FileManager.cpp"/>
-          <FILE id="ZhAq5z" name="RT_FileManager.h" compile="0" resource="0"
-                file="Source/Managers/OS Managers/RT_FileManager.h"/>
-        </GROUP>
-      </GROUP>
-      <FILE id="KwoobJ" name="RT_AudioProcessor.cpp" compile="1" resource="0"
-            file="Source/RT_AudioProcessor.cpp"/>
-      <FILE id="RTm8SB" name="RT_AudioProcessor.h" compile="0" resource="0"
-            file="Source/RT_AudioProcessor.h"/>
-      <FILE id="btxJ85" name="RT_ProcessorBase.cpp" compile="1" resource="0"
-            file="Source/RT_ProcessorBase.cpp"/>
-      <FILE id="WymFS3" name="RT_ProcessorBase.h" compile="0" resource="0"
-            file="Source/RT_ProcessorBase.h"/>
-      <FILE id="tzXnRa" name="RT_ProcessorEditor.cpp" compile="1" resource="0"
-            file="Source/RT_ProcessorEditor.cpp"/>
-      <FILE id="VHSUs0" name="RT_ProcessorEditor.h" compile="0" resource="0"
-            file="Source/RT_ProcessorEditor.h"/>
-    </GROUP>
     <GROUP id="{37D090C2-12C5-2595-B0B4-1EA2DE6D0F6A}" name="RTSTFT_src">
       <GROUP id="{0D5BA3CA-CE98-0188-F4BC-CA2F739C8C3C}" name="pffft">
         <FILE id="tzzhxP" name="fftpack.c" compile="1" resource="0" file="RTSTFT/src/pffft/fftpack.c"/>
@@ -93,6 +42,57 @@
       <FILE id="ydByaJ" name="tests.c" compile="1" resource="0" file="RTSTFT/src/tests.c"/>
       <FILE id="Nsx6hE" name="wavfile.c" compile="1" resource="0" file="RTSTFT/src/wavfile.c"/>
       <FILE id="KTLPuT" name="wavfile.h" compile="0" resource="0" file="RTSTFT/src/wavfile.h"/>
+    </GROUP>
+    <GROUP id="{5EC28A37-6422-C3D1-513E-C10C5E4E9791}" name="Source">
+      <GROUP id="{E9A15101-0B05-499F-B395-DAA70255F666}" name="Components">
+        <GROUP id="{07A2DC33-AEA2-1F87-D5B1-31130BD8B1C4}" name="Interactive"/>
+        <FILE id="yygWdn" name="RT_Component.cpp" compile="1" resource="0"
+              file="Source/Components/RT_Component.cpp"/>
+        <FILE id="WPqCvJ" name="RT_Component.h" compile="0" resource="0" file="Source/Components/RT_Component.h"/>
+        <FILE id="I7i8pN" name="RT_MainWindow.cpp" compile="1" resource="0"
+              file="Source/Components/RT_MainWindow.cpp"/>
+        <FILE id="r4zcpg" name="RT_MainWindow.h" compile="0" resource="0" file="Source/Components/RT_MainWindow.h"/>
+      </GROUP>
+      <GROUP id="{602BF2D6-0F2A-483C-4C33-2E542D4E725C}" name="Managers">
+        <GROUP id="{22D84CC3-6F1E-593C-5A8E-30E353817475}" name="DSPStateManagers">
+          <FILE id="xn4MCr" name="RT_ParameterManager.cpp" compile="1" resource="0"
+                file="Source/Managers/DSPStateManagers/RT_ParameterManager.cpp"/>
+          <FILE id="TRBpat" name="RT_ParameterManager.h" compile="0" resource="0"
+                file="Source/Managers/DSPStateManagers/RT_ParameterManager.h"/>
+          <FILE id="sLPSC9" name="RT_PropertyManager.cpp" compile="1" resource="0"
+                file="Source/Managers/DSPStateManagers/RT_PropertyManager.cpp"/>
+          <FILE id="oXSRGL" name="RT_PropertyManager.h" compile="0" resource="0"
+                file="Source/Managers/DSPStateManagers/RT_PropertyManager.h"/>
+        </GROUP>
+        <GROUP id="{2B24316A-AEF2-555D-48BE-0495AD46AFF8}" name="Interface">
+          <FILE id="EQm0Mk" name="RT_ProcessorInterface.h" compile="0" resource="0"
+                file="Source/Managers/Interface/RT_ProcessorInterface.h"/>
+        </GROUP>
+        <GROUP id="{51BADFC8-F997-E6CD-94EC-1DFE5C45BD76}" name="LookAndFeelManagement">
+          <FILE id="IdeJ1Y" name="RT_LookAndFeelManager.cpp" compile="1" resource="0"
+                file="Source/Managers/LookAndFeelManagement/RT_LookAndFeelManager.cpp"/>
+          <FILE id="LXcs33" name="RT_LookAndFeelManagement.h" compile="0" resource="0"
+                file="Source/Managers/LookAndFeelManagement/RT_LookAndFeelManagement.h"/>
+        </GROUP>
+        <GROUP id="{1F70A4AB-0E3C-94A1-9D5A-568335DB686E}" name="OS Managers">
+          <FILE id="MyGn62" name="RT_FileManager.cpp" compile="1" resource="0"
+                file="Source/Managers/OS Managers/RT_FileManager.cpp"/>
+          <FILE id="ZQoxXw" name="RT_FileManager.h" compile="0" resource="0"
+                file="Source/Managers/OS Managers/RT_FileManager.h"/>
+        </GROUP>
+      </GROUP>
+      <FILE id="ktOiNl" name="RT_AudioProcessor.cpp" compile="1" resource="0"
+            file="Source/RT_AudioProcessor.cpp"/>
+      <FILE id="gyYy7t" name="RT_AudioProcessor.h" compile="0" resource="0"
+            file="Source/RT_AudioProcessor.h"/>
+      <FILE id="EH89J2" name="RT_ProcessorBase.cpp" compile="1" resource="0"
+            file="Source/RT_ProcessorBase.cpp"/>
+      <FILE id="i8DUmT" name="RT_ProcessorBase.h" compile="0" resource="0"
+            file="Source/RT_ProcessorBase.h"/>
+      <FILE id="r0Bh1M" name="RT_ProcessorEditor.cpp" compile="1" resource="0"
+            file="Source/RT_ProcessorEditor.cpp"/>
+      <FILE id="WLaulE" name="RT_ProcessorEditor.h" compile="0" resource="0"
+            file="Source/RT_ProcessorEditor.h"/>
     </GROUP>
   </MAINGROUP>
   <JUCEOPTIONS JUCE_STRICT_REFCOUNTEDPOINTER="1" JUCE_VST3_CAN_REPLACE_VST2="0"/>

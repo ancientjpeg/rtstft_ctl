@@ -29,8 +29,9 @@ RT_ProcessorBase::RT_ProcessorBase()
 
 RT_ProcessorBase::~RT_ProcessorBase() {}
 //==============================================================================
-RT_ProcessorBase      *RT_ProcessorBase::getProcessor() { return this; }
-RT_LookAndFeelManager *RT_ProcessorBase::getLookAndFeelManager()
+RT_ProcessorBase        *RT_ProcessorBase::getProcessor() { return this; }
+
+RT_LookAndFeel::Manager *RT_ProcessorBase::getLookAndFeelManager()
 {
   return &mLookAndFeelManager;
 }

@@ -7,6 +7,7 @@
 */
 
 #include "RT_ProcessorEditor.h"
+using RT_LookAndFeel::ComponentType;
 
 //==============================================================================
 RT_ProcessorEditor::RT_ProcessorEditor(RT_ProcessorInterface *inInterface)
@@ -17,7 +18,8 @@ RT_ProcessorEditor::RT_ProcessorEditor(RT_ProcessorInterface *inInterface)
   // editor's size to whatever you need it to be.
   setSize(800, 600);
   addAndMakeVisible(mMainWindow);
-  setLookAndFeel(mInterface->getLookAndFeelManager()->getCurrentLookAndFeel());
+  setLookAndFeel(mInterface->getLookAndFeelManager()->getSingleLookAndFeel(
+      ComponentType::PLUGIN_DEFAULT));
 }
 
 RT_ProcessorEditor::~RT_ProcessorEditor() {}
@@ -27,10 +29,10 @@ void RT_ProcessorEditor::paint(juce::Graphics &g)
 {
   // (Our component is opaque, so we must completely fill the background with a
   // solid colour)
+  using enum juce::LookAndFeel_V4::ColourScheme::UIColour;
   juce::LookAndFeel_V4 &lookAndFeel
       = static_cast<juce::LookAndFeel_V4 &>(getLookAndFeel());
-  g.fillAll(lookAndFeel.getCurrentColourScheme(
-      juce::LookAndFeel_V4::ColourScheme::UIColour::outline));
+  g.fillAll(lookAndFeel.getCurrentColourScheme().getUIColour(outline));
 
   // setFont
 }

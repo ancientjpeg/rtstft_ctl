@@ -13,12 +13,14 @@
 class RT_ProcessorBase;
 class RT_PropertyManager;
 class RT_ParameterManager;
-class RT_LookAndFeelManager;
+namespace RT_LookAndFeel {
+class Manager;
+}
 
 class RT_ProcessorInterface {
 
 public:
   virtual ~RT_ProcessorInterface() {}
-  virtual RT_ProcessorBase      *getProcessor()          = 0;
-  virtual RT_LookAndFeelManager *getLookAndFeelManager() = 0;
+  virtual RT_ProcessorBase        *getProcessor()          = 0;
+  virtual RT_LookAndFeel::Manager *getLookAndFeelManager() = 0;
 };
