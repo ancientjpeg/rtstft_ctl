@@ -41,8 +41,8 @@
 #if ! JUCE_DONT_DECLARE_PROJECTINFO
 namespace ProjectInfo
 {
-    const char* const  projectName    = "rt_control";
-    const char* const  companyName    = "sound_ctl";
+    const char* const  projectName    = "rt-spectrum-ctl";
+    const char* const  companyName    = "sound-ctl";
     const char* const  versionString  = "1.0.0";
     const int          versionNumber  = 0x10000;
 }

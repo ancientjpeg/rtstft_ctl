@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<JUCERPROJECT id="Ez8Xaa" name="rt_control" projectType="audioplug" useAppConfig="0"
+<JUCERPROJECT id="Ez8Xaa" name="rt-spectrum-ctl" projectType="audioplug" useAppConfig="0"
               addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1"
-              cppLanguageStandard="20" companyName="sound_ctl">
-  <MAINGROUP id="top3X7" name="rt_control">
+              cppLanguageStandard="20" companyName="sound-ctl">
+  <MAINGROUP id="top3X7" name="rt-spectrum-ctl">
     <GROUP id="{37D090C2-12C5-2595-B0B4-1EA2DE6D0F6A}" name="RTSTFT_src">
       <GROUP id="{0D5BA3CA-CE98-0188-F4BC-CA2F739C8C3C}" name="pffft">
         <FILE id="tzzhxP" name="fftpack.c" compile="1" resource="0" file="RTSTFT/src/pffft/fftpack.c"/>
@@ -56,6 +56,8 @@
                 file="Source/Components/Layout/RT_GUIControlsContainer.h"/>
         </GROUP>
         <GROUP id="{07A2DC33-AEA2-1F87-D5B1-31130BD8B1C4}" name="Interactive"/>
+        <FILE id="aK4vpe" name="RT_Header.cpp" compile="1" resource="0" file="Source/Components/RT_Header.cpp"/>
+        <FILE id="bMG7Yy" name="RT_Header.h" compile="0" resource="0" file="Source/Components/RT_Header.h"/>
         <FILE id="yygWdn" name="RT_Component.cpp" compile="1" resource="0"
               file="Source/Components/RT_Component.cpp"/>
         <FILE id="WPqCvJ" name="RT_Component.h" compile="0" resource="0" file="Source/Components/RT_Component.h"/>

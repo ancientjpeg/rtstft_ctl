@@ -38,13 +38,13 @@
  #define JucePlugin_Enable_IAA             0
 #endif
 #ifndef  JucePlugin_Name
- #define JucePlugin_Name                   "rt_control"
+ #define JucePlugin_Name                   "rt-spectrum-ctl"
 #endif
 #ifndef  JucePlugin_Desc
- #define JucePlugin_Desc                   "rt_control"
+ #define JucePlugin_Desc                   "rt-spectrum-ctl"
 #endif
 #ifndef  JucePlugin_Manufacturer
- #define JucePlugin_Manufacturer           "sound_ctl"
+ #define JucePlugin_Manufacturer           "sound-ctl"
 #endif
 #ifndef  JucePlugin_ManufacturerWebsite
  #define JucePlugin_ManufacturerWebsite    ""
@@ -98,16 +98,16 @@
  #define JucePlugin_AUSubType              JucePlugin_PluginCode
 #endif
 #ifndef  JucePlugin_AUExportPrefix
- #define JucePlugin_AUExportPrefix         rt_controlAU
+ #define JucePlugin_AUExportPrefix         rtspectrumctlAU
 #endif
 #ifndef  JucePlugin_AUExportPrefixQuoted
- #define JucePlugin_AUExportPrefixQuoted   "rt_controlAU"
+ #define JucePlugin_AUExportPrefixQuoted   "rtspectrumctlAU"
 #endif
 #ifndef  JucePlugin_AUManufacturerCode
  #define JucePlugin_AUManufacturerCode     JucePlugin_ManufacturerCode
 #endif
 #ifndef  JucePlugin_CFBundleIdentifier
- #define JucePlugin_CFBundleIdentifier     com.sound_ctl.rt_control
+ #define JucePlugin_CFBundleIdentifier     com.soundctl.rtspectrumctl
 #endif
 #ifndef  JucePlugin_RTASCategory
  #define JucePlugin_RTASCategory           0
@@ -125,7 +125,7 @@
  #define JucePlugin_RTASDisableMultiMono   0
 #endif
 #ifndef  JucePlugin_AAXIdentifier
- #define JucePlugin_AAXIdentifier          com.sound_ctl.rt_control
+ #define JucePlugin_AAXIdentifier          com.soundctl.rtspectrumctl
 #endif
 #ifndef  JucePlugin_AAXManufacturerCode
  #define JucePlugin_AAXManufacturerCode    JucePlugin_ManufacturerCode
@@ -149,7 +149,7 @@
  #define JucePlugin_IAASubType             JucePlugin_PluginCode
 #endif
 #ifndef  JucePlugin_IAAName
- #define JucePlugin_IAAName                "sound_ctl: rt_control"
+ #define JucePlugin_IAAName                "sound-ctl: rt-spectrum-ctl"
 #endif
 #ifndef  JucePlugin_VSTNumMidiInputs
  #define JucePlugin_VSTNumMidiInputs       16

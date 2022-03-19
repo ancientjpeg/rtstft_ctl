@@ -21,6 +21,7 @@ RT_ProcessorEditor::RT_ProcessorEditor(RT_ProcessorInterface *inInterface)
   setLookAndFeel(mInterface->getLookAndFeelManager()->getSingleLookAndFeel(
       ComponentType::PLUGIN_DEFAULT));
   addAndMakeVisible(mMainWindow);
+  addAndMakeVisible(mHeader);
 
   setSize(800, 600);
 }
@@ -41,5 +42,6 @@ void RT_ProcessorEditor::resized()
   auto contentBounds = getBounds().reduced(mainBorderSize);
   int  headerHeight  = headerHeightRatio * getHeight();
   auto headerBounds  = contentBounds.removeFromTop(headerHeight);
+  mHeader.setBounds(headerBounds);
   mMainWindow.setBounds(contentBounds);
 }
