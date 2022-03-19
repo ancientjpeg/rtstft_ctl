@@ -9,18 +9,13 @@
 */
 
 #include "RT_MainWindow.h"
+using enum juce::LookAndFeel_V4::ColourScheme::UIColour;
 
-RT_MainWindow::RT_MainWindow(int inBorderSize) : mBorderSize(inBorderSize) {}
+RT_MainWindow::RT_MainWindow() {}
 
 void RT_MainWindow::paint(juce::Graphics &g)
 {
   g.fillAll(RT_getLookAndFeel().getCurrentColourScheme().getUIColour(
-      juce::LookAndFeel_V4::ColourScheme::UIColour::defaultFill));
-  g.setColour(RT_getLookAndFeel().getCurrentColourScheme().getUIColour(
-      juce::LookAndFeel_V4::ColourScheme::UIColour::outline));
-  g.drawRect(0, 0, getWidth(), mBorderSize);
-  g.drawRect(0, 0, mBorderSize, getHeight());
-  g.drawRect(0, getWidth() - mBorderSize, getWidth(), mBorderSize);
-  g.drawRect(0, getHeight() - mBorderSize, mBorderSize, getHeight());
+      windowBackground));
 }
 void RT_MainWindow::resized() {}

@@ -16,10 +16,8 @@
 
 class RT_MainWindow : public RT_Component {
 
-  unsigned int mBorderSize;
-
 public:
-  RT_MainWindow(int inBorderSize);
+  RT_MainWindow();
   void paint(juce::Graphics &g) override;
   void resized() override;
 };
