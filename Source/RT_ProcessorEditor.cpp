@@ -40,7 +40,7 @@ void RT_ProcessorEditor::paint(juce::Graphics &g)
 void RT_ProcessorEditor::resized()
 {
   auto contentBounds = getBounds().reduced(mainBorderSize);
-  int  headerHeight  = headerHeightRatio * getHeight();
+  int  headerHeight  = headerHeightRatio * contentBounds.getHeight();
   auto headerBounds  = contentBounds.removeFromTop(headerHeight);
   mHeader.setBounds(headerBounds);
   mMainWindow.setBounds(contentBounds);

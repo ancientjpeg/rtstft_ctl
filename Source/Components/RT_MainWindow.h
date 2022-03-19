@@ -11,6 +11,7 @@
 #pragma once
 
 #include "../Managers/Interface/RT_ProcessorInterface.h"
+#include "Layout/RT_CommandLineContainer.h"
 #include "Layout/RT_FFTDisplayContainer.h"
 #include "Layout/RT_GUIControlsContainer.h"
 #include "RT_Component.h"
@@ -21,6 +22,7 @@ class RT_MainWindow : public RT_Component {
   RT_ProcessorInterface  *mInterface;
   RT_GUIControlsContainer mGUIControlsContainer;
   RT_FFTDisplayContainer  mFFTDisplayContainer;
+  RT_CommandLineContainer mCommandLineContainer;
 
 public:
   RT_MainWindow(RT_ProcessorInterface *inInterface);

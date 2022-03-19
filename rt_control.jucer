@@ -46,6 +46,10 @@
     <GROUP id="{5EC28A37-6422-C3D1-513E-C10C5E4E9791}" name="Source">
       <GROUP id="{E9A15101-0B05-499F-B395-DAA70255F666}" name="Components">
         <GROUP id="{7E1A4226-6906-1CFF-015A-9BE241E986A8}" name="Layout">
+          <FILE id="CQiIuE" name="RT_CommandLineContainer.cpp" compile="1" resource="0"
+                file="Source/Components/Layout/RT_CommandLineContainer.cpp"/>
+          <FILE id="HkjTtY" name="RT_CommandLineContainer.h" compile="0" resource="0"
+                file="Source/Components/Layout/RT_CommandLineContainer.h"/>
           <FILE id="Bp91Lb" name="RT_FFTDisplayContainer.cpp" compile="1" resource="0"
                 file="Source/Components/Layout/RT_FFTDisplayContainer.cpp"/>
           <FILE id="OaCZzL" name="RT_FFTDisplayContainer.h" compile="0" resource="0"
@@ -75,6 +79,10 @@
                 file="Source/Managers/DSPStateManagers/RT_PropertyManager.cpp"/>
           <FILE id="oXSRGL" name="RT_PropertyManager.h" compile="0" resource="0"
                 file="Source/Managers/DSPStateManagers/RT_PropertyManager.h"/>
+          <FILE id="pmoXv9" name="RTSTFT_Manager.cpp" compile="1" resource="0"
+                file="Source/Managers/DSPStateManagers/RTSTFT_Manager.cpp"/>
+          <FILE id="OCTN76" name="RTSTFT_Manager.h" compile="0" resource="0"
+                file="Source/Managers/DSPStateManagers/RTSTFT_Manager.h"/>
         </GROUP>
         <GROUP id="{2B24316A-AEF2-555D-48BE-0495AD46AFF8}" name="Interface">
           <FILE id="EQm0Mk" name="RT_ProcessorInterface.h" compile="0" resource="0"
