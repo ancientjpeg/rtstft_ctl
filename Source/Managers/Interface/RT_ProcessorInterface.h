@@ -9,16 +9,16 @@
 */
 
 #pragma once
-#include "../DSPStateManagers/RT_ParameterManager.h"
-#include "../DSPStateManagers/RT_PropertyManager.h"
-#include "../GUIManagers/RT_StyleManager.h"
 
 class RT_ProcessorBase;
+class RT_StyleManager;
+class RT_PropertyManager;
+class RT_ParameterManager;
 
 class RT_ProcessorInterface {
-  
+
 public:
-  virtual ~RT_ProcessorInterface();
-  virtual RT_ProcessorBase *getProcessor() = 0;
-  virtual RT_StyleManager *getStyleManager() = 0;
+  virtual ~RT_ProcessorInterface() {}
+  virtual RT_ProcessorBase *getProcessor()    = 0;
+  virtual RT_StyleManager  *getStyleManager() = 0;
 };

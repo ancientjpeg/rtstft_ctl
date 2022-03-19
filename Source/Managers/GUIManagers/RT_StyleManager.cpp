@@ -8,4 +8,19 @@
   ==============================================================================
 */
 
-#include "RT_LookAndFeelManager.h"
+#include "RT_StyleManager.h"
+
+RT_StyleManager::RT_StyleManager()
+{
+  mSkins.push_back(std::make_unique<juce::LookAndFeel_V4::ColourScheme>(
+      juce::Colours::white, juce::Colours::white, juce::Colours::white,
+      juce::Colours::black, juce::Colours::black, juce::Colours::white,
+      juce::Colours::blue, juce::Colours::blue));
+  mCurrentSkin = mSkins[0].get();
+  mLookAndFeel.reset(new juce::LookAndFeel_V4(*mCurrentSkin));
+}
+
+juce::LookAndFeel_V4::ColourScheme *RT_StyleManager::getCurrentSkin()
+{
+  return mCurrentSkin;
+}
