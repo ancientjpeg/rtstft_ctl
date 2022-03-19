@@ -8,26 +8,26 @@
 
 #pragma once
 
-#include <JuceHeader.h>
+#include "Components/RT_MainWindow.h"
 #include "RT_ProcessorBase.h"
+#include <JuceHeader.h>
 
 //==============================================================================
 /**
-*/
-class RT_ProcessorEditor  : public juce::AudioProcessorEditor
-{
-public:
-    RT_ProcessorEditor (RT_ProcessorBase&);
-    ~RT_ProcessorEditor() override;
+ */
+class RT_ProcessorEditor : public juce::AudioProcessorEditor {
 
-    //==============================================================================
-    void paint (juce::Graphics&) override;
-    void resized() override;
+public:
+  RT_ProcessorEditor(RT_ProcessorInterface *inInterface);
+  ~RT_ProcessorEditor() override;
+
+  //==============================================================================
+  void paint(juce::Graphics &) override;
+  void resized() override;
 
 private:
-    // This reference is provided as a quick way for your editor to
-    // access the processor object that created it.
-    RT_ProcessorBase& audioProcessor;
+  RT_ProcessorInterface *mInterface;
+  RT_MainWindow          mMainWindow;
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (RT_ProcessorEditor)
+  JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(RT_ProcessorEditor)
 };

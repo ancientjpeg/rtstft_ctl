@@ -12,13 +12,14 @@
 
 #include "../Managers/Interface/RT_ProcessorInterface.h"
 #include "RT_Component.h"
-#include "Visual/RT_Bordered_Container.h"
 #include <JuceHeader.h>
 
 class RT_MainWindow : public RT_Component {
 
-  RT_ProcessorInterface *mInterface;
+  unsigned int mBorderSize;
 
 public:
-  RT_MainWindow();
+  RT_MainWindow(int inBorderSize);
+  void paint(juce::Graphics &g) override;
+  void resized() override;
 };

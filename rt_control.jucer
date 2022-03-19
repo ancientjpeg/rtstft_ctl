@@ -6,12 +6,10 @@
     <GROUP id="{D0832678-8E03-71CD-4B9B-35AD38C49970}" name="Source">
       <GROUP id="{5651A27F-4AA2-41B8-03CD-DD6F4A6CECF2}" name="Components">
         <GROUP id="{4380D52D-59C0-361D-C20F-348084A73D1A}" name="Interactive"/>
-        <GROUP id="{B623085D-177F-C2C5-65A8-A705C1D3143E}" name="Visual">
-          <FILE id="V3APJW" name="RT_Bordered_Container.cpp" compile="1" resource="0"
-                file="Source/Components/Visual/RT_Bordered_Container.cpp"/>
-          <FILE id="TSydD8" name="RT_Bordered_Container.h" compile="0" resource="0"
-                file="Source/Components/Visual/RT_Bordered_Container.h"/>
-        </GROUP>
+        <GROUP id="{B623085D-177F-C2C5-65A8-A705C1D3143E}" name="Visual"/>
+        <FILE id="FIJit6" name="RT_Component.cpp" compile="1" resource="0"
+              file="Source/Components/RT_Component.cpp"/>
+        <FILE id="x4Gx79" name="RT_Component.h" compile="0" resource="0" file="Source/Components/RT_Component.h"/>
         <FILE id="e2rtvq" name="RT_MainWindow.cpp" compile="1" resource="0"
               file="Source/Components/RT_MainWindow.cpp"/>
         <FILE id="tmyO7Y" name="RT_MainWindow.h" compile="0" resource="0" file="Source/Components/RT_MainWindow.h"/>

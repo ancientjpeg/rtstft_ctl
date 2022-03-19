@@ -14,7 +14,5 @@
 
 class RT_Component : public juce::Component {
 public:
-  RT_Component();
-  ~RT_Component();
   juce::LookAndFeel_V4 &RT_getLookAndFeel();
 };

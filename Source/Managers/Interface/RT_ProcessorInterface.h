@@ -11,14 +11,14 @@
 #pragma once
 
 class RT_ProcessorBase;
-class RT_StyleManager;
 class RT_PropertyManager;
 class RT_ParameterManager;
+class RT_LookAndFeelManager;
 
 class RT_ProcessorInterface {
 
 public:
   virtual ~RT_ProcessorInterface() {}
-  virtual RT_ProcessorBase *getProcessor()    = 0;
-  virtual RT_StyleManager  *getStyleManager() = 0;
+  virtual RT_ProcessorBase      *getProcessor()          = 0;
+  virtual RT_LookAndFeelManager *getLookAndFeelManager() = 0;
 };

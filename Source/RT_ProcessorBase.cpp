@@ -29,8 +29,11 @@ RT_ProcessorBase::RT_ProcessorBase()
 
 RT_ProcessorBase::~RT_ProcessorBase() {}
 //==============================================================================
-RT_ProcessorBase *RT_ProcessorBase::getProcessor() { return this; }
-RT_StyleManager  *RT_ProcessorBase::getStyleManager() {}
+RT_ProcessorBase      *RT_ProcessorBase::getProcessor() { return this; }
+RT_LookAndFeelManager *RT_ProcessorBase::getLookAndFeelManager()
+{
+  return &mLookAndFeelManager;
+}
 
 //==============================================================================
 const juce::String RT_ProcessorBase::getName() const { return JucePlugin_Name; }
@@ -115,7 +118,7 @@ bool RT_ProcessorBase::hasEditor() const
 
 juce::AudioProcessorEditor *RT_ProcessorBase::createEditor()
 {
-  return new RT_ProcessorEditor(*this);
+  return new RT_ProcessorEditor(this);
 }
 
 //==============================================================================

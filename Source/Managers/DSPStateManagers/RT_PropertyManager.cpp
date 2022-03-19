@@ -9,3 +9,6 @@
 */
 
 #include "RT_PropertyManager.h"
+
+RT_PropertyManager::RT_PropertyManager() {}
+RT_PropertyManager::~RT_PropertyManager() {}

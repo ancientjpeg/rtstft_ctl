@@ -13,4 +13,7 @@
 #include "../Interface/RT_ProcessorInterface.h"
 
 class RT_ParameterManager {
+public:
+  RT_ParameterManager();
+  ~RT_ParameterManager();
 };

@@ -11,23 +11,25 @@
 #pragma once
 #include "Managers/DSPStateManagers/RT_ParameterManager.h"
 #include "Managers/DSPStateManagers/RT_PropertyManager.h"
-#include "Managers/GUIManagers/RT_StyleManager.h"
+#include "Managers/GUIManagers/RT_LookAndFeelManager.h"
 #include "Managers/Interface/RT_ProcessorInterface.h"
 #include <JuceHeader.h>
 #include <JucePluginDefines.h>
 
-class RT_ProcessorBase : public juce::AudioProcessor,
-                         public RT_ProcessorInterface {
+class RT_ProcessorBase : public RT_ProcessorInterface,
+                         public juce::AudioProcessor {
 
-  RT_StyleManager mStyleManager;
+  RT_LookAndFeelManager mLookAndFeelManager;
+  RT_ParameterManager   mParameterManager;
+  RT_PropertyManager    mPropertyManager;
 
 public:
   RT_ProcessorBase();
   virtual ~RT_ProcessorBase();
 
   //==============================================================================
-  RT_ProcessorBase *getProcessor() override;
-  RT_StyleManager  *getStyleManager() override;
+  RT_ProcessorBase      *getProcessor() override;
+  RT_LookAndFeelManager *getLookAndFeelManager() override;
 
   //==============================================================================
   juce::AudioProcessorEditor *createEditor() override;

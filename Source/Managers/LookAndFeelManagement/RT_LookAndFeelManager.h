@@ -12,12 +12,13 @@
 
 #include <JuceHeader.h>
 
-class RT_StyleManager {
+class RT_LookAndFeelManager {
   std::vector<std::unique_ptr<juce::LookAndFeel_V4::ColourScheme>> mSkins;
   juce::LookAndFeel_V4::ColourScheme                              *mCurrentSkin;
   std::unique_ptr<juce::LookAndFeel_V4>                            mLookAndFeel;
 
 public:
-  RT_StyleManager();
+  RT_LookAndFeelManager();
   juce::LookAndFeel_V4::ColourScheme *getCurrentSkin();
+  juce::LookAndFeel_V4               *getCurrentLookAndFeel();
 };

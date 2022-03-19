@@ -9,3 +9,6 @@
 */
 
 #include "RT_ParameterManager.h"
+
+RT_ParameterManager::RT_ParameterManager() {}
+RT_ParameterManager::~RT_ParameterManager() {}
