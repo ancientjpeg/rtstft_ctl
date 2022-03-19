@@ -12,7 +12,7 @@
 #include <JuceHeader.h>
 
 class RT_MainWindow : juce::Component {
-  
+
 public:
   RT_MainWindow();
 };

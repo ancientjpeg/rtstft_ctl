@@ -34,8 +34,6 @@
                 file="Source/Managers/GUIManagers/RT_StyleManager.h"/>
         </GROUP>
         <GROUP id="{79517193-B404-8987-2A85-B2C850DFC0ED}" name="Interface">
-          <FILE id="TfhVnD" name="RT_ProcessorInterface.cpp" compile="1" resource="0"
-                file="Source/Managers/Interface/RT_ProcessorInterface.cpp"/>
           <FILE id="pzWV8g" name="RT_ProcessorInterface.h" compile="0" resource="0"
                 file="Source/Managers/Interface/RT_ProcessorInterface.h"/>
         </GROUP>
