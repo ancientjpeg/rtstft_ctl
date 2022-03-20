@@ -30,8 +30,9 @@ void RT_Header::paint(juce::Graphics &g)
   */
   using enum juce::LookAndFeel_V4::ColourScheme::UIColour;
 
-  g.fillAll(RT_getLookAndFeel().getCurrentColourScheme().getUIColour(
-      windowBackground)); // clear the background
+  g.fillAll(((juce::LookAndFeel_V4)getLookAndFeel())
+                .getCurrentColourScheme()
+                .getUIColour(windowBackground)); // clear the background
 
   g.setColour(juce::Colours::red);
   g.drawRect(getLocalBounds(), 1); // draw an outline around the component

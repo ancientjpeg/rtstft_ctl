@@ -13,7 +13,7 @@
 RT_LookAndFeel::Manager::Manager()
 {
   mLookAndFeelCollection[PLUGIN_DEFAULT]
-      = std::make_unique<juce::LookAndFeel_V4>(DefaultColourScheme);
+      = std::unique_ptr<juce::LookAndFeel_V4>(new Default);
 }
 
 juce::LookAndFeel_V4 *

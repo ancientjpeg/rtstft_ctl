@@ -10,13 +10,12 @@
 
 #pragma once
 
-#include "RT_Component.h"
 #include <JuceHeader.h>
 
 //==============================================================================
 /*
  */
-class RT_Header : public RT_Component {
+class RT_Header : public juce::Component {
 public:
   RT_Header();
   ~RT_Header() override;

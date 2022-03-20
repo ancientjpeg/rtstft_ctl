@@ -11,13 +11,12 @@
 #pragma once
 
 #include "../../Managers/Interface/RT_ProcessorInterface.h"
-#include "../RT_Component.h"
 #include <JuceHeader.h>
 
 //==============================================================================
 /*
  */
-class RT_CommandLineContainer : public RT_Component {
+class RT_CommandLineContainer : public juce::Component {
 public:
   RT_CommandLineContainer(RT_ProcessorInterface *mInterface);
   ~RT_CommandLineContainer() override;

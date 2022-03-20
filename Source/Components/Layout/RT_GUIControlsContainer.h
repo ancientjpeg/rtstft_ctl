@@ -12,12 +12,11 @@
 
 #include "../../Managers/DSPStateManagers/RT_ParameterDefines.h"
 #include "../../Managers/Interface/RT_ProcessorInterface.h"
-#include "../RT_Component.h"
 #include <JuceHeader.h>
 
 //==============================================================================
 
-class RT_GUIControlsContainer : public RT_Component {
+class RT_GUIControlsContainer : public juce::Component {
 public:
   RT_GUIControlsContainer(RT_ProcessorInterface *inInterface);
   ~RT_GUIControlsContainer() override;

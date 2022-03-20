@@ -14,10 +14,9 @@
 #include "Layout/RT_CommandLineContainer.h"
 #include "Layout/RT_FFTDisplayContainer.h"
 #include "Layout/RT_GUIControlsContainer.h"
-#include "RT_Component.h"
 #include <JuceHeader.h>
 
-class RT_MainWindow : public RT_Component {
+class RT_MainWindow : public juce::Component {
 
   RT_ProcessorInterface  *mInterface;
   RT_GUIControlsContainer mGUIControlsContainer;

@@ -11,13 +11,12 @@
 #pragma once
 
 #include "../../Managers/Interface/RT_ProcessorInterface.h"
-#include "../RT_Component.h"
 #include <JuceHeader.h>
 
 //==============================================================================
 /*
  */
-class RT_FFTDisplayContainer : public RT_Component {
+class RT_FFTDisplayContainer : public juce::Component {
 public:
   RT_FFTDisplayContainer(RT_ProcessorInterface *inInterface);
   ~RT_FFTDisplayContainer() override;

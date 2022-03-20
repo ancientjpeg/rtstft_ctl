@@ -1,8 +1,8 @@
 /*
   ==============================================================================
 
-    RT_Component.h
-    Created: 18 Mar 2022 6:20:20pm
+    RT_Slider.h
+    Created: 19 Mar 2022 7:40:01pm
     Author:  Jackson Kaplan
 
   ==============================================================================
@@ -12,7 +12,11 @@
 
 #include <JuceHeader.h>
 
-class RT_Component : public juce::Component {
+namespace RT_Sliders {
+class RotarySlider : public juce::Slider {
 public:
-  juce::LookAndFeel_V4 &RT_getLookAndFeel();
+  RotarySlider()  = default;
+  ~RotarySlider() = default;
+  void paint(juce::Graphics &g) override;
 };
+} // namespace RT_Sliders

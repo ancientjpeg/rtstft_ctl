@@ -15,12 +15,17 @@
 
 namespace RT_LookAndFeel {
 
-enum ComponentType { PLUGIN_DEFAULT, SLIDER, BUTTON, NUM_COMPONENT_TYPES };
+enum ComponentType { PLUGIN_DEFAULT, NUM_COMPONENT_TYPES };
 static const juce::StringArray ComponentNames = {"Default", "Slider", "Button"};
 static const int               mainBorderSize = 10;
 static const int               widgetBorderSize  = 4;
 static const float             headerHeightRatio = 0.1f;
 static const float             cmdHeightRatio    = 0.1f;
+
+static const juce::LookAndFeel_V4::ColourScheme DefaultColourScheme(
+    juce::Colours::white, juce::Colours::white, juce::Colours::white,
+    juce::Colours::black, juce::Colours::black, juce::Colours::black,
+    juce::Colours::blue, juce::Colours::blue, juce::Colours::black);
 
 class Manager {
   std::vector<std::unique_ptr<juce::LookAndFeel_V4::ColourScheme>> mSkins;
@@ -32,10 +37,15 @@ public:
   juce::LookAndFeel_V4 *getSingleLookAndFeel(ComponentType inComponentTypeID);
 };
 
-static const juce::LookAndFeel_V4::ColourScheme DefaultColourScheme(
-    juce::Colours::white, juce::Colours::white, juce::Colours::white,
-    juce::Colours::black, juce::Colours::black, juce::Colours::black,
-    juce::Colours::blue, juce::Colours::blue, juce::Colours::black);
+class Default : public juce::LookAndFeel_V4 {
+public:
+  Default(juce::LookAndFeel_V4::ColourScheme inColourScheme
+          = DefaultColourScheme);
+  ~Default() = default;
+  void drawRotarySlider(juce::Graphics &g, int x, int y, int width, int height,
+                        float sliderPosProportional, float rotaryStartAngle,
+                        float rotaryEndAngle, juce::Slider &s) override;
+};
 
 } // namespace RT_LookAndFeel
 
