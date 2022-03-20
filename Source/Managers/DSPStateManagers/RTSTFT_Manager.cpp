@@ -38,28 +38,26 @@ void RTSTFT_Manager::prepareToPlay(double inSampleRate, int inSamplesPerBlock)
     if (initialized) {
       initialized = false;
       rt_clean(p);
+      p = NULL;
     }
     mNumChannels        = numChannels;
     int samplesPerBlock = RT_Utilities::getNearestPowerOfTwo(inSamplesPerBlock);
-    mCurrentSamplesPerBlock = mCurrentSamplesPerBlock < samplesPerBlock ? samplesPerBlock : mCurrentSamplesPerBlock;
-    p = rt_init(mNumChannels, 2048, mCurrentSamplesPerBlock, 4, 0, mCurrentSampleRate);
+    mCurrentSamplesPerBlock = mCurrentSamplesPerBlock < samplesPerBlock
+                                  ? samplesPerBlock
+                                  : mCurrentSamplesPerBlock;
+    p           = rt_init(mNumChannels, 512, mCurrentSamplesPerBlock, 8, 0,
+                          mCurrentSampleRate);
     initialized = true;
   }
 }
 void RTSTFT_Manager::processBlock(juce::AudioBuffer<float> &buffer)
 {
   for (int i = 0; i < buffer.getNumChannels(); i++) {
-    auto buf = buffer.getWritePointer(i);
-    rt_cycle_chan(p, i, buf, buffer.getNumSamples());
+    rt_cycle_chan(p, i, buffer.getWritePointer(i), buffer.getNumSamples());
   }
 }
 
-void RTSTFT_Manager::releaseResources() {
-  
-//  rt_flush(p);
-  
-  
-}
+void RTSTFT_Manager::releaseResources() { rt_flush(p); }
 
 void RTSTFT_Manager::parameterChanged(const juce::String &parameterID,
                                       float               newValue)
