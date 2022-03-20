@@ -16,9 +16,7 @@
 RT_GUIControlsContainer::RT_GUIControlsContainer(
     RT_ProcessorInterface *inInterface)
     : mInterface(inInterface)
-{
-  // In your constructor, you should add any child components, and
-  // initialise any special settings that your component needs.
+{ 
   mPitchScaleKnob.setRange(0.5f, 2.f, 0);
   mPitchScaleKnob.setSkewFactorFromMidPoint(1.f);
   mPitchScaleKnob.setValue(1.0f);
