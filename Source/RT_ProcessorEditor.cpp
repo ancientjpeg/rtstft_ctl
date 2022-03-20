@@ -32,8 +32,8 @@ RT_ProcessorEditor::~RT_ProcessorEditor() {}
 void RT_ProcessorEditor::paint(juce::Graphics &g)
 {
   juce::LookAndFeel_V4::ColourScheme &colScheme
-      = (static_cast<juce::LookAndFeel_V4 &>(getLookAndFeel()))
-            .getCurrentColourScheme();
+      = ((static_cast<juce::LookAndFeel_V4 &>(getLookAndFeel()))
+            .getCurrentColourScheme());
   g.fillAll(colScheme.getUIColour(defaultFill));
 }
 

@@ -23,7 +23,7 @@ RTSTFT_Manager::~RTSTFT_Manager()
     rt_clean(p);
   }
 }
-rt_params RTSTFT_Manager::getParamsStruct() {}
+rt_params RTSTFT_Manager::getParamsStruct() { return p; }
 void RTSTFT_Manager::prepareToPlay(double inSampleRate, int inSamplesPerBlock)
 {
   if (mCurrentSampleRate != inSampleRate) {
@@ -32,18 +32,27 @@ void RTSTFT_Manager::prepareToPlay(double inSampleRate, int inSamplesPerBlock)
       rt_set_sample_rate(p, mCurrentSampleRate);
     }
   }
-  if (!initialized || inSamplesPerBlock > mCurrentSamplesPerBlock) {
+  int numChannels = mInterface->getProcessor()->getChannelCountOfBus(true, 0);
+  if (!initialized || inSamplesPerBlock > mCurrentSamplesPerBlock
+      || mNumChannels != numChannels) {
     if (initialized) {
       initialized = false;
       rt_clean(p);
     }
+    mNumChannels        = numChannels;
     int samplesPerBlock = RT_Utilities::getNearestPowerOfTwo(inSamplesPerBlock);
-    int numChannels = mInterface->getProcessor()->getChannelCountOfBus(true, 0);
-    p = rt_init(numChannels, 512, samplesPerBlock, 4, 0, mCurrentSampleRate);
+    p = rt_init(mNumChannels, 2048, samplesPerBlock, 4, 0, mCurrentSampleRate);
     initialized = true;
   }
 }
-void RTSTFT_Manager::processBlock(juce::AudioBuffer<float> &buffer) {}
+void RTSTFT_Manager::processBlock(juce::AudioBuffer<float> &buffer)
+{
+  rt_cycle(p, buffer.getArrayOfWritePointers(), buffer.getNumSamples());
+//  for (int i = 0; i < buffer.getNumChannels(); i++) {
+//    auto buf = buffer.getWritePointer(i);
+//    rt_cycle_chan(p, i, buf, buffer.getNumSamples());
+//  }
+}
 
 void RTSTFT_Manager::releaseResources() { rt_flush(p); }
 

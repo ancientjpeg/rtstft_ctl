@@ -12,6 +12,7 @@
 
 #include "../../Managers/DSPStateManagers/RT_ParameterDefines.h"
 #include "../../Managers/Interface/RT_ProcessorInterface.h"
+#include "../Interactive/RT_Sliders.h"
 #include <JuceHeader.h>
 
 //==============================================================================
@@ -25,5 +26,7 @@ public:
   void resized() override;
 
 private:
+  RT_ProcessorInterface *mInterface;
+  RT_Sliders::RotaryKnob mPitchScaleKnob;
   JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(RT_GUIControlsContainer)
 };

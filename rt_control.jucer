@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<JUCERPROJECT id="Ez8Xaa" name="rt-spectrum-ctl" projectType="audioplug" useAppConfig="0"
+<JUCERPROJECT id="Ez8Xaa" name="rtstft_ctl" projectType="audioplug" useAppConfig="0"
               addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1"
-              cppLanguageStandard="20" companyName="sound-ctl" pluginChannelConfigs="{1,1}, {2,2}">
-  <MAINGROUP id="top3X7" name="rt-spectrum-ctl">
+              cppLanguageStandard="20" companyName="sound_ctl">
+  <MAINGROUP id="top3X7" name="rtstft_ctl">
     <GROUP id="{37D090C2-12C5-2595-B0B4-1EA2DE6D0F6A}" name="RTSTFT_src">
       <GROUP id="{0D5BA3CA-CE98-0188-F4BC-CA2F739C8C3C}" name="pffft">
         <FILE id="tzzhxP" name="fftpack.c" compile="0" resource="0" file="RTSTFT/src/pffft/fftpack.c"/>
@@ -60,15 +60,11 @@
                 file="Source/Components/Layout/RT_GUIControlsContainer.h"/>
         </GROUP>
         <GROUP id="{07A2DC33-AEA2-1F87-D5B1-31130BD8B1C4}" name="Interactive">
-          <FILE id="BMaYER" name="RT_RotarySlider.cpp" compile="1" resource="0"
-                file="Source/Components/Interactive/RT_RotarySlider.cpp"/>
+          <FILE id="BMaYER" name="RT_Sliders.cpp" compile="1" resource="0" file="Source/Components/Interactive/RT_Sliders.cpp"/>
           <FILE id="f9YAr0" name="RT_Sliders.h" compile="0" resource="0" file="Source/Components/Interactive/RT_Sliders.h"/>
         </GROUP>
         <FILE id="aK4vpe" name="RT_Header.cpp" compile="1" resource="0" file="Source/Components/RT_Header.cpp"/>
         <FILE id="bMG7Yy" name="RT_Header.h" compile="0" resource="0" file="Source/Components/RT_Header.h"/>
-        <FILE id="yygWdn" name="RT_Component.cpp" compile="1" resource="0"
-              file="Source/Components/RT_Component.cpp"/>
-        <FILE id="WPqCvJ" name="RT_Component.h" compile="0" resource="0" file="Source/Components/RT_Component.h"/>
         <FILE id="I7i8pN" name="RT_MainWindow.cpp" compile="1" resource="0"
               file="Source/Components/RT_MainWindow.cpp"/>
         <FILE id="r4zcpg" name="RT_MainWindow.h" compile="0" resource="0" file="Source/Components/RT_MainWindow.h"/>
@@ -131,8 +127,8 @@
   <EXPORTFORMATS>
     <XCODE_MAC targetFolder="Builds/MacOSX">
       <CONFIGURATIONS>
-        <CONFIGURATION isDebug="1" name="Debug" targetName="rt_control"/>
-        <CONFIGURATION isDebug="0" name="Release" targetName="rt_control"/>
+        <CONFIGURATION isDebug="1" name="Debug" targetName="rtstft_ctl"/>
+        <CONFIGURATION isDebug="0" name="Release" targetName="rtstft_ctl"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
         <MODULEPATH id="juce_audio_basics" path="../../JUCE/modules"/>

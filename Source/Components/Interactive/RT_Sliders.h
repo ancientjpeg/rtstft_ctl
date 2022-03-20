@@ -13,10 +13,13 @@
 #include <JuceHeader.h>
 
 namespace RT_Sliders {
-class RotarySlider : public juce::Slider {
+class RotaryKnob : public juce::Slider {
+  float mStartAngle = juce::MathConstants<float>::pi;
+  float mEndAngle   = juce::MathConstants<float>::pi;
+
 public:
-  RotarySlider()  = default;
-  ~RotarySlider() = default;
+  RotaryKnob();
+  ~RotaryKnob() = default;
   void paint(juce::Graphics &g) override;
 };
 } // namespace RT_Sliders

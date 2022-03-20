@@ -31,7 +31,7 @@ void RT_CommandLineContainer::paint(juce::Graphics &g)
   */
   using enum juce::LookAndFeel_V4::ColourScheme::UIColour;
 
-  g.fillAll(((juce::LookAndFeel_V4)getLookAndFeel())
+  g.fillAll((static_cast<juce::LookAndFeel_V4 &>(getLookAndFeel()))
                 .getCurrentColourScheme()
                 .getUIColour(windowBackground)); // clear the background
 

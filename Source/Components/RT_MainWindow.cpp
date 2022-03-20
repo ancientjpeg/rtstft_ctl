@@ -24,7 +24,7 @@ RT_MainWindow::RT_MainWindow(RT_ProcessorInterface *inInterface)
 
 void RT_MainWindow::paint(juce::Graphics &g)
 {
-  g.fillAll(((juce::LookAndFeel_V4)getLookAndFeel())
+  g.fillAll((static_cast<juce::LookAndFeel_V4 &>(getLookAndFeel()))
                 .getCurrentColourScheme()
                 .getUIColour(windowBackground));
 }

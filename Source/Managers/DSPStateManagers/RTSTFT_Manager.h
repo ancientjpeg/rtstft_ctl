@@ -18,7 +18,8 @@ class RTSTFT_Manager : juce::AudioProcessorValueTreeState::Listener {
   const int              mDefaultMaxSamplesPerBlock = 4096;
   int                    mCurrentSamplesPerBlock;
   float                  mCurrentSampleRate = -1;
-  bool                   initialized        = false;
+  int                    mNumChannels;
+  bool                   initialized = false;
 
 public:
   RTSTFT_Manager(RT_ProcessorInterface *inInterface);
