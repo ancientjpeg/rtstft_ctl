@@ -11,8 +11,11 @@
 #pragma once
 
 #include "../Interface/RT_ProcessorInterface.h"
+#include "RT_ParameterDefines.h"
 
 class RT_ParameterManager {
+  std::unique_ptr<juce::AudioProcessorValueTreeState> mValueTreeState;
+
 public:
   RT_ParameterManager(RT_ProcessorInterface *mInterface);
   ~RT_ParameterManager();

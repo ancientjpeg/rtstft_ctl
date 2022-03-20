@@ -71,6 +71,8 @@
       </GROUP>
       <GROUP id="{602BF2D6-0F2A-483C-4C33-2E542D4E725C}" name="Managers">
         <GROUP id="{22D84CC3-6F1E-593C-5A8E-30E353817475}" name="DSPStateManagers">
+          <FILE id="PEZx0l" name="RT_ParameterDefines.h" compile="0" resource="0"
+                file="Source/Managers/DSPStateManagers/RT_ParameterDefines.h"/>
           <FILE id="xn4MCr" name="RT_ParameterManager.cpp" compile="1" resource="0"
                 file="Source/Managers/DSPStateManagers/RT_ParameterManager.cpp"/>
           <FILE id="TRBpat" name="RT_ParameterManager.h" compile="0" resource="0"
@@ -102,8 +104,6 @@
         </GROUP>
       </GROUP>
       <GROUP id="{5A4EBC78-0DD3-53D4-E95C-D71D1FE29F42}" name="Utilities">
-        <FILE id="YT7UMT" name="RT_MathUtilities.cpp" compile="1" resource="0"
-              file="Source/Utilities/RT_MathUtilities.cpp"/>
         <FILE id="CCT3cw" name="RT_MathUtilities.h" compile="0" resource="0"
               file="Source/Utilities/RT_MathUtilities.h"/>
       </GROUP>

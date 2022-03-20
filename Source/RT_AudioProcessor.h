@@ -8,29 +8,25 @@
 
 #pragma once
 
-#include <JuceHeader.h>
 #include "RT_ProcessorBase.h"
-
+#include <JuceHeader.h>
 
 //==============================================================================
 /**
-*/
-class RT_AudioProcessor  : public RT_ProcessorBase
-{
+ */
+class RT_AudioProcessor : public RT_ProcessorBase {
 public:
-    //==============================================================================
-    RT_AudioProcessor();
-    ~RT_AudioProcessor() override;
+  //==============================================================================
+  RT_AudioProcessor();
+  ~RT_AudioProcessor() override;
 
-    //==============================================================================
-    void prepareToPlay (double sampleRate, int samplesPerBlock) override;
-    void releaseResources() override;
-  
-    void processBlock (juce::AudioBuffer<float>&, juce::MidiBuffer&) override;
+  //==============================================================================
+  void prepareToPlay(double sampleRate, int samplesPerBlock) override;
+  void releaseResources() override;
 
-    
+  void processBlock(juce::AudioBuffer<float> &, juce::MidiBuffer &) override;
 
 private:
-    //==============================================================================
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (RT_AudioProcessor)
+  //==============================================================================
+  JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(RT_AudioProcessor)
 };

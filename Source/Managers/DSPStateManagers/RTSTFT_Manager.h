@@ -12,7 +12,7 @@
 #include "../../../RTSTFT/src/rtstft.h"
 #include "../Interface/RT_ProcessorInterface.h"
 #include <JuceHeader.h>
-class RTSTFT_Manager {
+class RTSTFT_Manager : juce::AudioProcessorValueTreeState::Listener {
   RT_ProcessorInterface *mInterface;
   rt_params              p;
   const int              mDefaultMaxSamplesPerBlock = 4096;
@@ -26,4 +26,6 @@ public:
   rt_params getParamsStruct();
   void      prepareToPlay(double inSampleRate, int inSamplesPerBlock);
   void      processBlock(juce::AudioBuffer<float> &buffer);
+  void      parameterChanged(const juce::String &parameterID,
+                             float               newValue) override;
 };

@@ -23,8 +23,7 @@ RT_AudioProcessor::~RT_AudioProcessor() {}
 //==============================================================================
 void RT_AudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
 {
-  // Use this method as the place to do any pre-playback
-  // initialisation that you need..
+  getRTSTFTManager()->prepareToPlay(sampleRate, samplesPerBlock);
 }
 
 void RT_AudioProcessor::releaseResources()

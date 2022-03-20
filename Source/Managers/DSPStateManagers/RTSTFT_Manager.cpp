@@ -10,6 +10,8 @@
 
 #include "RTSTFT_Manager.h"
 #include "../../RT_AudioProcessor.h"
+#include "../../Utilities/RT_MathUtilities.h"
+#include "RT_ParameterManager.h"
 
 RTSTFT_Manager::RTSTFT_Manager(RT_ProcessorInterface *mInterface) : p(NULL) {}
 RTSTFT_Manager::~RTSTFT_Manager()
@@ -23,24 +25,22 @@ void RTSTFT_Manager::prepareToPlay(double inSampleRate, int inSamplesPerBlock)
 {
   if (!initialized || inSamplesPerBlock > mCurrentSamplesPerBlock
       || inSampleRate != mCurrentSampleRate) {
-    int samplesPerBlock = inSamplesPerBlock;
-    int powerOfTwoCheck = (samplesPerBlock & (samplesPerBlock - 1));
-    if (powerOfTwoCheck != 0) {
-      int  nextHighestPower = sizeof(samplesPerBlock) - 1;
-      bool found;
-      while (!found && nextHighestPower-- > 1) {
-        if (samplesPerBlock & (1 << nextHighestPower) == 1) {
-          nextHighestPower++;
-          break;
-        }
-      }
-      samplesPerBlock = 1 << nextHighestPower;
+    if (p != NULL) {
+      rt_clean(p);
     }
-    mCurrentSamplesPerBlock = samplesPerBlock;
-    mCurrentSampleRate      = inSampleRate;
-
+    int samplesPerBlock = RT_Utilities::getNearestPowerOfTwo(inSamplesPerBlock);
     int numChannels = mInterface->getProcessor()->getChannelCountOfBus(true, 0);
     p = rt_init(numChannels, 512, samplesPerBlock, 4, 0, mCurrentSampleRate);
+    initialized = true;
   }
 }
 void RTSTFT_Manager::processBlock(juce::AudioBuffer<float> &buffer) {}
+
+void RTSTFT_Manager::parameterChanged(const juce::String &parameterID,
+                                      float               newValue)
+{
+  int paramFlavor = RT_ParameterIDs.indexOf(parameterID);
+  if (paramFlavor < 0) {
+    // error handling here...
+  }
+}
