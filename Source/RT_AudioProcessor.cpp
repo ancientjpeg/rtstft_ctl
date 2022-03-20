@@ -28,8 +28,7 @@ void RT_AudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
 
 void RT_AudioProcessor::releaseResources()
 {
-  // When playback stops, you can use this as an opportunity to free up any
-  // spare memory, etc.
+  getRTSTFTManager()->releaseResources();
 }
 
 void RT_AudioProcessor::processBlock(juce::AudioBuffer<float> &buffer,

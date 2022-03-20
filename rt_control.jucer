@@ -2,48 +2,48 @@
 
 <JUCERPROJECT id="Ez8Xaa" name="rt-spectrum-ctl" projectType="audioplug" useAppConfig="0"
               addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1"
-              cppLanguageStandard="20" companyName="sound-ctl">
+              cppLanguageStandard="20" companyName="sound-ctl" pluginChannelConfigs="{1,1}, {2,2}">
   <MAINGROUP id="top3X7" name="rt-spectrum-ctl">
-    <GROUP id="{37D090C2-12C5-2595-B0B4-1EA2DE6D0F6A}" name="RTSTFT_src">
-      <GROUP id="{0D5BA3CA-CE98-0188-F4BC-CA2F739C8C3C}" name="pffft">
-        <FILE id="tzzhxP" name="fftpack.c" compile="1" resource="0" file="RTSTFT/src/pffft/fftpack.c"/>
-        <FILE id="l2VtN7" name="fftpack.h" compile="0" resource="0" file="RTSTFT/src/pffft/fftpack.h"/>
-        <FILE id="UGWN9w" name="pffft.c" compile="1" resource="0" file="RTSTFT/src/pffft/pffft.c"/>
-        <FILE id="I5EXbl" name="pffft.h" compile="0" resource="0" file="RTSTFT/src/pffft/pffft.h"/>
-        <FILE id="w8LZ2E" name="README.md" compile="0" resource="1" file="RTSTFT/src/pffft/README.md"/>
-        <FILE id="gvq0mS" name="test_pffft.c" compile="1" resource="0" file="RTSTFT/src/pffft/test_pffft.c"/>
-      </GROUP>
-      <GROUP id="{3658EB62-4BA6-8BBF-A087-C6FE550B8AB9}" name="rt_parser">
-        <FILE id="DEMh32" name="rt_parser.c" compile="1" resource="0" file="RTSTFT/src/rt_parser/rt_parser.c"/>
-        <FILE id="nHHwTa" name="rt_parser.h" compile="0" resource="0" file="RTSTFT/src/rt_parser/rt_parser.h"/>
-        <FILE id="GVC4Ly" name="rt_parser_cmd_table.c" compile="1" resource="0"
-              file="RTSTFT/src/rt_parser/rt_parser_cmd_table.c"/>
-        <FILE id="F1lNEe" name="rt_parser_exec.c" compile="1" resource="0"
-              file="RTSTFT/src/rt_parser/rt_parser_exec.c"/>
-        <FILE id="L9UpL8" name="rt_parser_lex.c" compile="1" resource="0" file="RTSTFT/src/rt_parser/rt_parser_lex.c"/>
-        <FILE id="xO7aa5" name="rt_parser_parse.c" compile="1" resource="0"
-              file="RTSTFT/src/rt_parser/rt_parser_parse.c"/>
-      </GROUP>
-      <FILE id="Ri31Ug" name="rt_API.c" compile="1" resource="0" file="RTSTFT/src/rt_API.c"/>
-      <FILE id="NJRUH3" name="rt_chan.c" compile="1" resource="0" file="RTSTFT/src/rt_chan.c"/>
-      <FILE id="rcc0PU" name="rt_core.c" compile="1" resource="0" file="RTSTFT/src/rt_core.c"/>
-      <FILE id="KFd09a" name="rt_fifo.c" compile="1" resource="0" file="RTSTFT/src/rt_fifo.c"/>
-      <FILE id="IZdOCE" name="rt_fifo.h" compile="0" resource="0" file="RTSTFT/src/rt_fifo.h"/>
-      <FILE id="iLGmIH" name="rt_framebuf.c" compile="1" resource="0" file="RTSTFT/src/rt_framebuf.c"/>
-      <FILE id="A4F1Vc" name="rt_framebuf.h" compile="0" resource="0" file="RTSTFT/src/rt_framebuf.h"/>
-      <FILE id="yk1NGc" name="rt_globals.h" compile="0" resource="0" file="RTSTFT/src/rt_globals.h"/>
-      <FILE id="hPpLdp" name="rt_holder.c" compile="1" resource="0" file="RTSTFT/src/rt_holder.c"/>
-      <FILE id="Q6p8Gs" name="rt_internal_API.h" compile="0" resource="0"
-            file="RTSTFT/src/rt_internal_API.h"/>
-      <FILE id="WVyz81" name="rt_manip.c" compile="1" resource="0" file="RTSTFT/src/rt_manip.c"/>
-      <FILE id="oAktNX" name="rt_math.c" compile="1" resource="0" file="RTSTFT/src/rt_math.c"/>
-      <FILE id="DfY97c" name="rt_structs.h" compile="0" resource="0" file="RTSTFT/src/rt_structs.h"/>
-      <FILE id="f1NQNm" name="rtstft.h" compile="0" resource="0" file="RTSTFT/src/rtstft.h"/>
-      <FILE id="ydByaJ" name="tests.c" compile="1" resource="0" file="RTSTFT/src/tests.c"/>
-      <FILE id="Nsx6hE" name="wavfile.c" compile="1" resource="0" file="RTSTFT/src/wavfile.c"/>
-      <FILE id="KTLPuT" name="wavfile.h" compile="0" resource="0" file="RTSTFT/src/wavfile.h"/>
-    </GROUP>
     <GROUP id="{5EC28A37-6422-C3D1-513E-C10C5E4E9791}" name="Source">
+      <GROUP id="{37D090C2-12C5-2595-B0B4-1EA2DE6D0F6A}" name="RTSTFT_src">
+        <GROUP id="{0D5BA3CA-CE98-0188-F4BC-CA2F739C8C3C}" name="pffft">
+          <FILE id="tzzhxP" name="fftpack.c" compile="0" resource="0" file="RTSTFT/src/pffft/fftpack.c"/>
+          <FILE id="l2VtN7" name="fftpack.h" compile="0" resource="0" file="RTSTFT/src/pffft/fftpack.h"/>
+          <FILE id="UGWN9w" name="pffft.c" compile="1" resource="0" file="RTSTFT/src/pffft/pffft.c"/>
+          <FILE id="I5EXbl" name="pffft.h" compile="0" resource="0" file="RTSTFT/src/pffft/pffft.h"/>
+          <FILE id="w8LZ2E" name="README.md" compile="0" resource="0" file="RTSTFT/src/pffft/README.md"/>
+          <FILE id="gvq0mS" name="test_pffft.c" compile="0" resource="0" file="RTSTFT/src/pffft/test_pffft.c"/>
+        </GROUP>
+        <GROUP id="{3658EB62-4BA6-8BBF-A087-C6FE550B8AB9}" name="rt_parser">
+          <FILE id="DEMh32" name="rt_parser.c" compile="1" resource="0" file="RTSTFT/src/rt_parser/rt_parser.c"/>
+          <FILE id="nHHwTa" name="rt_parser.h" compile="0" resource="0" file="RTSTFT/src/rt_parser/rt_parser.h"/>
+          <FILE id="GVC4Ly" name="rt_parser_cmd_table.c" compile="1" resource="0"
+                file="RTSTFT/src/rt_parser/rt_parser_cmd_table.c"/>
+          <FILE id="F1lNEe" name="rt_parser_exec.c" compile="1" resource="0"
+                file="RTSTFT/src/rt_parser/rt_parser_exec.c"/>
+          <FILE id="L9UpL8" name="rt_parser_lex.c" compile="1" resource="0" file="RTSTFT/src/rt_parser/rt_parser_lex.c"/>
+          <FILE id="xO7aa5" name="rt_parser_parse.c" compile="1" resource="0"
+                file="RTSTFT/src/rt_parser/rt_parser_parse.c"/>
+        </GROUP>
+        <FILE id="Ri31Ug" name="rt_API.c" compile="1" resource="0" file="RTSTFT/src/rt_API.c"/>
+        <FILE id="NJRUH3" name="rt_chan.c" compile="1" resource="0" file="RTSTFT/src/rt_chan.c"/>
+        <FILE id="rcc0PU" name="rt_core.c" compile="1" resource="0" file="RTSTFT/src/rt_core.c"/>
+        <FILE id="KFd09a" name="rt_fifo.c" compile="1" resource="0" file="RTSTFT/src/rt_fifo.c"/>
+        <FILE id="IZdOCE" name="rt_fifo.h" compile="0" resource="0" file="RTSTFT/src/rt_fifo.h"/>
+        <FILE id="iLGmIH" name="rt_framebuf.c" compile="1" resource="0" file="RTSTFT/src/rt_framebuf.c"/>
+        <FILE id="A4F1Vc" name="rt_framebuf.h" compile="0" resource="0" file="RTSTFT/src/rt_framebuf.h"/>
+        <FILE id="yk1NGc" name="rt_globals.h" compile="0" resource="0" file="RTSTFT/src/rt_globals.h"/>
+        <FILE id="hPpLdp" name="rt_holder.c" compile="1" resource="0" file="RTSTFT/src/rt_holder.c"/>
+        <FILE id="Q6p8Gs" name="rt_internal_API.h" compile="0" resource="0"
+              file="RTSTFT/src/rt_internal_API.h"/>
+        <FILE id="WVyz81" name="rt_manip.c" compile="1" resource="0" file="RTSTFT/src/rt_manip.c"/>
+        <FILE id="oAktNX" name="rt_math.c" compile="1" resource="0" file="RTSTFT/src/rt_math.c"/>
+        <FILE id="DfY97c" name="rt_structs.h" compile="0" resource="0" file="RTSTFT/src/rt_structs.h"/>
+        <FILE id="f1NQNm" name="rtstft.h" compile="0" resource="0" file="RTSTFT/src/rtstft.h"/>
+        <FILE id="ydByaJ" name="tests.c" compile="0" resource="0" file="RTSTFT/src/tests.c"/>
+        <FILE id="Nsx6hE" name="wavfile.c" compile="0" resource="0" file="RTSTFT/src/wavfile.c"/>
+        <FILE id="KTLPuT" name="wavfile.h" compile="0" resource="0" file="RTSTFT/src/wavfile.h"/>
+      </GROUP>
       <GROUP id="{E9A15101-0B05-499F-B395-DAA70255F666}" name="Components">
         <GROUP id="{7E1A4226-6906-1CFF-015A-9BE241E986A8}" name="Layout">
           <FILE id="CQiIuE" name="RT_CommandLineContainer.cpp" compile="1" resource="0"

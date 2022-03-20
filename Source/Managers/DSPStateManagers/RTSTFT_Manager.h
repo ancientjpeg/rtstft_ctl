@@ -17,15 +17,16 @@ class RTSTFT_Manager : juce::AudioProcessorValueTreeState::Listener {
   rt_params              p;
   const int              mDefaultMaxSamplesPerBlock = 4096;
   int                    mCurrentSamplesPerBlock;
-  float                  mCurrentSampleRate;
-  bool                   initialized = false;
+  float                  mCurrentSampleRate = -1;
+  bool                   initialized        = false;
 
 public:
-  RTSTFT_Manager(RT_ProcessorInterface *mInterface);
+  RTSTFT_Manager(RT_ProcessorInterface *inInterface);
   ~RTSTFT_Manager();
   rt_params getParamsStruct();
   void      prepareToPlay(double inSampleRate, int inSamplesPerBlock);
   void      processBlock(juce::AudioBuffer<float> &buffer);
+  void      releaseResources();
   void      parameterChanged(const juce::String &parameterID,
                              float               newValue) override;
 };

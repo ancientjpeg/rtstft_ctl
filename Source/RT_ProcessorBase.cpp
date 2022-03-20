@@ -23,6 +23,8 @@ RT_ProcessorBase::RT_ProcessorBase()
             .withOutput("Output", juce::AudioChannelSet::stereo(), true)
 #endif
             ),
+#else
+:
 #endif
       mRTSTFTManager(this), mParameterManager(this), mPropertyManager(this)
 {

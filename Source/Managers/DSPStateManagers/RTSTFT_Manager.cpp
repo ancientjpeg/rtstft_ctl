@@ -13,19 +13,28 @@
 #include "../../Utilities/RT_MathUtilities.h"
 #include "RT_ParameterManager.h"
 
-RTSTFT_Manager::RTSTFT_Manager(RT_ProcessorInterface *mInterface) : p(NULL) {}
+RTSTFT_Manager::RTSTFT_Manager(RT_ProcessorInterface *inInterface)
+    : mInterface(inInterface), p(NULL)
+{
+}
 RTSTFT_Manager::~RTSTFT_Manager()
 {
-  if (p != NULL) {
+  if (initialized) {
     rt_clean(p);
   }
 }
 rt_params RTSTFT_Manager::getParamsStruct() {}
 void RTSTFT_Manager::prepareToPlay(double inSampleRate, int inSamplesPerBlock)
 {
-  if (!initialized || inSamplesPerBlock > mCurrentSamplesPerBlock
-      || inSampleRate != mCurrentSampleRate) {
-    if (p != NULL) {
+  if (mCurrentSampleRate != inSampleRate) {
+    mCurrentSampleRate = inSampleRate;
+    if (initialized) {
+      rt_set_sample_rate(p, mCurrentSampleRate);
+    }
+  }
+  if (!initialized || inSamplesPerBlock > mCurrentSamplesPerBlock) {
+    if (initialized) {
+      initialized = false;
       rt_clean(p);
     }
     int samplesPerBlock = RT_Utilities::getNearestPowerOfTwo(inSamplesPerBlock);
@@ -35,6 +44,8 @@ void RTSTFT_Manager::prepareToPlay(double inSampleRate, int inSamplesPerBlock)
   }
 }
 void RTSTFT_Manager::processBlock(juce::AudioBuffer<float> &buffer) {}
+
+void RTSTFT_Manager::releaseResources() { rt_flush(p); }
 
 void RTSTFT_Manager::parameterChanged(const juce::String &parameterID,
                                       float               newValue)
