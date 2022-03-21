@@ -12,7 +12,7 @@
 #include "../../../RTSTFT/src/rtstft.h"
 #include "../Interface/RT_ProcessorInterface.h"
 #include <JuceHeader.h>
-class RTSTFT_Manager : juce::AudioProcessorValueTreeState::Listener {
+class RTSTFT_Manager : public juce::AudioProcessorValueTreeState::Listener {
   RT_ProcessorInterface *mInterface;
   rt_params              p;
   int                    mCurrentSamplesPerBlock;

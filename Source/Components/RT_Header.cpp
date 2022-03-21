@@ -33,14 +33,6 @@ void RT_Header::paint(juce::Graphics &g)
   g.fillAll((static_cast<juce::LookAndFeel_V4 &>(getLookAndFeel()))
                 .getCurrentColourScheme()
                 .getUIColour(windowBackground)); // clear the background
-
-  g.setColour(juce::Colours::red);
-  g.drawRect(getLocalBounds(), 1); // draw an outline around the component
-
-  g.setColour(juce::Colours::white);
-  g.setFont(14.0f);
-  g.drawText("RT_Header", getLocalBounds(), juce::Justification::centred,
-             true); // draw some placeholder text
 }
 
 void RT_Header::resized()

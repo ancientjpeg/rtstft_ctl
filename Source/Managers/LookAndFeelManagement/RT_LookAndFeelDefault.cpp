@@ -24,13 +24,26 @@ void RT_LookAndFeel::Default::drawRotarySlider(juce::Graphics &g, int x, int y,
                                                juce::Slider &s)
 {
   using enum juce::LookAndFeel_V4::ColourScheme::UIColour;
-  auto bounds     = s.getLocalBounds();
-  int  knobDim    = std::min(bounds.getHeight(), bounds.getWidth()) / 2;
-  auto dialBounds = bounds.withSizeKeepingCentre(knobDim, knobDim);
-  g.drawEllipse(dialBounds.toFloat(), 2.f);
-  const auto parameters = s.getRotaryParameters();
-  auto radians = juce::jmap<float>(s.valueToProportionOfLength(s.getValue()),
-                                   parameters.startAngleRadians,
-                                   parameters.endAngleRadians);
-  // this is likely not quite right and very unfinished
+  float currentKnobAngle
+      = rotaryStartAngle
+        + sliderPosProportional * (rotaryEndAngle - rotaryStartAngle);
+
+  auto       bounds    = s.getLocalBounds();
+  auto       center    = bounds.getCentre();
+  int        knobDim   = std::min(bounds.getHeight(), bounds.getWidth()) / 2;
+  int        radius    = knobDim / 2.2;
+  int        radiusInv = (bounds.getHeight() - 2 * radius) / 2;
+  juce::Path knobPath;
+  float      knobSpread = .8;
+  knobPath.addCentredArc(center.getX(), center.getY(), radius, radius, 0,
+                         -knobSpread, knobSpread, true);
+
+  knobPath.startNewSubPath(center.getX(), radiusInv);
+  knobPath.lineTo(center.getX(), radiusInv * 1.5);
+  knobPath.closeSubPath();
+  g.strokePath(
+      knobPath, juce::PathStrokeType(2.f),
+      juce::AffineTransform::rotation(currentKnobAngle, center.x, center.y));
 }
+
+juce::Label *RT_LookAndFeel::Default::createSliderTextBox(juce::Slider &s) {}

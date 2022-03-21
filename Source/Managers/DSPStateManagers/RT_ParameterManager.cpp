@@ -9,6 +9,7 @@
 */
 
 #include "RT_ParameterManager.h"
+#include "RTSTFT_Manager.h"
 
 RT_ParameterManager::RT_ParameterManager(RT_ProcessorInterface *inInterface)
     : mInterface(inInterface)
@@ -23,6 +24,9 @@ RT_ParameterManager::RT_ParameterManager(RT_ProcessorInterface *inInterface)
   mValueTreeState.reset(new juce::AudioProcessorValueTreeState(
       *mInterface->getProcessor(), nullptr, "PARAMETER_TREE",
       {parameters.begin(), parameters.end()}));
+
+  RTSTFT_Manager *rtstft_obj = mInterface->getRTSTFTManager();
+  mValueTreeState->addParameterListener(RT_PARAM_IDS[PITCH_RATIO], rtstft_obj);
 }
 RT_ParameterManager::~RT_ParameterManager() {}
 juce::AudioProcessorValueTreeState *RT_ParameterManager::getValueTree()

@@ -19,11 +19,12 @@ RT_GUIControlsContainer::RT_GUIControlsContainer(
     : mInterface(inInterface)
 {
   for (int i = 0; i < NUM_PARAMS; i++) {
-    mKnobs.add(std::make_unique<RT_Sliders::RotaryKnob>());
+    mKnobs.add(std::make_unique<RT_Sliders::LabelledRotaryKnob>(
+        RT_PARAM_RANGES.getRawDataPointer() + i, RT_PARAM_IDS[i]));
     mKnobAttachments.add(
         std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(
             *mInterface->getParameterManager()->getValueTree(), RT_PARAM_IDS[i],
-            *mKnobs[i]));
+            *mKnobs[i]->getKnobPointer()));
     addAndMakeVisible(*mKnobs[i]);
   }
 }
@@ -32,7 +33,6 @@ RT_GUIControlsContainer::~RT_GUIControlsContainer() {}
 
 void RT_GUIControlsContainer::paint(juce::Graphics &g)
 {
-
   g.fillAll(getLookAndFeel().findColour(
       juce::ResizableWindow::backgroundColourId)); // clear the background
 }

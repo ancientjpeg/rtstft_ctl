@@ -46,7 +46,7 @@ void RTSTFT_Manager::prepareToPlay(double inSampleRate, int inSamplesPerBlock)
     mCurrentSamplesPerBlock = mCurrentSamplesPerBlock < samplesPerBlock
                                   ? samplesPerBlock
                                   : mCurrentSamplesPerBlock;
-    p           = rt_init(mNumChannels, 1024, mCurrentSamplesPerBlock, 4, 0,
+    p           = rt_init(mNumChannels, 2048, mCurrentSamplesPerBlock, 4, 0,
                           mCurrentSampleRate);
     initialized = true;
   }
@@ -66,5 +66,9 @@ void RTSTFT_Manager::parameterChanged(const juce::String &parameterID,
   int paramFlavor = RT_PARAM_IDS.indexOf(parameterID);
   if (paramFlavor < 0) {
     // error handling here...
+  }
+  switch (paramFlavor) {
+  case PITCH_RATIO:
+    rt_set_scale_factor(p, newValue);
   }
 }
