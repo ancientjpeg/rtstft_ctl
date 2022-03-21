@@ -20,18 +20,20 @@
 class RT_ProcessorBase : public RT_ProcessorInterface,
                          public juce::AudioProcessor {
 
-  RTSTFT_Manager          mRTSTFTManager;
   RT_LookAndFeel::Manager mLookAndFeelManager;
   RT_ParameterManager     mParameterManager;
   RT_PropertyManager      mPropertyManager;
+  RTSTFT_Manager          mRTSTFTManager;
 
 public:
   RT_ProcessorBase();
   virtual ~RT_ProcessorBase();
 
   //==============================================================================
-  RT_ProcessorBase        *getProcessor() override;
+  juce::AudioProcessor    *getProcessor() override;
   RT_LookAndFeel::Manager *getLookAndFeelManager() override;
+  RT_ParameterManager     *getParameterManager() override;
+  RT_PropertyManager      *getPropertyManager() override;
   RTSTFT_Manager          *getRTSTFTManager() override;
 
   //==============================================================================

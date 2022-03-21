@@ -24,6 +24,13 @@ void RT_LookAndFeel::Default::drawRotarySlider(juce::Graphics &g, int x, int y,
                                                juce::Slider &s)
 {
   using enum juce::LookAndFeel_V4::ColourScheme::UIColour;
-  juce::Rectangle<float> bounds(width, height);
-  g.drawEllipse(bounds, 2.f);
+  auto bounds     = s.getLocalBounds();
+  int  knobDim    = std::min(bounds.getHeight(), bounds.getWidth()) / 2;
+  auto dialBounds = bounds.withSizeKeepingCentre(knobDim, knobDim);
+  g.drawEllipse(dialBounds.toFloat(), 2.f);
+  const auto parameters = s.getRotaryParameters();
+  auto radians = juce::jmap<float>(s.valueToProportionOfLength(s.getValue()),
+                                   parameters.startAngleRadians,
+                                   parameters.endAngleRadians);
+  // this is likely not quite right and very unfinished
 }

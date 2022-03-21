@@ -10,5 +10,22 @@
 
 #include "RT_ParameterManager.h"
 
-RT_ParameterManager::RT_ParameterManager(RT_ProcessorInterface *mInterface) {}
+RT_ParameterManager::RT_ParameterManager(RT_ProcessorInterface *inInterface)
+    : mInterface(inInterface)
+{
+  std::vector<std::unique_ptr<juce::AudioParameterFloat>> parameters;
+
+  for (int i = 0; i < NUM_PARAMS; i++) {
+    parameters.push_back(std::make_unique<juce::AudioParameterFloat>(
+        RT_PARAM_IDS[i], RT_PARAM_IDS[i], RT_PARAM_RANGES[i],
+        RT_PARAM_DEFAULTS[i]));
+  }
+  mValueTreeState.reset(new juce::AudioProcessorValueTreeState(
+      *mInterface->getProcessor(), nullptr, "PARAMETER_TREE",
+      {parameters.begin(), parameters.end()}));
+}
 RT_ParameterManager::~RT_ParameterManager() {}
+juce::AudioProcessorValueTreeState *RT_ParameterManager::getValueTree()
+{
+  return mValueTreeState.get();
+}

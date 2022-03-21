@@ -11,6 +11,7 @@
 #include "RTSTFT_Manager.h"
 #include "../../RT_AudioProcessor.h"
 #include "../../Utilities/RT_MathUtilities.h"
+#include "RT_ParameterDefines.h"
 #include "RT_ParameterManager.h"
 
 RTSTFT_Manager::RTSTFT_Manager(RT_ProcessorInterface *inInterface)
@@ -45,7 +46,7 @@ void RTSTFT_Manager::prepareToPlay(double inSampleRate, int inSamplesPerBlock)
     mCurrentSamplesPerBlock = mCurrentSamplesPerBlock < samplesPerBlock
                                   ? samplesPerBlock
                                   : mCurrentSamplesPerBlock;
-    p           = rt_init(mNumChannels, 512, mCurrentSamplesPerBlock, 8, 0,
+    p           = rt_init(mNumChannels, 1024, mCurrentSamplesPerBlock, 4, 0,
                           mCurrentSampleRate);
     initialized = true;
   }
@@ -62,7 +63,7 @@ void RTSTFT_Manager::releaseResources() { rt_flush(p); }
 void RTSTFT_Manager::parameterChanged(const juce::String &parameterID,
                                       float               newValue)
 {
-  int paramFlavor = RT_ParameterIDs.indexOf(parameterID);
+  int paramFlavor = RT_PARAM_IDS.indexOf(parameterID);
   if (paramFlavor < 0) {
     // error handling here...
   }
