@@ -23,10 +23,10 @@ class RTSTFT_Manager : public juce::AudioProcessorValueTreeState::Listener {
 public:
   RTSTFT_Manager(RT_ProcessorInterface *inInterface);
   ~RTSTFT_Manager();
-  rt_params getParamsStruct();
-  void      prepareToPlay(double inSampleRate, int inSamplesPerBlock);
-  void      processBlock(juce::AudioBuffer<float> &buffer);
-  void      releaseResources();
-  void      parameterChanged(const juce::String &parameterID,
-                             float               newValue) override;
+  const rt_params getParamsStruct();
+  void            prepareToPlay(double inSampleRate, int inSamplesPerBlock);
+  void            processBlock(juce::AudioBuffer<float> &buffer);
+  void            releaseResources();
+  void            parameterChanged(const juce::String &parameterID,
+                                   float               newValue) override;
 };

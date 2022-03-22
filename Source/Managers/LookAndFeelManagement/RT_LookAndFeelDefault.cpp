@@ -31,15 +31,15 @@ void RT_LookAndFeel::Default::drawRotarySlider(juce::Graphics &g, int x, int y,
   auto       bounds    = s.getLocalBounds();
   auto       center    = bounds.getCentre();
   int        knobDim   = std::min(bounds.getHeight(), bounds.getWidth()) / 2;
-  int        radius    = knobDim / 2.2;
+  int        radius    = knobDim / 3;
   int        radiusInv = (bounds.getHeight() - 2 * radius) / 2;
   juce::Path knobPath;
-  float      knobSpread = .8;
+  float      knobSpread = .2;
   knobPath.addCentredArc(center.getX(), center.getY(), radius, radius, 0,
-                         -knobSpread, knobSpread, true);
+                         knobSpread, juce::MathConstants<float>::twoPi-knobSpread, true);
 
   knobPath.startNewSubPath(center.getX(), radiusInv);
-  knobPath.lineTo(center.getX(), radiusInv * 1.5);
+  knobPath.lineTo(center.getX(), radiusInv * 1.1);
   knobPath.closeSubPath();
   g.strokePath(
       knobPath, juce::PathStrokeType(2.f),

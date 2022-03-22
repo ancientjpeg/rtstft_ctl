@@ -16,13 +16,16 @@
 //==============================================================================
 /*
  */
-class RT_FFTDisplayContainer : public juce::Component {
+class RT_FFTDisplayContainer : public juce::Component, public juce::Timer {
+  RT_ProcessorInterface *mInterface;
+
 public:
   RT_FFTDisplayContainer(RT_ProcessorInterface *inInterface);
   ~RT_FFTDisplayContainer() override;
 
   void paint(juce::Graphics &) override;
   void resized() override;
+  void timerCallback() override;
 
 private:
   JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(RT_FFTDisplayContainer)

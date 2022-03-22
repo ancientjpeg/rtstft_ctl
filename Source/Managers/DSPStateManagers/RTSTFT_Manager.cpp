@@ -24,7 +24,7 @@ RTSTFT_Manager::~RTSTFT_Manager()
     rt_clean(p);
   }
 }
-rt_params RTSTFT_Manager::getParamsStruct() { return p; }
+const rt_params RTSTFT_Manager::getParamsStruct() { return p; }
 void RTSTFT_Manager::prepareToPlay(double inSampleRate, int inSamplesPerBlock)
 {
   if (mCurrentSampleRate != inSampleRate) {
@@ -70,5 +70,15 @@ void RTSTFT_Manager::parameterChanged(const juce::String &parameterID,
   switch (paramFlavor) {
   case PITCH_RATIO:
     rt_set_scale_factor(p, newValue);
+      break;
+  case RETENTION_MOD:
+    rt_set_retention_mod(p, newValue);
+      break;
+  case PHASE_MOD:
+    rt_set_phase_mod(p, newValue);
+      break;
+  case PHASE_CHAOS:
+    rt_set_phase_chaos(p, newValue);
+      break;
   }
 }
