@@ -12,6 +12,7 @@
 #include "../../../RTSTFT/src/rtstft.h"
 #include "../Interface/RT_ProcessorInterface.h"
 #include <JuceHeader.h>
+void RTSTFTListenerCallback(void *RTSTFTManagerPtr);
 class RTSTFT_Manager : public juce::AudioProcessorValueTreeState::Listener {
   RT_ProcessorInterface *mInterface;
   rt_params              p;
@@ -19,6 +20,7 @@ class RTSTFT_Manager : public juce::AudioProcessorValueTreeState::Listener {
   float                  mCurrentSampleRate = -1;
   int                    mNumChannels;
   bool                   initialized = false;
+  juce::ReadWriteLock    mRTSTFTParamsUpdateLock;
 
 public:
   RTSTFT_Manager(RT_ProcessorInterface *inInterface);
@@ -29,4 +31,5 @@ public:
   void            releaseResources();
   void            parameterChanged(const juce::String &parameterID,
                                    float               newValue) override;
+  friend void     RTSTFTListenerCallback(void *RTSTFTManagerPtr);
 };

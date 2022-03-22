@@ -48,6 +48,7 @@ void RTSTFT_Manager::prepareToPlay(double inSampleRate, int inSamplesPerBlock)
                                   : mCurrentSamplesPerBlock;
     p           = rt_init(mNumChannels, 2048, mCurrentSamplesPerBlock, 4, 0,
                           mCurrentSampleRate);
+    p->listener = {(void *)this, &RTSTFTListenerCallback};
     initialized = true;
   }
 }
@@ -63,22 +64,33 @@ void RTSTFT_Manager::releaseResources() { rt_flush(p); }
 void RTSTFT_Manager::parameterChanged(const juce::String &parameterID,
                                       float               newValue)
 {
-  int paramFlavor = RT_PARAM_IDS.indexOf(parameterID);
+  const juce::ScopedReadLock paramUpdateLock(mRTSTFTParamsUpdateLock);
+  int                        paramFlavor = RT_PARAM_IDS.indexOf(parameterID);
   if (paramFlavor < 0) {
     // error handling here...
   }
   switch (paramFlavor) {
   case PITCH_RATIO:
     rt_set_scale_factor(p, newValue);
-      break;
+    break;
   case RETENTION_MOD:
     rt_set_retention_mod(p, newValue);
-      break;
+    break;
   case PHASE_MOD:
     rt_set_phase_mod(p, newValue);
-      break;
+    break;
   case PHASE_CHAOS:
     rt_set_phase_chaos(p, newValue);
-      break;
+    break;
+  }
+}
+
+void RTSTFTListenerCallback(void *RTSTFTManagerPtr)
+{
+  RTSTFT_Manager *ptr = (RTSTFT_Manager *)RTSTFTManagerPtr;
+  juce::ScopedWriteLock(ptr->mRTSTFTParamsUpdateLock);
+  auto tree = ptr->mInterface->getParameterManager()->getValueTree();
+  for (int i = 0; i < RT_PARAM_FLAVOR_COUNT; i++) {
+    *(tree->getRawParameterValue(RT_PARAM_IDS[i])) = 1.f;
   }
 }
