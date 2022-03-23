@@ -54,9 +54,10 @@ void RTSTFT_Manager::prepareToPlay(double inSampleRate, int inSamplesPerBlock)
 }
 void RTSTFT_Manager::processBlock(juce::AudioBuffer<float> &buffer)
 {
-  for (int i = 0; i < buffer.getNumChannels(); i++) {
-    rt_cycle_chan(p, i, buffer.getWritePointer(i), buffer.getNumSamples());
-  }
+  rt_cycle(p, buffer.getArrayOfWritePointers(), buffer.getNumSamples());
+//  for (int i = 0; i < buffer.getNumChannels(); i++) {
+//    rt_cycle_chan(p, i, buffer.getWritePointer(i), buffer.getNumSamples());
+//  }
 }
 
 void RTSTFT_Manager::releaseResources() { rt_flush(p); }
@@ -64,31 +65,18 @@ void RTSTFT_Manager::releaseResources() { rt_flush(p); }
 void RTSTFT_Manager::parameterChanged(const juce::String &parameterID,
                                       float               newValue)
 {
-  const juce::ScopedReadLock paramUpdateLock(mRTSTFTParamsUpdateLock);
+  const juce::ScopedReadLock paramUpdateLockChec(mRTSTFTParamsUpdateLock);
   int                        paramFlavor = RT_PARAM_IDS.indexOf(parameterID);
-  if (paramFlavor < 0) {
+  if (paramFlavor < 0 || paramFlavor >= RT_PARAM_FLAVOR_COUNT) {
     // error handling here...
   }
-  switch (paramFlavor) {
-  case PITCH_RATIO:
-    rt_set_scale_factor(p, newValue);
-    break;
-  case RETENTION_MOD:
-    rt_set_retention_mod(p, newValue);
-    break;
-  case PHASE_MOD:
-    rt_set_phase_mod(p, newValue);
-    break;
-  case PHASE_CHAOS:
-    rt_set_phase_chaos(p, newValue);
-    break;
-  }
+  rt_set_single_param(p, (rt_param_flavor)paramFlavor, newValue);
 }
 
 void RTSTFTListenerCallback(void *RTSTFTManagerPtr)
 {
-  RTSTFT_Manager *ptr = (RTSTFT_Manager *)RTSTFTManagerPtr;
-  juce::ScopedWriteLock(ptr->mRTSTFTParamsUpdateLock);
+  RTSTFT_Manager             *ptr = (RTSTFT_Manager *)RTSTFTManagerPtr;
+  const juce::ScopedWriteLock paramRealUpdateLock(ptr->mRTSTFTParamsUpdateLock);
   auto tree = ptr->mInterface->getParameterManager()->getValueTree();
   for (int i = 0; i < RT_PARAM_FLAVOR_COUNT; i++) {
     *(tree->getRawParameterValue(RT_PARAM_IDS[i])) = 1.f;

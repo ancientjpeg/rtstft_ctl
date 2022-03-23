@@ -2,7 +2,7 @@
 
 <JUCERPROJECT id="Ez8Xaa" name="rtstft_ctl" projectType="audioplug" useAppConfig="0"
               addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1"
-              cppLanguageStandard="20" companyName="sound_ctl">
+              cppLanguageStandard="20" companyName="sound_ctl" bundleIdentifier="com.soundctl.rtstft-ctl">
   <MAINGROUP id="top3X7" name="rtstft_ctl">
     <GROUP id="{37D090C2-12C5-2595-B0B4-1EA2DE6D0F6A}" name="RTSTFT_src">
       <GROUP id="{0D5BA3CA-CE98-0188-F4BC-CA2F739C8C3C}" name="pffft">

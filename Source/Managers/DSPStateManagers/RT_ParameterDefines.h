@@ -10,15 +10,9 @@
 
 #pragma once
 
+#include "../../RTSTFT/src/rtstft.h"
 #include <JuceHeader.h>
 
-enum RT_ParameterFlavor {
-  PITCH_RATIO,
-  RETENTION_MOD,
-  PHASE_MOD,
-  PHASE_CHAOS,
-  NUM_PARAMS
-};
 static const juce::StringArray RT_PARAM_IDS{"Pitch Ratio", "Retention",
                                             "Phase Mod", "Phase Chaos"};
 static const juce::Array<juce::NormalisableRange<float>> RT_PARAM_RANGES{
@@ -29,4 +23,5 @@ static const juce::Array<juce::NormalisableRange<float>> RT_PARAM_RANGES{
     juce::NormalisableRange<float>(0.f, 1.f, 0.f),
 };
 
-static const float RT_PARAM_DEFAULTS[NUM_PARAMS] = {1.f, 1.f, 1.f, 0.f};
+static const float RT_PARAM_DEFAULTS[RT_PARAM_FLAVOR_COUNT]
+    = {1.f, 1.f, 1.f, 0.f};

@@ -18,7 +18,7 @@ RT_GUIControlsContainer::RT_GUIControlsContainer(
     RT_ProcessorInterface *inInterface)
     : mInterface(inInterface)
 {
-  for (int i = 0; i < NUM_PARAMS; i++) {
+  for (int i = 0; i < RT_PARAM_FLAVOR_COUNT; i++) {
     mKnobs.add(std::make_unique<RT_Sliders::LabelledRotaryKnob>(
         RT_PARAM_RANGES.getRawDataPointer() + i, RT_PARAM_IDS[i]));
     mKnobAttachments.add(
@@ -43,7 +43,7 @@ void RT_GUIControlsContainer::resized()
   // components that your component contains..
   auto bounds           = getLocalBounds();
   int  knobAreaVertical = getHeight() / mKnobs.size();
-  for (int i = 0; i < NUM_PARAMS; i++) {
+  for (int i = 0; i < RT_PARAM_FLAVOR_COUNT; i++) {
     auto thisBound = bounds.removeFromTop(knobAreaVertical);
     thisBound.setWidth(thisBound.getHeight());
     if (i & 1) {
