@@ -11,6 +11,7 @@
 #include "RT_ParameterManager.h"
 #include "RTSTFT_Manager.h"
 
+
 RT_ParameterManager::RT_ParameterManager(RT_ProcessorInterface *inInterface)
     : mInterface(inInterface)
 {
