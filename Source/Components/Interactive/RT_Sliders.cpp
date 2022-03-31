@@ -62,8 +62,10 @@ void RT_Sliders::LabelledRotaryKnob::labelTextChanged(
 void RT_Sliders::LabelledRotaryKnob::editorShown(juce::Label      *l,
                                                  juce::TextEditor &t)
 {
-  t.setText("type a new knob value",
+  t.setText("newValue",
             juce::NotificationType::dontSendNotification);
+  t.setColour(juce::TextEditor::focusedOutlineColourId, juce::Colours::transparentWhite);
+  t.setJustification(juce::Justification(juce::Justification::centredTop));
 }
 void RT_Sliders::LabelledRotaryKnob::editorHidden(juce::Label      *l,
                                                   juce::TextEditor &t)

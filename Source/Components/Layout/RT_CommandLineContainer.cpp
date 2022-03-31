@@ -9,21 +9,37 @@
 */
 
 #include "RT_CommandLineContainer.h"
+#include "../../Managers/DSPStateManagers/RTSTFT_Manager.h"
 #include <JuceHeader.h>
 
 //==============================================================================
 RT_CommandLineContainer::RT_CommandLineContainer(
     RT_ProcessorInterface *inInterface, int inBorderSize)
     : RT_BorderedComponent(inInterface, inBorderSize),
-      mCommandLinePrompt("RT_CMD_PROMPT", "rt_cmd:"),
-      mCommandLineEntry("RT_CMD_ENTRY", "enter your rt_cmd commands here")
+      mCommandLinePrompt("RT_CMD_PROMPT", "user@rt_cmd$")
 {
   addAndMakeVisible(mCommandLineEntry);
-  // mCommandLineEntry.setColour(juce::Label::ColourIds::textColourId,
-  //                             juce::Colours::blue);
+  mCommandLineEntry.setColour(juce::TextEditor::focusedOutlineColourId,
+                               juce::Colours::transparentWhite);
+  mCommandLineEntry.setColour(juce::TextEditor::outlineColourId,
+                               juce::Colours::transparentWhite);
+  mCommandLineEntry.setJustification(juce::Justification(juce::Justification::centredLeft));
+  mCommandLineEntry.setMultiLine(false);
+  mCommandLineEntry.setTextToShowWhenEmpty(mEntryPlaceholderText, juce::Colours::lightgrey);
+  mCommandLineEntry.addListener(static_cast<juce::TextEditor::Listener*>(mInterface->getRTSTFTManager()));
+  mCommandLineEntry.onReturnKey = [this] () {
+    auto text = mCommandLineEntry.getText();
+    mCommandLineEntry.clear();
+    mCommandLineEntry.repaint();
+  };
+  
+  
   addAndMakeVisible(mCommandLinePrompt);
   mCommandLinePrompt.setEditable(false);
-  mCommandLinePrompt.setFont(juce::Font(18, juce::Font::bold));
+  mCommandLinePrompt.setFont(juce::Font(16, juce::Font::bold));
+  mCommandLinePrompt.setColour(juce::Label::outlineColourId,
+                               juce::Colours::transparentWhite);
+  mCommandLinePrompt.setJustificationType(juce::Justification(juce::Justification::centredRight));
 }
 
 RT_CommandLineContainer::~RT_CommandLineContainer() {}
@@ -38,7 +54,9 @@ void RT_CommandLineContainer::paintInBorder(juce::Graphics &g)
 void RT_CommandLineContainer::resized()
 {
   auto bounds       = getBoundsAdj();
-  auto promptBounds = bounds.removeFromLeft(80);
+  
+  int strW = mCommandLinePrompt.getFont().getStringWidth(mCommandLinePrompt.getText());
+  auto promptBounds = bounds.removeFromLeft(strW);
   mCommandLinePrompt.setBounds(promptBounds);
   mCommandLineEntry.setBounds(bounds);
 }

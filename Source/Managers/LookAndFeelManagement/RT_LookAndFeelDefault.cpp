@@ -9,6 +9,7 @@
 */
 
 #include "RT_LookAndFeelManagement.h"
+using enum juce::LookAndFeel_V4::ColourScheme::UIColour;
 
 RT_LookAndFeel::Default::Default(
     juce::LookAndFeel_V4::ColourScheme inColourScheme)
@@ -23,7 +24,6 @@ void RT_LookAndFeel::Default::drawRotarySlider(juce::Graphics &g, int x, int y,
                                                float rotaryEndAngle,
                                                juce::Slider &s)
 {
-  using enum juce::LookAndFeel_V4::ColourScheme::UIColour;
   float currentKnobAngle
       = rotaryStartAngle
         + sliderPosProportional * (rotaryEndAngle - rotaryStartAngle);
@@ -46,4 +46,13 @@ void RT_LookAndFeel::Default::drawRotarySlider(juce::Graphics &g, int x, int y,
       juce::AffineTransform::rotation(currentKnobAngle, center.x, center.y));
 }
 
-juce::Label *RT_LookAndFeel::Default::createSliderTextBox(juce::Slider &s) {}
+juce::Label *RT_LookAndFeel::Default::createSliderTextBox(juce::Slider &s) {
+  juce::Label *label_ptr = new juce::Label;
+  juce::String str;
+  str << s.getValue();
+  label_ptr->setText(str, juce::NotificationType::dontSendNotification);
+  label_ptr->setColour(juce::Label::textColourId, getCurrentColourScheme().getUIColour(defaultText));
+  return label_ptr;
+}
+
+

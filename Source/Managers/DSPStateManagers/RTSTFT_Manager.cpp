@@ -79,6 +79,13 @@ void RTSTFT_Manager::parameterChanged(const juce::String &parameterID,
   
 }
 
+void RTSTFT_Manager::textEditorReturnKeyPressed(juce::TextEditor &t) {
+  auto str = t.getText();
+  DBG("CALLBACK TEXT: " << str);
+  int result = rt_parse_and_execute(p, str.getCharPointer());
+  DBG(juce::String("Error message: ") << p->parser.error_msg_buffer << " error state: " << result);
+}
+
 void RTSTFT_Manager::RTSTFT_ManagerCMDCallback(rt_param_flavor_t inParamFlavor, float inVal)
 {
   mLastUpdateWasCMD = true;

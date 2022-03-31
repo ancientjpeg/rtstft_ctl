@@ -27,6 +27,8 @@ public:
 
 private:
   int         mBorderSize;
-  juce::Label mCommandLinePrompt, mCommandLineEntry;
+  juce::String mEntryPlaceholderText = "Enter your rt_cmd commands here.";
+  juce::Label mCommandLinePrompt;
+  juce::TextEditor mCommandLineEntry;
   JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(RT_CommandLineContainer)
 };
