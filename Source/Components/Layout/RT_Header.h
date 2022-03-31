@@ -10,17 +10,18 @@
 
 #pragma once
 
+#include "../Utility/RT_BorderedComponent.h"
 #include <JuceHeader.h>
 
 //==============================================================================
 /*
  */
-class RT_Header : public juce::Component {
+class RT_Header : public RT_BorderedComponent {
 public:
-  RT_Header();
+  RT_Header(RT_ProcessorInterface *inInterface, int inBorderSize);
   ~RT_Header() override;
 
-  void paint(juce::Graphics &) override;
+  void paintInBorder(juce::Graphics &) override;
   void resized() override;
 
 private:

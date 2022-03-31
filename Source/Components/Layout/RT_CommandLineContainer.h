@@ -11,19 +11,22 @@
 #pragma once
 
 #include "../../Managers/Interface/RT_ProcessorInterface.h"
+#include "../Utility/RT_BorderedComponent.h"
 #include <JuceHeader.h>
 
 //==============================================================================
 /*
  */
-class RT_CommandLineContainer : public juce::Component {
+class RT_CommandLineContainer : public RT_BorderedComponent {
 public:
-  RT_CommandLineContainer(RT_ProcessorInterface *mInterface);
+  RT_CommandLineContainer(RT_ProcessorInterface *inInterface, int inBorderSize);
   ~RT_CommandLineContainer() override;
 
-  void paint(juce::Graphics &) override;
+  void paintInBorder(juce::Graphics &) override;
   void resized() override;
 
 private:
+  int         mBorderSize;
+  juce::Label mCommandLinePrompt, mCommandLineEntry;
   JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(RT_CommandLineContainer)
 };

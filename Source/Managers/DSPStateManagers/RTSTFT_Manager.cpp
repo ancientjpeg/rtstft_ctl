@@ -46,7 +46,7 @@ void RTSTFT_Manager::prepareToPlay(double inSampleRate, int inSamplesPerBlock)
     mCurrentSamplesPerBlock = mCurrentSamplesPerBlock < samplesPerBlock
                                   ? samplesPerBlock
                                   : mCurrentSamplesPerBlock;
-    p           = rt_init(mNumChannels, 2048, mCurrentSamplesPerBlock, 4, 0,
+    p           = rt_init(mNumChannels, 512, mCurrentSamplesPerBlock, 4, 0,
                           mCurrentSampleRate);
     p->listener = {(void *)this, &RTSTFT_CMDListenerCallback};
     mInitialized = true;
@@ -66,7 +66,7 @@ void RTSTFT_Manager::parameterChanged(const juce::String &parameterID,
   if (paramFlavor < 0 || paramFlavor >= RT_PARAM_FLAVOR_COUNT) {
     // error handling here...
   }
-  if (mLastUpdateWasCMD )
+  if (!mLastUpdateWasCMD )
   {
     // this is stupid and dumb as it's not guarunteed threadsafe (i.e. incoming value could be different from the CMD-derived value)
     // I just have it here as a reminder in case things go wrong that I might need a more foolproof method of setting the Valuetree
@@ -82,8 +82,8 @@ void RTSTFT_Manager::parameterChanged(const juce::String &parameterID,
 void RTSTFT_Manager::RTSTFT_ManagerCMDCallback(rt_param_flavor_t inParamFlavor, float inVal)
 {
   mLastUpdateWasCMD = true;
-  auto pm = mInterface->getParameterManager()->getValueTree()->getParameter(RT_PARAM_IDS[inParamFlavor]);
-  pm->setValueNotifyingHost(inVal);
+  auto param = mInterface->getParameterManager()->getValueTree()->getParameter(RT_PARAM_IDS[inParamFlavor]);
+  param->setValueNotifyingHost(inVal);
 }
 
 void RTSTFT_CMDListenerCallback(void *RTSTFTManagerPtr, rt_param_flavor_t inParamFlavor, float inVal)

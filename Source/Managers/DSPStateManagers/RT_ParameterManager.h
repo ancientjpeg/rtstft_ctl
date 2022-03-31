@@ -14,18 +14,6 @@
 #include "RT_ParameterDefines.h"
 
 
-class RT_ValueTreeState : public juce::AudioProcessorValueTreeState {
-public:
-  RT_ValueTreeState(juce::AudioProcessor &processorToConnectTo, juce::UndoManager *undoManagerToUse, const juce::Identifier &valueTreeType, std::vector<std::unique_ptr<juce::RangedAudioParameter>> layoutPtrs) :
-  juce::AudioProcessorValueTreeState (processorToConnectTo, undoManagerToUse, valueTreeType, {layoutPtrs.begin(), layoutPtrs.end()}) {}
-  ~RT_ValueTreeState() = default;
-private:
-  void valueTreePropertyChanged (juce::ValueTree&, const juce::Identifier&) override {
-    
-  }
-};
-
-
 class RT_ParameterManager {
   RT_ProcessorInterface                              *mInterface;
   std::unique_ptr<juce::AudioProcessorValueTreeState> mValueTreeState;

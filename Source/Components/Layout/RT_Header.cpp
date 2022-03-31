@@ -12,7 +12,8 @@
 #include <JuceHeader.h>
 
 //==============================================================================
-RT_Header::RT_Header()
+RT_Header::RT_Header(RT_ProcessorInterface *inInterface, int inBorderSize)
+    : RT_BorderedComponent(inInterface, inBorderSize)
 {
   // In your constructor, you should add any child components, and
   // initialise any special settings that your component needs.
@@ -20,7 +21,7 @@ RT_Header::RT_Header()
 
 RT_Header::~RT_Header() {}
 
-void RT_Header::paint(juce::Graphics &g)
+void RT_Header::paintInBorder(juce::Graphics &g)
 {
   /* This demo code just fills the component's background and
      draws some placeholder text to get you started.
@@ -30,9 +31,10 @@ void RT_Header::paint(juce::Graphics &g)
   */
   using enum juce::LookAndFeel_V4::ColourScheme::UIColour;
 
-  g.fillAll((static_cast<juce::LookAndFeel_V4 &>(getLookAndFeel()))
-                .getCurrentColourScheme()
-                .getUIColour(windowBackground)); // clear the background
+  g.setColour((static_cast<juce::LookAndFeel_V4 &>(getLookAndFeel()))
+                  .getCurrentColourScheme()
+                  .getUIColour(windowBackground)); // clear the background
+  g.fillRect(getBoundsAdj());
 }
 
 void RT_Header::resized()

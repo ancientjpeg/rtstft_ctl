@@ -13,31 +13,32 @@
 
 //==============================================================================
 RT_CommandLineContainer::RT_CommandLineContainer(
-    RT_ProcessorInterface *mInterface)
+    RT_ProcessorInterface *inInterface, int inBorderSize)
+    : RT_BorderedComponent(inInterface, inBorderSize),
+      mCommandLinePrompt("RT_CMD_PROMPT", "rt_cmd:"),
+      mCommandLineEntry("RT_CMD_ENTRY", "enter your rt_cmd commands here")
 {
-  // In your constructor, you should add any child components, and
-  // initialise any special settings that your component needs.
+  addAndMakeVisible(mCommandLineEntry);
+  // mCommandLineEntry.setColour(juce::Label::ColourIds::textColourId,
+  //                             juce::Colours::blue);
+  addAndMakeVisible(mCommandLinePrompt);
+  mCommandLinePrompt.setEditable(false);
+  mCommandLinePrompt.setFont(juce::Font(18, juce::Font::bold));
 }
 
 RT_CommandLineContainer::~RT_CommandLineContainer() {}
 
-void RT_CommandLineContainer::paint(juce::Graphics &g)
+void RT_CommandLineContainer::paintInBorder(juce::Graphics &g)
 {
-  /* This demo code just fills the component's background and
-     draws some placeholder text to get you started.
-
-     You should replace everything in this method with your own
-     drawing code..
-  */
   using enum juce::LookAndFeel_V4::ColourScheme::UIColour;
-
-  g.fillAll((static_cast<juce::LookAndFeel_V4 &>(getLookAndFeel()))
-                .getCurrentColourScheme()
-                .getUIColour(windowBackground)); // clear the background
+  g.setColour(
+      getLookAndFeel_V4().getCurrentColourScheme().getUIColour(defaultFill));
 }
 
 void RT_CommandLineContainer::resized()
 {
-  // This method is where you should set the bounds of any child
-  // components that your component contains..
+  auto bounds       = getBoundsAdj();
+  auto promptBounds = bounds.removeFromLeft(80);
+  mCommandLinePrompt.setBounds(promptBounds);
+  mCommandLineEntry.setBounds(bounds);
 }

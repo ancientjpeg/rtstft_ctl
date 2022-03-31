@@ -18,7 +18,7 @@ RT_FFTDisplayContainer::RT_FFTDisplayContainer(
 {
   // In your constructor, you should add any child components, and
   // initialise any special settings that your component needs.
-  startTimer(125);
+  startTimer(1000 / 5);
 }
 
 RT_FFTDisplayContainer::~RT_FFTDisplayContainer() {}
@@ -38,7 +38,7 @@ void RT_FFTDisplayContainer::paint(juce::Graphics &g)
   g.setColour(juce::Colours::black);
   g.drawRect(getLocalBounds(), 1); // draw an outline around the component
 
-  g.setColour(juce::Colours::blue);
+  g.setColour(juce::Colours::black);
   const rt_params p = mInterface->getRTSTFTManager()->getParamsStruct();
   for (int i = 0; i < p->hold->frame_size / 4; i++) {
     float height = p->hold->amp_holder[i * 4] * getHeight();

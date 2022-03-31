@@ -45,6 +45,14 @@
     </GROUP>
     <GROUP id="{5EC28A37-6422-C3D1-513E-C10C5E4E9791}" name="Source">
       <GROUP id="{E9A15101-0B05-499F-B395-DAA70255F666}" name="Components">
+        <FILE id="zH6ulJ" name="RT_AppWindow.cpp" compile="1" resource="0"
+              file="Source/Components/RT_AppWindow.cpp"/>
+        <FILE id="Cu4RXA" name="RT_AppWindow.h" compile="0" resource="0" file="Source/Components/RT_AppWindow.h"/>
+        <GROUP id="{F711F6DA-3A2E-CF0B-57F4-434238C0C7A5}" name="Utility">
+          <FILE id="QwjXtA" name="RT_BorderedComponent.h" compile="0" resource="0"
+                file="Source/Components/Utility/RT_BorderedComponent.h"/>
+          <FILE id="oIBxxS" name="RT_Component.h" compile="0" resource="0" file="Source/Components/Utility/RT_Component.h"/>
+        </GROUP>
         <GROUP id="{7E1A4226-6906-1CFF-015A-9BE241E986A8}" name="Layout">
           <FILE id="CQiIuE" name="RT_CommandLineContainer.cpp" compile="1" resource="0"
                 file="Source/Components/Layout/RT_CommandLineContainer.cpp"/>
@@ -58,16 +66,17 @@
                 file="Source/Components/Layout/RT_GUIControlsContainer.cpp"/>
           <FILE id="riYSLa" name="RT_GUIControlsContainer.h" compile="0" resource="0"
                 file="Source/Components/Layout/RT_GUIControlsContainer.h"/>
+          <FILE id="O1JW0B" name="RT_Header.cpp" compile="1" resource="0" file="Source/Components/Layout/RT_Header.cpp"/>
+          <FILE id="Eel1tJ" name="RT_Header.h" compile="0" resource="0" file="Source/Components/Layout/RT_Header.h"/>
+          <FILE id="eD9H68" name="RT_MainDisplay.cpp" compile="1" resource="0"
+                file="Source/Components/Layout/RT_MainDisplay.cpp"/>
+          <FILE id="f4MJT5" name="RT_MainDisplay.h" compile="0" resource="0"
+                file="Source/Components/Layout/RT_MainDisplay.h"/>
         </GROUP>
         <GROUP id="{07A2DC33-AEA2-1F87-D5B1-31130BD8B1C4}" name="Interactive">
           <FILE id="BMaYER" name="RT_Sliders.cpp" compile="1" resource="0" file="Source/Components/Interactive/RT_Sliders.cpp"/>
           <FILE id="f9YAr0" name="RT_Sliders.h" compile="0" resource="0" file="Source/Components/Interactive/RT_Sliders.h"/>
         </GROUP>
-        <FILE id="aK4vpe" name="RT_Header.cpp" compile="1" resource="0" file="Source/Components/RT_Header.cpp"/>
-        <FILE id="bMG7Yy" name="RT_Header.h" compile="0" resource="0" file="Source/Components/RT_Header.h"/>
-        <FILE id="I7i8pN" name="RT_MainWindow.cpp" compile="1" resource="0"
-              file="Source/Components/RT_MainWindow.cpp"/>
-        <FILE id="r4zcpg" name="RT_MainWindow.h" compile="0" resource="0" file="Source/Components/RT_MainWindow.h"/>
       </GROUP>
       <GROUP id="{602BF2D6-0F2A-483C-4C33-2E542D4E725C}" name="Managers">
         <GROUP id="{22D84CC3-6F1E-593C-5A8E-30E353817475}" name="DSPStateManagers">

@@ -13,15 +13,14 @@ using enum juce::LookAndFeel_V4::ColourScheme::UIColour;
 //==============================================================================
 RT_ProcessorEditor::RT_ProcessorEditor(RT_ProcessorInterface *inInterface)
     : AudioProcessorEditor(inInterface->getProcessor()),
-      mInterface(inInterface), mMainWindow(mInterface)
+      mInterface(inInterface), mAppWindow(mInterface, RT_MAIN_BORDER_SIZE)
 {
   // Make sure that before the constructor has finished, you've set the
   // editor's size to whatever you need it to be.
 
   setLookAndFeel(mInterface->getLookAndFeelManager()->getSingleLookAndFeel(
       ComponentType::PLUGIN_DEFAULT));
-  addAndMakeVisible(mMainWindow);
-  addAndMakeVisible(mHeader);
+  addAndMakeVisible(mAppWindow);
 
   setSize(800, 600);
 }
@@ -33,15 +32,8 @@ void RT_ProcessorEditor::paint(juce::Graphics &g)
 {
   juce::LookAndFeel_V4::ColourScheme &colScheme
       = ((static_cast<juce::LookAndFeel_V4 &>(getLookAndFeel()))
-            .getCurrentColourScheme());
+             .getCurrentColourScheme());
   g.fillAll(colScheme.getUIColour(defaultFill));
 }
 
-void RT_ProcessorEditor::resized()
-{
-  auto contentBounds = getBounds().reduced(mainBorderSize);
-  int  headerHeight  = headerHeightRatio * contentBounds.getHeight();
-  auto headerBounds  = contentBounds.removeFromTop(headerHeight);
-  mHeader.setBounds(headerBounds);
-  mMainWindow.setBounds(contentBounds);
-}
+void RT_ProcessorEditor::resized() { mAppWindow.setBounds(getBounds()); }
