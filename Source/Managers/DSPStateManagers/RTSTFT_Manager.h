@@ -15,13 +15,14 @@
 
 using rt_param_flavor_t = RT_PARAM_FLAVOR;
 
-class RTSTFT_Manager : public juce::AudioProcessorValueTreeState::Listener, virtual public juce::TextEditor::Listener {
+class RTSTFT_Manager : public juce::AudioProcessorValueTreeState::Listener,
+                       virtual public juce::TextEditor::Listener {
   RT_ProcessorInterface *mInterface;
   rt_params              p;
   int                    mCurrentSamplesPerBlock;
   float                  mCurrentSampleRate = -1;
   int                    mNumChannels;
-  bool                   mInitialized = false;
+  bool                   mInitialized      = false;
   bool                   mLastUpdateWasCMD = false;
 
 public:
@@ -35,6 +36,10 @@ public:
                                    float               newValue) override;
   void RTSTFT_ManagerCMDCallback(rt_param_flavor_t inParamFlavor, float inVal);
   void textEditorReturnKeyPressed(juce::TextEditor &t) override;
+
+  void TestMethod();
 };
 
-extern "C" void RTSTFT_CMDListenerCallback(void *RTSTFTManagerPtr, rt_param_flavor_t inParamFlavor, float inVal);
+extern "C" void RTSTFT_CMDListenerCallback(void             *RTSTFTManagerPtr,
+                                           rt_param_flavor_t inParamFlavor,
+                                           float             inVal);

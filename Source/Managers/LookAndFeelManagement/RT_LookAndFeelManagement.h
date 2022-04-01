@@ -46,7 +46,10 @@ public:
                         float sliderPosProportional, float rotaryStartAngle,
                         float rotaryEndAngle, juce::Slider &s) override;
   juce::Label *createSliderTextBox(juce::Slider &s) override;
-  // juce::Label *createSliderTextBox(juce::Slider &) override;
+  void         drawButtonBackground(juce::Graphics &g, juce::Button &b,
+                                    const juce::Colour &backgroundColour,
+                                    bool                shouldDrawButtonAsHighlighted,
+                                    bool shouldDrawButtonAsDown) override;
 };
 
 } // namespace RT_LookAndFeel

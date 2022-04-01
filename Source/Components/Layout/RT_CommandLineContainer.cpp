@@ -16,30 +16,41 @@
 RT_CommandLineContainer::RT_CommandLineContainer(
     RT_ProcessorInterface *inInterface, int inBorderSize)
     : RT_BorderedComponent(inInterface, inBorderSize),
-      mCommandLinePrompt("RT_CMD_PROMPT", "user@rt_cmd$")
+      mCommandLinePrompt("RT_CMD_PROMPT", "user@rt_cmd$"),
+      mCommandLineButton("TEST")
 {
-  addAndMakeVisible(mCommandLineEntry);
+
   mCommandLineEntry.setColour(juce::TextEditor::focusedOutlineColourId,
-                               juce::Colours::transparentWhite);
+                              juce::Colours::transparentWhite);
   mCommandLineEntry.setColour(juce::TextEditor::outlineColourId,
-                               juce::Colours::transparentWhite);
-  mCommandLineEntry.setJustification(juce::Justification(juce::Justification::centredLeft));
+                              juce::Colours::transparentWhite);
+  mCommandLineEntry.setJustification(
+      juce::Justification(juce::Justification::centredLeft));
   mCommandLineEntry.setMultiLine(false);
-  mCommandLineEntry.setTextToShowWhenEmpty(mEntryPlaceholderText, juce::Colours::lightgrey);
-  mCommandLineEntry.addListener(static_cast<juce::TextEditor::Listener*>(mInterface->getRTSTFTManager()));
-  mCommandLineEntry.onReturnKey = [this] () {
+  mCommandLineEntry.setTextToShowWhenEmpty(mEntryPlaceholderText,
+                                           juce::Colours::lightgrey);
+  mCommandLineEntry.addListener(static_cast<juce::TextEditor::Listener *>(
+      mInterface->getRTSTFTManager()));
+  mCommandLineEntry.onReturnKey = [this]() {
     auto text = mCommandLineEntry.getText();
     mCommandLineEntry.clear();
     mCommandLineEntry.repaint();
   };
-  
-  
-  addAndMakeVisible(mCommandLinePrompt);
+  addAndMakeVisible(mCommandLineEntry);
+
   mCommandLinePrompt.setEditable(false);
   mCommandLinePrompt.setFont(juce::Font(16, juce::Font::bold));
   mCommandLinePrompt.setColour(juce::Label::outlineColourId,
                                juce::Colours::transparentWhite);
-  mCommandLinePrompt.setJustificationType(juce::Justification(juce::Justification::centredRight));
+  mCommandLinePrompt.setJustificationType(
+      juce::Justification(juce::Justification::centredRight));
+  addAndMakeVisible(mCommandLinePrompt);
+
+  mCommandLineButton.onClick = [this]() {
+    DBG("cluck.");
+    mInterface->getRTSTFTManager()->TestMethod();
+  };
+  addAndMakeVisible(mCommandLineButton);
 }
 
 RT_CommandLineContainer::~RT_CommandLineContainer() {}
@@ -53,10 +64,15 @@ void RT_CommandLineContainer::paintInBorder(juce::Graphics &g)
 
 void RT_CommandLineContainer::resized()
 {
-  auto bounds       = getBoundsAdj();
-  
-  int strW = mCommandLinePrompt.getFont().getStringWidth(mCommandLinePrompt.getText());
-  auto promptBounds = bounds.removeFromLeft(strW);
+  auto bounds = getBoundsAdj();
+
+  int  strW   = mCommandLinePrompt.getFont().getStringWidth(
+         mCommandLinePrompt.getText());
+  auto promptBounds = bounds.removeFromLeft(strW + 15);
   mCommandLinePrompt.setBounds(promptBounds);
+
+  auto buttonBounds = bounds.removeFromRight(200);
+  mCommandLineButton.setBounds(buttonBounds);
+
   mCommandLineEntry.setBounds(bounds);
 }

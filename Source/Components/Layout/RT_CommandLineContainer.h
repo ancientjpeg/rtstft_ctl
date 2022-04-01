@@ -26,9 +26,10 @@ public:
   void resized() override;
 
 private:
-  int         mBorderSize;
-  juce::String mEntryPlaceholderText = "Enter your rt_cmd commands here.";
-  juce::Label mCommandLinePrompt;
+  int              mBorderSize;
+  juce::String     mEntryPlaceholderText = "Enter your rt_cmd commands here.";
+  juce::Label      mCommandLinePrompt;
   juce::TextEditor mCommandLineEntry;
+  juce::TextButton     mCommandLineButton;
   JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(RT_CommandLineContainer)
 };

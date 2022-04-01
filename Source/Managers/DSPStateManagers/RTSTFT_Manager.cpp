@@ -46,9 +46,9 @@ void RTSTFT_Manager::prepareToPlay(double inSampleRate, int inSamplesPerBlock)
     mCurrentSamplesPerBlock = mCurrentSamplesPerBlock < samplesPerBlock
                                   ? samplesPerBlock
                                   : mCurrentSamplesPerBlock;
-    p           = rt_init(mNumChannels, 512, mCurrentSamplesPerBlock, 4, 0,
-                          mCurrentSampleRate);
-    p->listener = {(void *)this, &RTSTFT_CMDListenerCallback};
+    p            = rt_init(mNumChannels, 1024, mCurrentSamplesPerBlock, 4, 0,
+                           mCurrentSampleRate);
+    p->listener  = {(void *)this, &RTSTFT_CMDListenerCallback};
     mInitialized = true;
   }
 }
@@ -62,38 +62,48 @@ void RTSTFT_Manager::releaseResources() { rt_flush(p); }
 void RTSTFT_Manager::parameterChanged(const juce::String &parameterID,
                                       float               newValue)
 {
-  int                        paramFlavor = RT_PARAM_IDS.indexOf(parameterID);
+  int paramFlavor = RT_PARAM_IDS.indexOf(parameterID);
   if (paramFlavor < 0 || paramFlavor >= RT_PARAM_FLAVOR_COUNT) {
     // error handling here...
   }
-  if (!mLastUpdateWasCMD )
-  {
-    // this is stupid and dumb as it's not guarunteed threadsafe (i.e. incoming value could be different from the CMD-derived value)
-    // I just have it here as a reminder in case things go wrong that I might need a more foolproof method of setting the Valuetree
-    // i.e., DELET THIS
+  if (!mLastUpdateWasCMD) {
+    // this is stupid and dumb as it's not guarunteed threadsafe (i.e. incoming
+    // value could be different from the CMD-derived value) I just have it here
+    // as a reminder in case things go wrong that I might need a more foolproof
+    // method of setting the Valuetree i.e., DELET THIS
     rt_set_single_param(p, (rt_param_flavor_t)paramFlavor, newValue);
   }
   else {
     mLastUpdateWasCMD = false;
   }
-  
 }
 
-void RTSTFT_Manager::textEditorReturnKeyPressed(juce::TextEditor &t) {
+void RTSTFT_Manager::textEditorReturnKeyPressed(juce::TextEditor &t)
+{
   auto str = t.getText();
   DBG("CALLBACK TEXT: " << str);
   int result = rt_parse_and_execute(p, str.getCharPointer());
-  DBG(juce::String("Error message: ") << p->parser.error_msg_buffer << " error state: " << result);
+  DBG(juce::String("Error message: \"")
+      << p->parser.error_msg_buffer << "\" error state: " << result);
 }
 
-void RTSTFT_Manager::RTSTFT_ManagerCMDCallback(rt_param_flavor_t inParamFlavor, float inVal)
+void RTSTFT_Manager::RTSTFT_ManagerCMDCallback(rt_param_flavor_t inParamFlavor,
+                                               float             inVal)
 {
   mLastUpdateWasCMD = true;
-  auto param = mInterface->getParameterManager()->getValueTree()->getParameter(RT_PARAM_IDS[inParamFlavor]);
+  auto param = mInterface->getParameterManager()->getValueTree()->getParameter(
+      RT_PARAM_IDS[inParamFlavor]);
   param->setValueNotifyingHost(inVal);
 }
 
-void RTSTFT_CMDListenerCallback(void *RTSTFTManagerPtr, rt_param_flavor_t inParamFlavor, float inVal)
+void RTSTFT_CMDListenerCallback(void             *RTSTFTManagerPtr,
+                                rt_param_flavor_t inParamFlavor, float inVal)
 {
-  ((RTSTFT_Manager *)RTSTFTManagerPtr)->RTSTFT_ManagerCMDCallback(inParamFlavor, inVal);
+  ((RTSTFT_Manager *)RTSTFTManagerPtr)
+      ->RTSTFT_ManagerCMDCallback(inParamFlavor, inVal);
+}
+
+void RTSTFT_Manager::TestMethod()
+{
+  rt_manip_set_bins(p, p->chans[0], RT_MANIP_GAIN, 150, 500, 0.0f);
 }

@@ -36,7 +36,8 @@ void RT_LookAndFeel::Default::drawRotarySlider(juce::Graphics &g, int x, int y,
   juce::Path knobPath;
   float      knobSpread = .2;
   knobPath.addCentredArc(center.getX(), center.getY(), radius, radius, 0,
-                         knobSpread, juce::MathConstants<float>::twoPi-knobSpread, true);
+                         knobSpread,
+                         juce::MathConstants<float>::twoPi - knobSpread, true);
 
   knobPath.startNewSubPath(center.getX(), radiusInv);
   knobPath.lineTo(center.getX(), radiusInv * 1.1);
@@ -46,13 +47,27 @@ void RT_LookAndFeel::Default::drawRotarySlider(juce::Graphics &g, int x, int y,
       juce::AffineTransform::rotation(currentKnobAngle, center.x, center.y));
 }
 
-juce::Label *RT_LookAndFeel::Default::createSliderTextBox(juce::Slider &s) {
+juce::Label *RT_LookAndFeel::Default::createSliderTextBox(juce::Slider &s)
+{
   juce::Label *label_ptr = new juce::Label;
   juce::String str;
   str << s.getValue();
   label_ptr->setText(str, juce::NotificationType::dontSendNotification);
-  label_ptr->setColour(juce::Label::textColourId, getCurrentColourScheme().getUIColour(defaultText));
+  label_ptr->setColour(juce::Label::textColourId,
+                       getCurrentColourScheme().getUIColour(defaultText));
   return label_ptr;
 }
 
-
+void RT_LookAndFeel::Default::drawButtonBackground(
+    juce::Graphics &g, juce::Button &b, const juce::Colour &backgroundColour,
+    bool shouldDrawButtonAsHighlighted, bool shouldDrawButtonAsDown)
+{
+  if (shouldDrawButtonAsDown) {
+    g.fillAll(juce::Colour(220, 232, 255));
+  }
+  else if (shouldDrawButtonAsHighlighted) {
+    g.fillAll(juce::Colours::aliceblue);
+  }
+  else
+    g.fillAll(backgroundColour);
+}
