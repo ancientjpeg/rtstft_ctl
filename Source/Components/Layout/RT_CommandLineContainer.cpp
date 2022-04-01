@@ -9,14 +9,14 @@
 */
 
 #include "RT_CommandLineContainer.h"
-#include "../../Managers/DSPStateManagers/RTSTFT_Manager.h"
 #include <JuceHeader.h>
 
 //==============================================================================
 RT_CommandLineContainer::RT_CommandLineContainer(
     RT_ProcessorInterface *inInterface, int inBorderSize)
     : RT_BorderedComponent(inInterface, inBorderSize),
-      mCommandLinePrompt("RT_CMD_PROMPT", "user@rt_cmd$")
+      mCommandLinePrompt("RT_CMD_PROMPT", "user@rt_cmd$"),
+      mErrorMessageContainer("RT_CMD_ERROR_BOX", "eroors..")
 {
 
   mCommandLineEntry.setColour(juce::TextEditor::focusedOutlineColourId,
@@ -44,6 +44,10 @@ RT_CommandLineContainer::RT_CommandLineContainer(
   mCommandLinePrompt.setJustificationType(
       juce::Justification(juce::Justification::centredRight));
   addAndMakeVisible(mCommandLinePrompt);
+  mErrorMessageContainer.setFont(juce::Font(8));
+  addAndMakeVisible(mErrorMessageContainer);
+  
+  mInterface->getRTSTFTManager()->addListener(this);
 }
 
 void RT_CommandLineContainer::paintInBorder(juce::Graphics &g)
@@ -60,7 +64,17 @@ void RT_CommandLineContainer::resized()
   int  strW   = mCommandLinePrompt.getFont().getStringWidth(
          mCommandLinePrompt.getText());
   auto promptBounds = bounds.removeFromLeft(strW + 15);
+  auto errorBounds  = bounds.removeFromRight(300);
   mCommandLinePrompt.setBounds(promptBounds);
 
   mCommandLineEntry.setBounds(bounds);
+
+  mErrorMessageContainer.setBounds(errorBounds);
+}
+
+void RT_CommandLineContainer::onCMDReturn()
+{
+  auto rtm = mInterface->getRTSTFTManager();
+  mErrorMessageContainer.setText(rtm->getCMDMessage(),
+                                 juce::NotificationType::sendNotification);
 }

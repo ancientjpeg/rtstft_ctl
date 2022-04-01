@@ -13,6 +13,9 @@
 #include "../Interface/RT_ProcessorInterface.h"
 #include <JuceHeader.h>
 
+/* weird stuff with C struct typedefs idk */
+typedef struct RTSTFT_Params_Listener_Return_Data rt_cpp_listener_return_t;
+
 using rt_param_flavor_t = RT_PARAM_FLAVOR;
 
 class RTSTFT_Manager : public juce::AudioProcessorValueTreeState::Listener,
@@ -29,20 +32,26 @@ class RTSTFT_Manager : public juce::AudioProcessorValueTreeState::Listener,
 
 public:
   RTSTFT_Manager(RT_ProcessorInterface *inInterface);
-  ~RTSTFT_Manager() = default;
+  ~RTSTFT_Manager();
   const rt_params getParamsStruct();
   void            prepareToPlay(double inSampleRate, int inSamplesPerBlock);
   void            processBlock(juce::AudioBuffer<float> &buffer);
   void            releaseResources();
   void            parameterChanged(const juce::String &parameterID,
                                    float               newValue) override;
-  void            RTSTFT_ManagerCMDCallback(rt_listener_return_t const info);
-  void            textEditorReturnKeyPressed(juce::TextEditor &t) override;
-  juce::String    getCMDMessage();
+  void         RTSTFT_ManagerCMDCallback(rt_cpp_listener_return_t const info);
+  void         textEditorReturnKeyPressed(juce::TextEditor &t) override;
+  int          getCMDErrorState();
+  juce::String getCMDMessage();
 
   struct Listener {
-    virtual void onManipChanged() {}
-    virtual void onParamChanged() {}
+    virtual void onManipChanged(rt_manip_flavor_t inManipFlavor) {}
+    virtual void onParamChanged(rt_param_flavor_t inParamFlavor,
+                                rt_real           inNewVal)
+    {
+    }
+    virtual void onCMDReturn(){};
+    virtual ~Listener() {}
   };
   void addListener(Listener *l);
 
@@ -52,4 +61,4 @@ private:
 };
 
 extern "C" void RTSTFT_CMDListenerCallback(void *RTSTFTManagerPtr,
-                                           rt_listener_return_t const info);
+                                           rt_cpp_listener_return_t const info);

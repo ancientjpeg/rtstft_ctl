@@ -89,7 +89,11 @@ void RTSTFT_Manager::executeCMDCommand(juce::String inCMDString)
 {
   mCMDErrorState = rt_parse_and_execute(p, inCMDString.toRawUTF8());
   mCMDMessage    = p->parser.error_msg_buffer;
+  mListenerList.call([](Listener &l) { l.onCMDReturn(); });
 }
+
+int          RTSTFT_Manager::getCMDErrorState() { return mCMDErrorState; }
+juce::String RTSTFT_Manager::getCMDMessage() { return mCMDMessage; }
 
 void RTSTFT_Manager::RTSTFT_ManagerCMDCallback(rt_listener_return_t const info)
 {
@@ -101,7 +105,8 @@ void RTSTFT_Manager::RTSTFT_ManagerCMDCallback(rt_listener_return_t const info)
     param->setValueNotifyingHost(info.param_value);
   }
   else if (info.manip_flavor != RT_MANIP_FLAVOR_UNDEFINED) {
-    // notify FFT window
+    mListenerList.call(
+        [&info](Listener &l) { l.onManipChanged(info.manip_flavor); });
   }
 }
 
