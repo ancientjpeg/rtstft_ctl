@@ -36,15 +36,19 @@ void RT_FFTDisplayContainer::paint(juce::Graphics &g)
       juce::ResizableWindow::backgroundColourId)); // clear the background
 
   g.setColour(juce::Colours::black);
-  g.drawRect(getLocalBounds(), 1); // draw an outline around the component
+  g.drawRect(getLocalBounds(), 2); // draw an outline around the component
 
-  g.setColour(juce::Colours::black);
-  const rt_params p = mInterface->getRTSTFTManager()->getParamsStruct();
-  for (int i = 0; i < p->hold->frame_size / 4; i++) {
-    float height = p->hold->amp_holder[i * 4] * getHeight();
-    float x      = (float)i / (p->hold->frame_size / 4) * getWidth();
-    float width  = (float)1 / (p->hold->frame_size / 4) * getWidth();
-    g.fillRect(x, (float)getHeight() - height, width, (float)getHeight());
+  g.setColour(juce::Colours::lightgrey);
+  const rt_params p       = mInterface->getRTSTFTManager()->getParamsStruct();
+  int             maxBars = 128;
+  int             numAmpsInFFT = rt_manip_len(p);
+  int   barsInWindow = numAmpsInFFT < maxBars ? numAmpsInFFT : maxBars;
+  float width        = (float)1 / barsInWindow * getWidth();
+  int   i_incr       = numAmpsInFFT <= maxBars ? 1 : numAmpsInFFT / maxBars;
+  for (int i = 0; i < barsInWindow; i++) {
+    float height = p->hold->amp_holder[i * i_incr] * getHeight() / 32;
+    float x      = (float)i / barsInWindow * getWidth();
+    g.fillRect(x, (float)getHeight() - height, width, height);
   }
 }
 

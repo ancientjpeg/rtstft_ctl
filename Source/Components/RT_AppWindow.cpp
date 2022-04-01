@@ -10,6 +10,7 @@
 
 #include "RT_AppWindow.h"
 #include "Layout/RT_MainDisplay.h"
+#include "../Managers/LookAndFeelManagement/RT_LookAndFeelManagement.h"
 
 RT_AppWindow::RT_AppWindow(RT_ProcessorInterface *inInterface, int inBorderSize)
     : RT_BorderedComponent(inInterface, inBorderSize),
@@ -24,7 +25,7 @@ void RT_AppWindow::paintInBorder(juce::Graphics &g) {}
 void RT_AppWindow::resized()
 {
   auto bounds       = getBoundsAdj();
-  auto headerBounds = bounds.removeFromTop(0.1f * getHeightAdj());
+  auto headerBounds = bounds.removeFromTop(RT_LookAndFeel::headerHeightRatio * getHeightAdj());
   mHeader.setBounds(headerBounds.reduced(RT_MAIN_PADDING));
   mMainDisplay.setBounds(bounds);
 }

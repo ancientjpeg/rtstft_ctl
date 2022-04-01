@@ -16,8 +16,7 @@
 RT_CommandLineContainer::RT_CommandLineContainer(
     RT_ProcessorInterface *inInterface, int inBorderSize)
     : RT_BorderedComponent(inInterface, inBorderSize),
-      mCommandLinePrompt("RT_CMD_PROMPT", "user@rt_cmd$"),
-      mCommandLineButton("TEST")
+      mCommandLinePrompt("RT_CMD_PROMPT", "user@rt_cmd$")
 {
 
   mCommandLineEntry.setColour(juce::TextEditor::focusedOutlineColourId,
@@ -45,15 +44,7 @@ RT_CommandLineContainer::RT_CommandLineContainer(
   mCommandLinePrompt.setJustificationType(
       juce::Justification(juce::Justification::centredRight));
   addAndMakeVisible(mCommandLinePrompt);
-
-  mCommandLineButton.onClick = [this]() {
-    DBG("cluck.");
-    mInterface->getRTSTFTManager()->TestMethod();
-  };
-  addAndMakeVisible(mCommandLineButton);
 }
-
-RT_CommandLineContainer::~RT_CommandLineContainer() {}
 
 void RT_CommandLineContainer::paintInBorder(juce::Graphics &g)
 {
@@ -70,9 +61,6 @@ void RT_CommandLineContainer::resized()
          mCommandLinePrompt.getText());
   auto promptBounds = bounds.removeFromLeft(strW + 15);
   mCommandLinePrompt.setBounds(promptBounds);
-
-  auto buttonBounds = bounds.removeFromRight(200);
-  mCommandLineButton.setBounds(buttonBounds);
 
   mCommandLineEntry.setBounds(bounds);
 }

@@ -16,7 +16,7 @@
 using rt_param_flavor_t = RT_PARAM_FLAVOR;
 
 class RTSTFT_Manager : public juce::AudioProcessorValueTreeState::Listener,
-                       virtual public juce::TextEditor::Listener {
+                       public juce::TextEditor::Listener {
   RT_ProcessorInterface *mInterface;
   rt_params              p;
   int                    mCurrentSamplesPerBlock;
@@ -24,22 +24,32 @@ class RTSTFT_Manager : public juce::AudioProcessorValueTreeState::Listener,
   int                    mNumChannels;
   bool                   mInitialized      = false;
   bool                   mLastUpdateWasCMD = false;
+  juce::String           mCMDMessage       = "";
+  int                    mCMDErrorState    = 0;
 
 public:
   RTSTFT_Manager(RT_ProcessorInterface *inInterface);
-  ~RTSTFT_Manager();
+  ~RTSTFT_Manager() = default;
   const rt_params getParamsStruct();
   void            prepareToPlay(double inSampleRate, int inSamplesPerBlock);
   void            processBlock(juce::AudioBuffer<float> &buffer);
   void            releaseResources();
   void            parameterChanged(const juce::String &parameterID,
                                    float               newValue) override;
-  void RTSTFT_ManagerCMDCallback(rt_param_flavor_t inParamFlavor, float inVal);
-  void textEditorReturnKeyPressed(juce::TextEditor &t) override;
+  void            RTSTFT_ManagerCMDCallback(rt_listener_return_t const info);
+  void            textEditorReturnKeyPressed(juce::TextEditor &t) override;
+  juce::String    getCMDMessage();
 
-  void TestMethod();
+  struct Listener {
+    virtual void onManipChanged() {}
+    virtual void onParamChanged() {}
+  };
+  void addListener(Listener *l);
+
+private:
+  void                         executeCMDCommand(juce::String inCMDString);
+  juce::ListenerList<Listener> mListenerList;
 };
 
-extern "C" void RTSTFT_CMDListenerCallback(void             *RTSTFTManagerPtr,
-                                           rt_param_flavor_t inParamFlavor,
-                                           float             inVal);
+extern "C" void RTSTFT_CMDListenerCallback(void *RTSTFTManagerPtr,
+                                           rt_listener_return_t const info);

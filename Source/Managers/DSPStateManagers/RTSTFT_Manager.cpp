@@ -46,7 +46,7 @@ void RTSTFT_Manager::prepareToPlay(double inSampleRate, int inSamplesPerBlock)
     mCurrentSamplesPerBlock = mCurrentSamplesPerBlock < samplesPerBlock
                                   ? samplesPerBlock
                                   : mCurrentSamplesPerBlock;
-    p            = rt_init(mNumChannels, 1024, mCurrentSamplesPerBlock, 4, 0,
+    p            = rt_init(mNumChannels, 2048, mCurrentSamplesPerBlock, 4, 0,
                            mCurrentSampleRate);
     p->listener  = {(void *)this, &RTSTFT_CMDListenerCallback};
     mInitialized = true;
@@ -78,32 +78,35 @@ void RTSTFT_Manager::parameterChanged(const juce::String &parameterID,
   }
 }
 
+void RTSTFT_Manager::addListener(Listener *l) { mListenerList.add(l); }
+
 void RTSTFT_Manager::textEditorReturnKeyPressed(juce::TextEditor &t)
 {
-  auto str = t.getText();
-  DBG("CALLBACK TEXT: " << str);
-  int result = rt_parse_and_execute(p, str.getCharPointer());
-  DBG(juce::String("Error message: \"")
-      << p->parser.error_msg_buffer << "\" error state: " << result);
+  executeCMDCommand(t.getText());
 }
 
-void RTSTFT_Manager::RTSTFT_ManagerCMDCallback(rt_param_flavor_t inParamFlavor,
-                                               float             inVal)
+void RTSTFT_Manager::executeCMDCommand(juce::String inCMDString)
+{
+  mCMDErrorState = rt_parse_and_execute(p, inCMDString.toRawUTF8());
+  mCMDMessage    = p->parser.error_msg_buffer;
+}
+
+void RTSTFT_Manager::RTSTFT_ManagerCMDCallback(rt_listener_return_t const info)
 {
   mLastUpdateWasCMD = true;
-  auto param = mInterface->getParameterManager()->getValueTree()->getParameter(
-      RT_PARAM_IDS[inParamFlavor]);
-  param->setValueNotifyingHost(inVal);
+  if (info.param_flavor != RT_PARAM_FLAVOR_UNDEFINED) {
+    auto param
+        = mInterface->getParameterManager()->getValueTree()->getParameter(
+            RT_PARAM_IDS[info.param_flavor]);
+    param->setValueNotifyingHost(info.param_value);
+  }
+  else if (info.manip_flavor != RT_MANIP_FLAVOR_UNDEFINED) {
+    // notify FFT window
+  }
 }
 
-void RTSTFT_CMDListenerCallback(void             *RTSTFTManagerPtr,
-                                rt_param_flavor_t inParamFlavor, float inVal)
+void RTSTFT_CMDListenerCallback(void                      *RTSTFTManagerPtr,
+                                rt_listener_return_t const info)
 {
-  ((RTSTFT_Manager *)RTSTFTManagerPtr)
-      ->RTSTFT_ManagerCMDCallback(inParamFlavor, inVal);
-}
-
-void RTSTFT_Manager::TestMethod()
-{
-  rt_manip_set_bins(p, p->chans[0], RT_MANIP_GAIN, 150, 500, 0.0f);
+  ((RTSTFT_Manager *)RTSTFTManagerPtr)->RTSTFT_ManagerCMDCallback(info);
 }
