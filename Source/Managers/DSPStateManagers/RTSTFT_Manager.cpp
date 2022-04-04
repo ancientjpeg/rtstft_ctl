@@ -88,7 +88,7 @@ void RTSTFT_Manager::textEditorReturnKeyPressed(juce::TextEditor &t)
 void RTSTFT_Manager::executeCMDCommand(juce::String inCMDString)
 {
   mCMDErrorState = rt_parse_and_execute(p, inCMDString.toRawUTF8());
-  mCMDMessage    = p->parser.error_msg_buffer;
+  mCMDMessage    = juce::String(p->parser.error_msg_buffer);
   mListenerList.call([](Listener &l) { l.onCMDReturn(); });
 }
 
