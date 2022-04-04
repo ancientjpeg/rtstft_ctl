@@ -32,7 +32,8 @@ RT_CommandLineContainer::RT_CommandLineContainer(
       mInterface->getRTSTFTManager()));
   mCommandLineEntry.onReturnKey = [this]() {
     auto text = mCommandLineEntry.getText();
-    mCommandHistory.push(text);
+    newHistoryCommand(text);
+    mHistoryIterator = mCommandHistory.begin();
     mCommandLineEntry.clear();
     mCommandLineEntry.repaint();
   };
@@ -49,6 +50,8 @@ RT_CommandLineContainer::RT_CommandLineContainer(
   addAndMakeVisible(mErrorMessageContainer);
 
   mInterface->getRTSTFTManager()->addListener(this);
+  mHistoryIterator = mCommandHistory.begin();
+  mCommandLineEntry.addKeyListener(this);
 }
 
 void RT_CommandLineContainer::paintInBorder(juce::Graphics &g)
@@ -73,9 +76,51 @@ void RT_CommandLineContainer::resized()
   mErrorMessageContainer.setBounds(errorBounds);
 }
 
+bool RT_CommandLineContainer::keyPressed(const juce::KeyPress &kp,
+                                         juce::Component      *orig)
+{
+  if (kp == juce::KeyPress::upKey) {
+    showNextStringInHistory();
+  }
+  else if (kp == juce::KeyPress::downKey) {
+    showNextStringInHistory(true);
+  }
+  return false;
+}
+void RT_CommandLineContainer::showNextStringInHistory(bool reverse)
+{
+  if (!mCommandLineEntry.isTextInputActive() || mCommandHistory.empty()) {
+    return;
+  }
+  juce::String str;
+  
+  if (reverse) {
+    if (mHistoryIterator != mCommandHistory.begin()) {
+      str = *--mHistoryIterator;
+    }
+    mCommandLineEntry.setText(str,
+                              juce::NotificationType::dontSendNotification);
+  } else {
+    if (mHistoryIterator == mCommandHistory.end()) {
+      --mHistoryIterator;
+    }
+    str = *mHistoryIterator++;
+    mCommandLineEntry.setText(str,
+                              juce::NotificationType::dontSendNotification);
+  }
+}
+
 void RT_CommandLineContainer::onCMDReturn()
 {
   auto rtm = mInterface->getRTSTFTManager();
   mErrorMessageContainer.setText(rtm->getCMDMessage(),
                                  juce::NotificationType::sendNotification);
+}
+
+void RT_CommandLineContainer::newHistoryCommand(juce::String &s)
+{
+  mCommandHistory.push_front(s);
+  if (mCommandHistory.size() > 3) {
+    mCommandHistory.pop_back();
+  }
 }
