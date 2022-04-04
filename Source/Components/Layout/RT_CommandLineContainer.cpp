@@ -28,14 +28,14 @@ RT_CommandLineContainer::RT_CommandLineContainer(
   mCommandLineEntry.setMultiLine(false);
   mCommandLineEntry.setTextToShowWhenEmpty(mEntryPlaceholderText,
                                            juce::Colours::lightgrey);
-  mCommandLineEntry.addListener(static_cast<juce::TextEditor::Listener *>(
-      mInterface->getRTSTFTManager()));
   mCommandLineEntry.onReturnKey = [this]() {
     auto text = mCommandLineEntry.getText();
     newHistoryCommand(text);
     mHistoryIterator = mCommandHistory.begin();
     mCommandLineEntry.clear();
     mCommandLineEntry.repaint();
+    mInterface->getRTSTFTManager()->executeCMDCommand(text);
+    mErrorMessageContainer.setText(mInterface->getRTSTFTManager()->getCMDMessage(), juce::NotificationType::dontSendNotification);
   };
   addAndMakeVisible(mCommandLineEntry);
 
@@ -49,7 +49,6 @@ RT_CommandLineContainer::RT_CommandLineContainer(
   mErrorMessageContainer.setFont(juce::Font(8));
   addAndMakeVisible(mErrorMessageContainer);
 
-  mInterface->getRTSTFTManager()->addListener(this);
   mHistoryIterator = mCommandHistory.begin();
   mCommandLineEntry.addKeyListener(this);
 }
@@ -110,12 +109,6 @@ void RT_CommandLineContainer::showNextStringInHistory(bool reverse)
   }
 }
 
-void RT_CommandLineContainer::onCMDReturn()
-{
-  auto rtm = mInterface->getRTSTFTManager();
-  mErrorMessageContainer.setText(rtm->getCMDMessage(),
-                                 juce::NotificationType::sendNotification);
-}
 
 void RT_CommandLineContainer::newHistoryCommand(juce::String &s)
 {

@@ -80,16 +80,10 @@ void RTSTFT_Manager::parameterChanged(const juce::String &parameterID,
 
 void RTSTFT_Manager::addListener(Listener *l) { mListenerList.add(l); }
 
-void RTSTFT_Manager::textEditorReturnKeyPressed(juce::TextEditor &t)
-{
-  executeCMDCommand(t.getText());
-}
-
 void RTSTFT_Manager::executeCMDCommand(juce::String inCMDString)
 {
   mCMDErrorState = rt_parse_and_execute(p, inCMDString.toRawUTF8());
   mCMDMessage    = juce::String(p->parser.error_msg_buffer);
-  mListenerList.call([](Listener &l) { l.onCMDReturn(); });
 }
 
 int          RTSTFT_Manager::getCMDErrorState() { return mCMDErrorState; }

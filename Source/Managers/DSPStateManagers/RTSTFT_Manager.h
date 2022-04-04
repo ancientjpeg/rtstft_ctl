@@ -18,8 +18,7 @@ typedef struct RTSTFT_Params_Listener_Return_Data rt_cpp_listener_return_t;
 
 using rt_param_flavor_t = RT_PARAM_FLAVOR;
 
-class RTSTFT_Manager : public juce::AudioProcessorValueTreeState::Listener,
-                       public juce::TextEditor::Listener {
+class RTSTFT_Manager : public juce::AudioProcessorValueTreeState::Listener {
   RT_ProcessorInterface *mInterface;
   rt_params              p;
   int                    mCurrentSamplesPerBlock;
@@ -40,7 +39,8 @@ public:
   void            parameterChanged(const juce::String &parameterID,
                                    float               newValue) override;
   void         RTSTFT_ManagerCMDCallback(rt_cpp_listener_return_t const info);
-  void         textEditorReturnKeyPressed(juce::TextEditor &t) override;
+  
+  void         executeCMDCommand(juce::String inCMDString);
   int          getCMDErrorState();
   juce::String getCMDMessage();
 
@@ -50,13 +50,12 @@ public:
                                 rt_real           inNewVal)
     {
     }
-    virtual void onCMDReturn(){};
     virtual ~Listener() {}
   };
   void addListener(Listener *l);
 
 private:
-  void                         executeCMDCommand(juce::String inCMDString);
+  
   juce::ListenerList<Listener> mListenerList;
 };
 

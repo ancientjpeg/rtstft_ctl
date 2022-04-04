@@ -19,7 +19,6 @@
 /*
  */
 class RT_CommandLineContainer : public RT_BorderedComponent,
-                                public RTSTFT_Manager::Listener,
                                 public juce::KeyListener {
 public:
   RT_CommandLineContainer(RT_ProcessorInterface *inInterface, int inBorderSize);
@@ -27,7 +26,6 @@ public:
 
   void paintInBorder(juce::Graphics &) override;
   void resized() override;
-  void onCMDReturn() override;
   bool keyPressed(const juce::KeyPress &kp, juce::Component *orig) override;
 
 private:

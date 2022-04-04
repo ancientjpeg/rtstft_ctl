@@ -26,7 +26,7 @@ RT_FFTDisplayContainer::RT_FFTDisplayContainer(
     copyManips((rt_manip_flavor_t)i);
   }
 
-  mInterface->getRTSTFTManager()->addListener(this);
+//  mInterface->getRTSTFTManager()->addListener(this);
   
   startTimer(1000 / 15);
 }
