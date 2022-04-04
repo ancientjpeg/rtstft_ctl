@@ -29,9 +29,10 @@ public:
   void onCMDReturn() override;
 
 private:
-  int              mBorderSize;
-  juce::String     mEntryPlaceholderText = "Enter your rt_cmd commands here.";
-  juce::Label      mCommandLinePrompt, mErrorMessageContainer;
-  juce::TextEditor mCommandLineEntry;
+  int          mBorderSize;
+  juce::String mEntryPlaceholderText = "Enter your rt_cmd commands here.";
+  std::queue<juce::String> mCommandHistory;
+  juce::Label              mCommandLinePrompt, mErrorMessageContainer;
+  juce::TextEditor         mCommandLineEntry;
   JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(RT_CommandLineContainer)
 };

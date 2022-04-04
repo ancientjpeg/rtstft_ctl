@@ -97,8 +97,8 @@ juce::String RTSTFT_Manager::getCMDMessage() { return mCMDMessage; }
 
 void RTSTFT_Manager::RTSTFT_ManagerCMDCallback(rt_listener_return_t const info)
 {
-  mLastUpdateWasCMD = true;
   if (info.param_flavor != RT_PARAM_FLAVOR_UNDEFINED) {
+    mLastUpdateWasCMD = true;
     auto param
         = mInterface->getParameterManager()->getValueTree()->getParameter(
             RT_PARAM_IDS[info.param_flavor]);

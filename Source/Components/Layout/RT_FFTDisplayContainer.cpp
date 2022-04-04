@@ -12,12 +12,12 @@
 
 //==============================================================================
 RT_FFTDisplayContainer::RT_FFTDisplayContainer(
-    RT_ProcessorInterface *inInterface)
-    : mInterface(inInterface)
+    RT_ProcessorInterface *inInterface, int inBorderSize)
+    : RT_BorderedComponent(inInterface, inBorderSize)
 {
   // In your constructor, you should add any child components, and
   // initialise any special settings that your component needs.
-  startTimer(1000 / 5);
+  
   const rt_params p        = mInterface->getRTSTFTManager()->getParamsStruct();
 
   auto            blocklen = rt_manip_block_len(p);
@@ -27,11 +27,13 @@ RT_FFTDisplayContainer::RT_FFTDisplayContainer(
   }
 
   mInterface->getRTSTFTManager()->addListener(this);
+  
+  startTimer(1000 / 15);
 }
 
 RT_FFTDisplayContainer::~RT_FFTDisplayContainer() {}
 
-void RT_FFTDisplayContainer::paint(juce::Graphics &g)
+void RT_FFTDisplayContainer::paintInBorder(juce::Graphics &g)
 {
   /* This demo code just fills the component's background and
      draws some placeholder text to get you started.
@@ -51,12 +53,12 @@ void RT_FFTDisplayContainer::paint(juce::Graphics &g)
   int             maxBars = 128;
   int             numAmpsInFFT = rt_manip_len(p);
   int   barsInWindow = numAmpsInFFT < maxBars ? numAmpsInFFT : maxBars;
-  float width        = (float)1 / barsInWindow * getWidth();
+  float width        = (float)1 / barsInWindow * getWidthAdj();
   int   i_incr       = numAmpsInFFT <= maxBars ? 1 : numAmpsInFFT / maxBars;
   for (int i = 0; i < barsInWindow; i++) {
-    float height = p->hold->amp_holder[i * i_incr] * getHeight() / 32;
-    float x      = (float)i / barsInWindow * getWidth();
-    g.fillRect(x, (float)getHeight() - height, width, height);
+    float height = p->hold->amp_holder[i * i_incr] * getHeightAdj() * 32;
+    float x      = (float)i / barsInWindow * getWidthAdj();
+    g.fillRect(x, (float)getHeight() - height - mBorderSize / 2, width, height);
   }
 }
 

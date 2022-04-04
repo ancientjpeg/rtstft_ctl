@@ -12,22 +12,22 @@
 
 #include "../../Managers/DSPStateManagers/RTSTFT_Manager.h"
 #include "../../Managers/Interface/RT_ProcessorInterface.h"
+#include "../Utility/RT_BorderedComponent.h"
 #include <JuceHeader.h>
 
 //==============================================================================
 /*
  */
-class RT_FFTDisplayContainer : public juce::Component,
+class RT_FFTDisplayContainer : public RT_BorderedComponent,
                                public juce::Timer,
                                public RTSTFT_Manager::Listener {
-  RT_ProcessorInterface     *mInterface;
   std::unique_ptr<rt_real[]> mLocalManipCopies;
 
 public:
-  RT_FFTDisplayContainer(RT_ProcessorInterface *inInterface);
+  RT_FFTDisplayContainer(RT_ProcessorInterface *inInterface, int inBorderSize);
   ~RT_FFTDisplayContainer() override;
 
-  void paint(juce::Graphics &) override;
+  void paintInBorder(juce::Graphics &) override;
   void resized() override;
   void timerCallback() override;
   void onManipChanged(rt_manip_flavor_t inManipFlavor);

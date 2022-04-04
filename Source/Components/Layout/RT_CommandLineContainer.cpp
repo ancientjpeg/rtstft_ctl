@@ -32,6 +32,7 @@ RT_CommandLineContainer::RT_CommandLineContainer(
       mInterface->getRTSTFTManager()));
   mCommandLineEntry.onReturnKey = [this]() {
     auto text = mCommandLineEntry.getText();
+    mCommandHistory.push(text);
     mCommandLineEntry.clear();
     mCommandLineEntry.repaint();
   };
@@ -46,7 +47,7 @@ RT_CommandLineContainer::RT_CommandLineContainer(
   addAndMakeVisible(mCommandLinePrompt);
   mErrorMessageContainer.setFont(juce::Font(8));
   addAndMakeVisible(mErrorMessageContainer);
-  
+
   mInterface->getRTSTFTManager()->addListener(this);
 }
 
