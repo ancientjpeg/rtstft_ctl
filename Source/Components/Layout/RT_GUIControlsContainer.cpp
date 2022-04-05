@@ -23,7 +23,7 @@ RT_GUIControlsContainer::RT_GUIControlsContainer(
         RT_PARAM_RANGES.getRawDataPointer() + i, RT_PARAM_IDS[i]));
     mKnobAttachments.add(
         std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(
-            *mInterface->getParameterManager()->getValueTree(), RT_PARAM_IDS[i],
+            *mInterface->getParameterManager()->getValueTreeState(), RT_PARAM_IDS[i],
             *mKnobs[i]->getKnobPointer()));
     addAndMakeVisible(*mKnobs[i]);
   }

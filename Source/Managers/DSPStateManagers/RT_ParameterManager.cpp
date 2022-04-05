@@ -31,7 +31,7 @@ RT_ParameterManager::RT_ParameterManager(RT_ProcessorInterface *inInterface)
   }
 }
 RT_ParameterManager::~RT_ParameterManager() {}
-juce::AudioProcessorValueTreeState *RT_ParameterManager::getValueTree()
+juce::AudioProcessorValueTreeState *RT_ParameterManager::getValueTreeState()
 {
   return mValueTreeState.get();
 }

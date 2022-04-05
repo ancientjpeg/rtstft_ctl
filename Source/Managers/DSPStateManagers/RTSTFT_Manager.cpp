@@ -17,6 +17,7 @@
 RTSTFT_Manager::RTSTFT_Manager(RT_ProcessorInterface *inInterface)
     : mInterface(inInterface), p(NULL), mCurrentSamplesPerBlock(0)
 {
+  resetParamsStruct();
 }
 RTSTFT_Manager::~RTSTFT_Manager()
 {
@@ -25,34 +26,38 @@ RTSTFT_Manager::~RTSTFT_Manager()
     p = NULL;
   }
 }
+void RTSTFT_Manager::resetParamsStruct(int inNumChans, float inSampleRate,
+                                       int inSamplesPerBlock, int inFFTSize,
+                                       int inOverlapFactor)
+{
+  // this needs some work
+  if (mInitialized) {
+    mInitialized = false;
+    rt_clean(p);
+    p = NULL;
+  }
+  mCurrentSampleRate  = inSampleRate;
+  mNumChannels        = inNumChans;
+  int samplesPerBlock = mCurrentSamplesPerBlock
+      = RT_Utilities::getNearestPowerOfTwo(inSamplesPerBlock);
+  p = rt_init(mNumChannels, inFFTSize, mCurrentSamplesPerBlock, inOverlapFactor,
+              0, mCurrentSampleRate);
+  p->listener  = {(void *)this, &RTSTFT_CMDListenerCallback};
+  mInitialized = true;
+}
+
 const rt_params RTSTFT_Manager::getParamsStruct() { return p; }
+
 void RTSTFT_Manager::prepareToPlay(double inSampleRate, int inSamplesPerBlock)
 {
-  if (mCurrentSampleRate != inSampleRate) {
-    mCurrentSampleRate = inSampleRate;
-    if (mInitialized) {
-      rt_set_sample_rate(p, mCurrentSampleRate);
-    }
-  }
   int numChannels = mInterface->getProcessor()->getChannelCountOfBus(true, 0);
-  if (!mInitialized || inSamplesPerBlock >= mCurrentSamplesPerBlock
-      || mNumChannels != numChannels) {
-    if (mInitialized) {
-      mInitialized = false;
-      rt_clean(p);
-      p = NULL;
-    }
-    mNumChannels        = numChannels;
-    int samplesPerBlock = RT_Utilities::getNearestPowerOfTwo(inSamplesPerBlock);
-    mCurrentSamplesPerBlock = mCurrentSamplesPerBlock < samplesPerBlock
-                                  ? samplesPerBlock
-                                  : mCurrentSamplesPerBlock;
-    p            = rt_init(mNumChannels, 2048, mCurrentSamplesPerBlock, 4, 0,
-                           mCurrentSampleRate);
-    p->listener  = {(void *)this, &RTSTFT_CMDListenerCallback};
-    mInitialized = true;
+  if (!mInitialized) {
+    resetParamsStruct(numChannels, inSampleRate, inSamplesPerBlock);
   }
-  serializeParamsStruct();
+  assert(inSamplesPerBlock < mCurrentSamplesPerBlock);
+  if (inSampleRate != p->sample_rate) {
+    p->sample_rate = inSampleRate;
+  }
 }
 
 void RTSTFT_Manager::processBlock(juce::AudioBuffer<float> &buffer)
@@ -89,34 +94,40 @@ void RTSTFT_Manager::executeCMDCommand(juce::String inCMDString)
   mCMDMessage    = juce::String(p->parser.error_msg_buffer);
 }
 
-int               RTSTFT_Manager::getCMDErrorState() { return mCMDErrorState; }
-juce::String      RTSTFT_Manager::getCMDMessage() { return mCMDMessage; }
+int          RTSTFT_Manager::getCMDErrorState() { return mCMDErrorState; }
+juce::String RTSTFT_Manager::getCMDMessage() { return mCMDMessage; }
 
-juce::XmlElement *RTSTFT_Manager::serializeParamsStruct()
+std::unique_ptr<juce::XmlElement> RTSTFT_Manager::serializeParamsStruct()
 {
   assert(p != NULL);
-  juce::XmlElement *p_xml     = new juce::XmlElement("rt_params");
+  std::unique_ptr<juce::XmlElement> p_xml
+      = std::make_unique<juce::XmlElement>("rt_params");
   juce::XmlElement *chans_xml = new juce::XmlElement("chans");
   p_xml->addChildElement(chans_xml);
   for (int i = 0; i < p->num_chans; i++) {
     rt_chan           c = p->chans[i];
     juce::XmlElement *c_xml
         = new juce::XmlElement(juce::String("c") + juce::String(i));
+    chans_xml->addChildElement(c_xml);
     c_xml->setAttribute(
         "manips", RT_Utilities::serializeFloats(c->manip->hold_manips,
                                                 rt_manip_block_len(p) * 4));
-    chans_xml->addChildElement(c_xml);
   }
-  DBG(p_xml->toString());
   return p_xml;
 }
 
 void RTSTFT_Manager::deserializeParamsStruct(juce::XmlElement *p_xml)
 {
+  assert(p != NULL);
   for (int i = 0; i < p->num_chans; i++) {
-    auto c_xml = p_xml->getChildByName("chans")->getChildByName(
-        juce::String("c") + juce::String(i));
+    rt_chan c     = p->chans[i];
+    auto    c_xml = p_xml->getChildByName("chans")->getChildByName(
+           juce::String("c") + juce::String(i));
     juce::String manips_b64 = c_xml->getStringAttribute("manips");
+    auto         mem
+        = RT_Utilities::deserializeFloats(manips_b64, rt_manip_block_len(p));
+    rt_manip_overwrite_manips(p, c, (rt_real *)mem.getData(),
+                              rt_manip_block_len(p));
   }
 }
 
@@ -125,7 +136,7 @@ void RTSTFT_Manager::RTSTFT_ManagerCMDCallback(rt_listener_return_t const info)
   if (info.param_flavor != RT_PARAM_FLAVOR_UNDEFINED) {
     mLastUpdateWasCMD = true;
     auto param
-        = mInterface->getParameterManager()->getValueTree()->getParameter(
+        = mInterface->getParameterManager()->getValueTreeState()->getParameter(
             RT_PARAM_IDS[info.param_flavor]);
     param->setValueNotifyingHost(info.param_value);
   }

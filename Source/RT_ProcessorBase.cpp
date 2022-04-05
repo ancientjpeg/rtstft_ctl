@@ -138,9 +138,14 @@ void RT_ProcessorBase::getStateInformation(juce::MemoryBlock &destData)
   // You should use this method to store your parameters in the memory block.
   // You could do that either as raw data, or use the XML or ValueTree classes
   // as intermediaries to make it easy to save and load complex data.
-  auto paramState = mParameterManager.getValueTree()->copyState().createXml();
-  auto state      = std::make_unique<juce::XmlElement>("rtstft_ctl_state");
+  auto paramState
+      = mParameterManager.getValueTreeState()->copyState().createXml();
+  DBG(paramState->toString());
+  auto state = std::make_unique<juce::XmlElement>("rtstft_ctl_state");
   state->addChildElement(paramState.release());
+  state->addChildElement(mRTSTFTManager.serializeParamsStruct().release());
+
+  copyXmlToBinary(*state, destData);
 }
 
 void RT_ProcessorBase::setStateInformation(const void *data, int sizeInBytes)
@@ -148,4 +153,8 @@ void RT_ProcessorBase::setStateInformation(const void *data, int sizeInBytes)
   // You should use this method to restore your parameters from this memory
   // block, whose contents will have been created by the getStateInformation()
   // call.
+  auto state = getXmlFromBinary(data, sizeInBytes);
+  mParameterManager.getValueTreeState()->replaceState(
+      juce::ValueTree::fromXml(*state->getChildByName("PARAMETER_TREE")));
+  mRTSTFTManager.deserializeParamsStruct(state->getChildByName("rt_params"));
 }
