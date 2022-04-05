@@ -12,7 +12,6 @@
 #include <JuceHeader.h>
 
 class RT_ProcessorBase;
-class RT_PropertyManager;
 class RT_ParameterManager;
 class RTSTFT_Manager;
 namespace RT_LookAndFeel {
@@ -26,6 +25,5 @@ public:
   virtual juce::AudioProcessor    *getProcessor()          = 0;
   virtual RT_LookAndFeel::Manager *getLookAndFeelManager() = 0;
   virtual RT_ParameterManager     *getParameterManager()   = 0;
-  virtual RT_PropertyManager      *getPropertyManager()    = 0;
   virtual RTSTFT_Manager          *getRTSTFTManager()      = 0;
 };

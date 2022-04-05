@@ -86,10 +86,6 @@
                 file="Source/Managers/DSPStateManagers/RT_ParameterManager.cpp"/>
           <FILE id="TRBpat" name="RT_ParameterManager.h" compile="0" resource="0"
                 file="Source/Managers/DSPStateManagers/RT_ParameterManager.h"/>
-          <FILE id="sLPSC9" name="RT_PropertyManager.cpp" compile="1" resource="0"
-                file="Source/Managers/DSPStateManagers/RT_PropertyManager.cpp"/>
-          <FILE id="oXSRGL" name="RT_PropertyManager.h" compile="0" resource="0"
-                file="Source/Managers/DSPStateManagers/RT_PropertyManager.h"/>
           <FILE id="pmoXv9" name="RTSTFT_Manager.cpp" compile="1" resource="0"
                 file="Source/Managers/DSPStateManagers/RTSTFT_Manager.cpp"/>
           <FILE id="OCTN76" name="RTSTFT_Manager.h" compile="0" resource="0"

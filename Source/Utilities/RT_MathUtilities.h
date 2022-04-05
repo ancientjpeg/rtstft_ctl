@@ -9,7 +9,9 @@
 */
 
 #pragma once
+#include <JuceHeader.h>
 #include <type_traits>
+
 namespace RT_Utilities {
 
 template <typename IntegralType>
@@ -32,6 +34,23 @@ IntegralType getNearestPowerOfTwo(IntegralType inValue)
     finalValue = 1 << nextHighestPower;
   }
   return finalValue;
+}
+
+typedef union {
+  float    f;
+  uint32_t i;
+} float_bits;
+
+juce::String serializeFloats(float *data, int count)
+{
+  return juce::Base64::toBase64((void *)data, count * 4);
+}
+juce::MemoryBlock deserializeFloats(juce::String data, int count)
+{
+  juce::MemoryBlock        mem(count * 4, false);
+  juce::MemoryOutputStream stream(mem, false);
+  juce::Base64::convertFromBase64(stream, data);
+  return mem;
 }
 
 } // namespace RT_Utilities

@@ -22,6 +22,7 @@ RTSTFT_Manager::~RTSTFT_Manager()
 {
   if (mInitialized) {
     rt_clean(p);
+    p = NULL;
   }
 }
 const rt_params RTSTFT_Manager::getParamsStruct() { return p; }
@@ -51,7 +52,9 @@ void RTSTFT_Manager::prepareToPlay(double inSampleRate, int inSamplesPerBlock)
     p->listener  = {(void *)this, &RTSTFT_CMDListenerCallback};
     mInitialized = true;
   }
+  serializeParamsStruct();
 }
+
 void RTSTFT_Manager::processBlock(juce::AudioBuffer<float> &buffer)
 {
   rt_cycle(p, buffer.getArrayOfWritePointers(), buffer.getNumSamples());
@@ -86,8 +89,36 @@ void RTSTFT_Manager::executeCMDCommand(juce::String inCMDString)
   mCMDMessage    = juce::String(p->parser.error_msg_buffer);
 }
 
-int          RTSTFT_Manager::getCMDErrorState() { return mCMDErrorState; }
-juce::String RTSTFT_Manager::getCMDMessage() { return mCMDMessage; }
+int               RTSTFT_Manager::getCMDErrorState() { return mCMDErrorState; }
+juce::String      RTSTFT_Manager::getCMDMessage() { return mCMDMessage; }
+
+juce::XmlElement *RTSTFT_Manager::serializeParamsStruct()
+{
+  assert(p != NULL);
+  juce::XmlElement *p_xml     = new juce::XmlElement("rt_params");
+  juce::XmlElement *chans_xml = new juce::XmlElement("chans");
+  p_xml->addChildElement(chans_xml);
+  for (int i = 0; i < p->num_chans; i++) {
+    rt_chan           c = p->chans[i];
+    juce::XmlElement *c_xml
+        = new juce::XmlElement(juce::String("c") + juce::String(i));
+    c_xml->setAttribute(
+        "manips", RT_Utilities::serializeFloats(c->manip->hold_manips,
+                                                rt_manip_block_len(p) * 4));
+    chans_xml->addChildElement(c_xml);
+  }
+  DBG(p_xml->toString());
+  return p_xml;
+}
+
+void RTSTFT_Manager::deserializeParamsStruct(juce::XmlElement *p_xml)
+{
+  for (int i = 0; i < p->num_chans; i++) {
+    auto c_xml = p_xml->getChildByName("chans")->getChildByName(
+        juce::String("c") + juce::String(i));
+    juce::String manips_b64 = c_xml->getStringAttribute("manips");
+  }
+}
 
 void RTSTFT_Manager::RTSTFT_ManagerCMDCallback(rt_listener_return_t const info)
 {

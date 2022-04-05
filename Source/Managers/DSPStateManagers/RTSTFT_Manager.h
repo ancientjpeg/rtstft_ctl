@@ -39,10 +39,13 @@ public:
   void            parameterChanged(const juce::String &parameterID,
                                    float               newValue) override;
   void         RTSTFT_ManagerCMDCallback(rt_cpp_listener_return_t const info);
-  
+
   void         executeCMDCommand(juce::String inCMDString);
   int          getCMDErrorState();
   juce::String getCMDMessage();
+
+  juce::XmlElement *serializeParamsStruct();
+  void              deserializeParamsStruct(juce::XmlElement *p_xml);
 
   struct Listener {
     virtual void onManipChanged(rt_manip_flavor_t inManipFlavor) {}
@@ -55,7 +58,6 @@ public:
   void addListener(Listener *l);
 
 private:
-  
   juce::ListenerList<Listener> mListenerList;
 };
 

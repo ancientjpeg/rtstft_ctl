@@ -26,7 +26,7 @@ RT_ProcessorBase::RT_ProcessorBase()
 #else
     :
 #endif
-      mRTSTFTManager(this), mParameterManager(this), mPropertyManager(this)
+      mRTSTFTManager(this), mParameterManager(this)
 {
 }
 
@@ -44,10 +44,6 @@ RT_LookAndFeel::Manager *RT_ProcessorBase::getLookAndFeelManager()
 RT_ParameterManager *RT_ProcessorBase::getParameterManager()
 {
   return &mParameterManager;
-}
-RT_PropertyManager *RT_ProcessorBase::getPropertyManager()
-{
-  return &mPropertyManager;
 }
 
 //==============================================================================
@@ -142,6 +138,9 @@ void RT_ProcessorBase::getStateInformation(juce::MemoryBlock &destData)
   // You should use this method to store your parameters in the memory block.
   // You could do that either as raw data, or use the XML or ValueTree classes
   // as intermediaries to make it easy to save and load complex data.
+  auto paramState = mParameterManager.getValueTree()->copyState().createXml();
+  auto state      = std::make_unique<juce::XmlElement>("rtstft_ctl_state");
+  state->addChildElement(paramState.release());
 }
 
 void RT_ProcessorBase::setStateInformation(const void *data, int sizeInBytes)
