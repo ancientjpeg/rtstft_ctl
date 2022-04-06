@@ -58,7 +58,7 @@ void RT_FFTDisplayContainer::paintInBorder(juce::Graphics &g)
   for (int i = 0; i < barsInWindow; i++) {
     float height = p->hold->amp_holder[i * i_incr] * getHeightAdj() * 32;
     float x      = (float)i / barsInWindow * getWidthAdj() + mBorderSize;
-    g.fillRect(x, (float)getHeight() - height - mBorderSize / 2, width, height);
+    g.fillRect(x, (float)(getHeight() - height - mBorderSize / 2), width, height);
   }
 }
 

@@ -28,22 +28,26 @@ void RT_LookAndFeel::Default::drawRotarySlider(juce::Graphics &g, int x, int y,
       = rotaryStartAngle
         + sliderPosProportional * (rotaryEndAngle - rotaryStartAngle);
 
-  auto       bounds    = s.getLocalBounds();
-  auto       center    = bounds.getCentre();
-  int        knobDim   = std::min(bounds.getHeight(), bounds.getWidth()) / 2;
-  int        radius    = knobDim / 3;
-  int        radiusInv = (bounds.getHeight() - 2 * radius) / 2;
+  float strokeThickness = 2.f;
+  auto  bounds          = s.getLocalBounds();
+  auto  center          = bounds.getCentre();
+  int   radiusFromCenter
+      = std::min(bounds.getHeight(), bounds.getWidth()) / 2 * 0.8f;
+  int        radiusFromBounds = (bounds.getHeight() - 2 * radiusFromCenter) / 2;
+  int        lineLength_2     = radiusFromCenter * 0.16f;
   juce::Path knobPath;
   float      knobSpread = .2;
-  knobPath.addCentredArc(center.getX(), center.getY(), radius, radius, 0,
-                         knobSpread,
+  knobPath.addCentredArc(center.getX(), center.getY(), radiusFromCenter,
+                         radiusFromCenter, 0, knobSpread,
                          juce::MathConstants<float>::twoPi - knobSpread, true);
 
-  knobPath.startNewSubPath(center.getX(), radiusInv);
-  knobPath.lineTo(center.getX(), radiusInv * 1.1);
+  knobPath.startNewSubPath(center.getX(), radiusFromBounds - lineLength_2
+                                              + strokeThickness * 0.5f);
+  knobPath.lineTo(center.getX(),
+                  radiusFromBounds + lineLength_2 + strokeThickness * 0.5f);
   knobPath.closeSubPath();
   g.strokePath(
-      knobPath, juce::PathStrokeType(2.f),
+      knobPath, juce::PathStrokeType(strokeThickness),
       juce::AffineTransform::rotation(currentKnobAngle, center.x, center.y));
 }
 
