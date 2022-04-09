@@ -50,7 +50,7 @@ void RT_FFTDisplayContainer::paintInBorder(juce::Graphics &g)
 
   g.setColour(juce::Colours::lightgrey);
   const rt_params p       = mInterface->getRTSTFTManager()->getParamsStruct();
-  if (p != NULL) {
+  if (p != NULL || !p->initialized) {
     int             maxBars = 128;
     int             numAmpsInFFT = rt_manip_len(p);
     int   barsInWindow = numAmpsInFFT < maxBars ? numAmpsInFFT : maxBars;

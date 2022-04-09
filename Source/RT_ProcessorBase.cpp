@@ -151,7 +151,7 @@ void RT_ProcessorBase::getStateInformation(juce::MemoryBlock &destData)
   DBG(destData.getSize());
   auto manips_stream = juce::MemoryOutputStream(destData, true);
   manips_stream.setPosition(size + 9);
-  mRTSTFTManager.writeManipsAfterXML(manips_stream);
+  mRTSTFTManager.writeManipsToFile(manips_stream);
 }
 
 void RT_ProcessorBase::setStateInformation(const void *data, int sizeInBytes)

@@ -91,7 +91,16 @@ void RTSTFT_Manager::parameterChanged(const juce::String &parameterID,
   }
 }
 
-void RTSTFT_Manager::addListener(Listener *l) { mListenerList.add(l); }
+void RTSTFT_Manager::changeFFTSize(int inNewFFTSize)
+{
+  if (!juce::isPowerOfTwo(inNewFFTSize) || inNewFFTSize > p->fft_max
+      || !mInitialized) {
+    return;
+  }
+  mInterface->getProcessor()->suspendProcessing(true);
+  rt_set_fft_size(p, inNewFFTSize, p->pad_factor);
+  mInterface->getProcessor()->suspendProcessing(false);
+}
 
 void RTSTFT_Manager::executeCMDCommand(juce::String inCMDString)
 {
@@ -102,7 +111,7 @@ void RTSTFT_Manager::executeCMDCommand(juce::String inCMDString)
 int          RTSTFT_Manager::getCMDErrorState() { return mCMDErrorState; }
 juce::String RTSTFT_Manager::getCMDMessage() { return mCMDMessage; }
 
-void RTSTFT_Manager::writeManipsAfterXML(juce::MemoryOutputStream &stream)
+void         RTSTFT_Manager::writeManipsToFile(juce::MemoryOutputStream &stream)
 {
   stream.writeInt(rt_manip_block_len(p));
   rt_uint i;
@@ -169,3 +178,5 @@ void RTSTFT_CMDListenerCallback(void                      *RTSTFTManagerPtr,
 {
   ((RTSTFT_Manager *)RTSTFTManagerPtr)->RTSTFT_ManagerCMDCallback(info);
 }
+
+void RTSTFT_Manager::addListener(Listener *l) { mListenerList.add(l); }

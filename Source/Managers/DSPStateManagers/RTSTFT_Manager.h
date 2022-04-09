@@ -42,16 +42,17 @@ public:
   void            releaseResources();
   void            parameterChanged(const juce::String &parameterID,
                                    float               newValue) override;
-  void         RTSTFT_ManagerCMDCallback(rt_cpp_listener_return_t const info);
+  void            changeFFTSize(int inNewFFTSize);
+  void            executeCMDCommand(juce::String inCMDString);
+  int             getCMDErrorState();
+  juce::String    getCMDMessage();
 
-  void         executeCMDCommand(juce::String inCMDString);
-  int          getCMDErrorState();
-  juce::String getCMDMessage();
+  void            writeManipsToFile(juce::MemoryOutputStream &stream);
+  void            readManipsFromBinary(const void *manips_binary_ptr);
+  void            setManipsFromTemp();
+  void            storeManipsAsTemp();
 
-  void         writeManipsAfterXML(juce::MemoryOutputStream &stream);
-  void         readManipsFromBinary(const void *manips_binary_ptr);
-  void         setManipsFromTemp();
-  void         storeManipsAsTemp();
+  void RTSTFT_ManagerCMDCallback(rt_cpp_listener_return_t const info);
 
   struct Listener {
     virtual void onManipChanged(rt_manip_flavor_t inManipFlavor) {}
