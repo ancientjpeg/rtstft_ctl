@@ -22,7 +22,7 @@ class RT_GUIStateManager {
   std::list<juce::String>::iterator mHistoryIterator;
   int                               mCommandHistoryMax;
 
-  RT_SelectorMenu::SelectorData     mSelectorData;
+  RT_SelectorMenu::SelectorData     mManipSelectorData;
 
 public:
   RT_GUIStateManager(RT_ProcessorInterface              *inInterface,
@@ -30,7 +30,8 @@ public:
                      int inCommandHistoryMaxSize = 5);
   ~RT_GUIStateManager();
 
-  juce::String getNextStringInHistory(bool reverse);
-  void         pushNewHistoryCommand(juce::String &s);
-  bool         commandHistoryIsEmpty();
+  juce::String                   getNextStringInHistory(bool reverse);
+  void                           pushNewHistoryCommand(juce::String &s);
+  bool                           commandHistoryIsEmpty();
+  RT_SelectorMenu::SelectorData *getSelectorData();
 };

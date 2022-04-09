@@ -34,7 +34,7 @@ public:
   RTSTFT_Manager(RT_ProcessorInterface *inInterface);
   ~RTSTFT_Manager();
   void resetParamsStruct(int inNumChans = 2, float inSampleRate = 44100.f,
-                         int inSamplesPerBlock = 1024, int inFFTSize = 2048,
+                         int inSamplesPerBlock = 1024, int inFFTSize = 1024,
                          int inOverlapFactor = 8);
   const rt_params getParamsStruct();
   void            prepareToPlay(double inSampleRate, int inSamplesPerBlock);

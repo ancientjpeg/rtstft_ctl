@@ -13,15 +13,15 @@
 #include "../../Managers/Interface/RT_ProcessorInterface.h"
 #include "../Utility/RT_Component.h"
 #include "RT_CommandLineContainer.h"
-#include "RT_FFTDisplayContainer.h"
 #include "RT_GUIControlsContainer.h"
+#include "RT_SpectralDisplayContainer.h"
 #include <JuceHeader.h>
 
 class RT_MainDisplay : public RT_Component {
 
-  RT_GUIControlsContainer mGUIControlsContainer;
-  RT_FFTDisplayContainer  mFFTDisplayContainer;
-  RT_CommandLineContainer mCommandLineContainer;
+  RT_GUIControlsContainer     mGUIControlsContainer;
+  RT_SpectralDisplayContainer mSpectralDisplayContainer;
+  RT_CommandLineContainer     mCommandLineContainer;
 
 public:
   RT_MainDisplay(RT_ProcessorInterface *inInterface);

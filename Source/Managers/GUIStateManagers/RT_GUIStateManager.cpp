@@ -13,9 +13,9 @@
 RT_GUIStateManager::RT_GUIStateManager(
     RT_ProcessorInterface              *inInterface,
     std::initializer_list<juce::String> inManipSelectorFields,
-    int                                 inCommandHistoryMaxSize = 5)
+    int                                 inCommandHistoryMaxSize)
     : mInterface(inInterface), mCommandHistoryMax(inCommandHistoryMaxSize),
-      mSelectorData(inManipSelectorFields)
+      mManipSelectorData(inManipSelectorFields)
 {
 }
 
@@ -53,4 +53,9 @@ void RT_GUIStateManager::pushNewHistoryCommand(juce::String &s)
   if (mCommandHistory.size() > mCommandHistoryMax) {
     mCommandHistory.pop_back();
   }
+}
+
+RT_SelectorMenu::SelectorData *RT_GUIStateManager::getSelectorData()
+{
+  return &mManipSelectorData;
 }

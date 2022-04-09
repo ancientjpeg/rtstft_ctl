@@ -19,21 +19,21 @@
 //==============================================================================
 /*
  */
-class RT_FFTDisplayContainer : public RT_BorderedComponent,
-                               public juce::Timer,
-                               public RTSTFT_Manager::Listener {
+class RT_FFTDisplay : public RT_Component,
+                      public juce::Timer,
+                      public RTSTFT_Manager::Listener {
   std::unique_ptr<rt_real[]> mLocalManipCopies;
 
 public:
-  RT_FFTDisplayContainer(RT_ProcessorInterface *inInterface, int inBorderSize);
-  ~RT_FFTDisplayContainer() override;
+  RT_FFTDisplay(RT_ProcessorInterface *inInterface);
+  ~RT_FFTDisplay() override;
 
-  void paintInBorder(juce::Graphics &) override;
+  void paint(juce::Graphics &) override;
   void resized() override;
   void timerCallback() override;
   void onManipChanged(rt_manip_flavor_t inManipFlavor);
 
 private:
   void copyManips(rt_manip_flavor_t inTargetManipFlavor);
-  JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(RT_FFTDisplayContainer)
+  JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(RT_FFTDisplay)
 };

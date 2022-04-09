@@ -18,14 +18,14 @@ namespace RT_LookAndFeel {
 enum ComponentType { PLUGIN_DEFAULT, NUM_COMPONENT_TYPES };
 static const juce::StringArray ComponentNames = {"Default", "Slider", "Button"};
 static const int               mainBorderSize = 10;
-static const int               widgetBorderSize  = 4;
+static const int               widgetBorderSize  = 2;
 static const float             headerHeightRatio = 0.2f;
 static const float             cmdHeightRatio    = 0.15f;
 
 static const juce::LookAndFeel_V4::ColourScheme DefaultColourScheme(
     juce::Colours::white, juce::Colours::white, juce::Colours::white,
     juce::Colours::black, juce::Colours::black, juce::Colours::black,
-    juce::Colours::blue, juce::Colours::blue, juce::Colours::black);
+    juce::Colours::white, juce::Colours::black, juce::Colours::black);
 
 class Manager {
   std::vector<std::unique_ptr<juce::LookAndFeel_V4::ColourScheme>> mSkins;
