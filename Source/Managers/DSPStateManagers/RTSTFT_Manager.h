@@ -24,10 +24,11 @@ class RTSTFT_Manager : public juce::AudioProcessorValueTreeState::Listener {
   int                    mCurrentSamplesPerBlock;
   float                  mCurrentSampleRate = -1;
   int                    mNumChannels;
-  bool                   mInitialized      = false;
+  bool                   mInitialized = false, mTempManipsNeedRead = false;
   bool                   mLastUpdateWasCMD = false;
   juce::String           mCMDMessage       = "";
   int                    mCMDErrorState    = 0;
+  juce::MemoryBlock      mManipsTemp;
 
 public:
   RTSTFT_Manager(RT_ProcessorInterface *inInterface);
@@ -47,8 +48,10 @@ public:
   int          getCMDErrorState();
   juce::String getCMDMessage();
 
-  std::unique_ptr<juce::XmlElement> serializeParamsStruct();
-  void deserializeParamsStruct(juce::XmlElement *p_xml);
+  void         writeManipsAfterXML(juce::MemoryOutputStream &stream);
+  void         readManipsFromBinary(const void *manips_binary_ptr);
+  void         setManipsFromTemp();
+  void         storeManipsAsTemp();
 
   struct Listener {
     virtual void onManipChanged(rt_manip_flavor_t inManipFlavor) {}

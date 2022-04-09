@@ -18,6 +18,7 @@ RTSTFT_Manager::RTSTFT_Manager(RT_ProcessorInterface *inInterface)
     : mInterface(inInterface), p(NULL), mCurrentSamplesPerBlock(0)
 {
   resetParamsStruct();
+  mManipsTemp.ensureSize(rt_manip_block_len(p), false);
 }
 RTSTFT_Manager::~RTSTFT_Manager()
 {
@@ -35,6 +36,7 @@ void RTSTFT_Manager::resetParamsStruct(int inNumChans, float inSampleRate,
     mInitialized = false;
     rt_clean(p);
     p = NULL;
+    storeManipsAsTemp();
   }
   mCurrentSampleRate  = inSampleRate;
   mNumChannels        = inNumChans;
@@ -44,6 +46,9 @@ void RTSTFT_Manager::resetParamsStruct(int inNumChans, float inSampleRate,
               0, mCurrentSampleRate);
   p->listener  = {(void *)this, &RTSTFT_CMDListenerCallback};
   mInitialized = true;
+  if (mTempManipsNeedRead) {
+    setManipsFromTemp();
+  }
 }
 
 const rt_params RTSTFT_Manager::getParamsStruct() { return p; }
@@ -97,38 +102,51 @@ void RTSTFT_Manager::executeCMDCommand(juce::String inCMDString)
 int          RTSTFT_Manager::getCMDErrorState() { return mCMDErrorState; }
 juce::String RTSTFT_Manager::getCMDMessage() { return mCMDMessage; }
 
-std::unique_ptr<juce::XmlElement> RTSTFT_Manager::serializeParamsStruct()
+void RTSTFT_Manager::writeManipsAfterXML(juce::MemoryOutputStream &stream)
 {
-  assert(p != NULL);
-  std::unique_ptr<juce::XmlElement> p_xml
-      = std::make_unique<juce::XmlElement>("rt_params");
-  juce::XmlElement *chans_xml = new juce::XmlElement("chans");
-  p_xml->addChildElement(chans_xml);
-  for (int i = 0; i < p->num_chans; i++) {
-    rt_chan           c = p->chans[i];
-    juce::XmlElement *c_xml
-        = new juce::XmlElement(juce::String("c") + juce::String(i));
-    chans_xml->addChildElement(c_xml);
-    c_xml->setAttribute(
-        "manips", RT_Utilities::serializeFloats(c->manip->hold_manips,
-                                                rt_manip_block_len(p) * 4));
+  stream.writeInt(rt_manip_block_len(p));
+  rt_uint i;
+  for (i = 0; i < p->num_chans; i++) {
+    stream.write(p->chans[i]->manip->manips,
+                 rt_manip_block_len(p) * sizeof(float));
   }
-  return p_xml;
 }
 
-void RTSTFT_Manager::deserializeParamsStruct(juce::XmlElement *p_xml)
+void RTSTFT_Manager::readManipsFromBinary(const void *manips_binary_ptr)
 {
-  assert(p != NULL);
-  for (int i = 0; i < p->num_chans; i++) {
-    rt_chan c     = p->chans[i];
-    auto    c_xml = p_xml->getChildByName("chans")->getChildByName(
-           juce::String("c") + juce::String(i));
-    juce::String manips_b64 = c_xml->getStringAttribute("manips");
-    auto         mem
-        = RT_Utilities::deserializeFloats(manips_b64, rt_manip_block_len(p));
-    rt_manip_overwrite_manips(p, c, (rt_real *)mem.getData(),
-                              rt_manip_block_len(p));
+  int     manip_block_len = ((int32_t *)manips_binary_ptr)[0];
+  rt_uint i, current_block_len = rt_manip_block_len(p);
+  if (manip_block_len == current_block_len) {
+    auto temp_stream = juce::MemoryOutputStream(mManipsTemp, false);
+    temp_stream.write(manips_binary_ptr, current_block_len * sizeof(float));
   }
+
+  if (mInitialized) {
+    setManipsFromTemp();
+  }
+  else {
+    storeManipsAsTemp();
+  }
+}
+void RTSTFT_Manager::setManipsFromTemp()
+{
+  rt_uint i, blocklen = rt_manip_block_len(p);
+  for (i = 0; i < p->num_chans; i++) {
+    rt_manip_overwrite_manips(p, p->chans[i],
+                              ((rt_real *)mManipsTemp.getData()) + i * blocklen,
+                              blocklen);
+  }
+  mTempManipsNeedRead = false;
+}
+void RTSTFT_Manager::storeManipsAsTemp()
+{
+  rt_uint blocklen = rt_manip_block_len(p);
+  for (int i = 0; i < p->num_chans; i++) {
+    rt_manip_copy_manips(p, p->chans[i],
+                         ((rt_real *)mManipsTemp.getData()) + i * blocklen,
+                         blocklen);
+  }
+  mTempManipsNeedRead = true;
 }
 
 void RTSTFT_Manager::RTSTFT_ManagerCMDCallback(rt_listener_return_t const info)

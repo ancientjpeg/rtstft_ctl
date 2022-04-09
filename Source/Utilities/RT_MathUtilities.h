@@ -24,7 +24,7 @@ IntegralType getNearestPowerOfTwo(IntegralType inValue)
   int powerOfTwoCheck = (finalValue & (finalValue - 1));
   if (powerOfTwoCheck != 0) {
     int  nextHighestPower = sizeof(finalValue) - 1;
-    bool found = false;
+    bool found            = false;
     while (!found && nextHighestPower-- > 1) {
       if ((finalValue & (1 << nextHighestPower)) == 1) {
         nextHighestPower++;

@@ -50,15 +50,17 @@ void RT_FFTDisplayContainer::paintInBorder(juce::Graphics &g)
 
   g.setColour(juce::Colours::lightgrey);
   const rt_params p       = mInterface->getRTSTFTManager()->getParamsStruct();
-  int             maxBars = 128;
-  int             numAmpsInFFT = rt_manip_len(p);
-  int   barsInWindow = numAmpsInFFT < maxBars ? numAmpsInFFT : maxBars;
-  float width        = (float)1 / barsInWindow * getWidthAdj();
-  int   i_incr       = numAmpsInFFT <= maxBars ? 1 : numAmpsInFFT / maxBars;
-  for (int i = 0; i < barsInWindow; i++) {
-    float height = p->hold->amp_holder[i * i_incr] * getHeightAdj() * 32;
-    float x      = (float)i / barsInWindow * getWidthAdj() + mBorderSize;
-    g.fillRect(x, (float)(getHeight() - height - mBorderSize / 2), width, height);
+  if (p != NULL) {
+    int             maxBars = 128;
+    int             numAmpsInFFT = rt_manip_len(p);
+    int   barsInWindow = numAmpsInFFT < maxBars ? numAmpsInFFT : maxBars;
+    float width        = (float)1 / barsInWindow * getWidthAdj();
+    int   i_incr       = numAmpsInFFT <= maxBars ? 1 : numAmpsInFFT / maxBars;
+    for (int i = 0; i < barsInWindow; i++) {
+      float height = p->hold->amp_holder[i * i_incr] * getHeightAdj() * 32;
+      float x      = (float)i / barsInWindow * getWidthAdj() + mBorderSize;
+      g.fillRect(x, (float)(getHeight() - height - mBorderSize / 2), width, height);
+    }
   }
 }
 
