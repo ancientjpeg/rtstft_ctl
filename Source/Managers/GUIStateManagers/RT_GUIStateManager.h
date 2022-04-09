@@ -10,5 +10,27 @@
 
 #pragma once
 
+#include "../../Components/Interactive/RT_SelectorMenu.h"
 #include "../Interface/RT_ProcessorInterface.h"
-class RT_GUIStateManager {}
+
+static const juce::StringArray RT_MANIP_GUI_IDS = {"Gate", "Gain", "Limit"};
+
+class RT_GUIStateManager {
+  RT_ProcessorInterface            *mInterface;
+
+  std::list<juce::String>           mCommandHistory;
+  std::list<juce::String>::iterator mHistoryIterator;
+  int                               mCommandHistoryMax;
+
+  RT_SelectorMenu::SelectorData     mSelectorData;
+
+public:
+  RT_GUIStateManager(RT_ProcessorInterface              *inInterface,
+                     std::initializer_list<juce::String> inManipSelectorFields,
+                     int inCommandHistoryMaxSize = 5);
+  ~RT_GUIStateManager();
+
+  juce::String getNextStringInHistory(bool reverse);
+  void         pushNewHistoryCommand(juce::String &s);
+  bool         commandHistoryIsEmpty();
+};

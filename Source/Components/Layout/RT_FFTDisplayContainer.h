@@ -11,6 +11,7 @@
 #pragma once
 
 #include "../../Managers/DSPStateManagers/RTSTFT_Manager.h"
+#include "../../Managers/GUIStateManagers/RT_GUIStateManager.h"
 #include "../../Managers/Interface/RT_ProcessorInterface.h"
 #include "../Utility/RT_BorderedComponent.h"
 #include <JuceHeader.h>

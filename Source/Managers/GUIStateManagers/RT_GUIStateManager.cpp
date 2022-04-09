@@ -9,3 +9,48 @@
 */
 
 #include "RT_GUIStateManager.h"
+
+RT_GUIStateManager::RT_GUIStateManager(
+    RT_ProcessorInterface              *inInterface,
+    std::initializer_list<juce::String> inManipSelectorFields,
+    int                                 inCommandHistoryMaxSize = 5)
+    : mInterface(inInterface), mCommandHistoryMax(inCommandHistoryMaxSize),
+      mSelectorData(inManipSelectorFields)
+{
+}
+
+RT_GUIStateManager::~RT_GUIStateManager() {}
+
+juce::String RT_GUIStateManager::getNextStringInHistory(bool reverse)
+{
+  juce::String str;
+  if (commandHistoryIsEmpty()) {
+    return str;
+  }
+
+  if (reverse) {
+    if (mHistoryIterator != mCommandHistory.begin()) {
+      str = *--mHistoryIterator;
+    }
+    return str;
+  }
+  else {
+    if (mHistoryIterator == mCommandHistory.end()) {
+      --mHistoryIterator;
+    }
+    str = *mHistoryIterator++;
+    return str;
+  }
+}
+
+bool RT_GUIStateManager::commandHistoryIsEmpty()
+{
+  return mCommandHistory.empty();
+}
+void RT_GUIStateManager::pushNewHistoryCommand(juce::String &s)
+{
+  mCommandHistory.push_front(s);
+  if (mCommandHistory.size() > mCommandHistoryMax) {
+    mCommandHistory.pop_back();
+  }
+}

@@ -13,7 +13,6 @@ RT_AudioProcessor::RT_AudioProcessor()
 {
   int numChannels = getChannelCountOfBus(true, 0);
   if (numChannels != getChannelCountOfBus(false, 0)) {
-    DBG("BAD CHANNEL COUNTS!");
     exit(1);
   }
 }

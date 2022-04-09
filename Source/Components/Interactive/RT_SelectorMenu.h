@@ -21,4 +21,28 @@ public:
   ~RT_SelectorMenu() = default;
   void paint(juce::Graphics &g) override;
   void resized() override;
+
+  struct SelectorData {
+    struct Datum {
+      bool         active;
+      juce::String selectionID;
+    };
+    std::vector<Datum> fields;
+    int                activeField = -1;
+
+    SelectorData(std::initializer_list<juce::String> inFields)
+    {
+      auto it = inFields.begin();
+      while (it != inFields.end()) {
+        fields.push_back((Datum){false, *(it++)});
+      }
+    }
+  };
+
+  std::function<void(void)> onNewSelection = []() {};
+
+  void                      mouseDown(const juce::MouseEvent &event) override;
+
+private:
+  SelectorData *mSelectorData;
 };

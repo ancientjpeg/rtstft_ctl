@@ -26,7 +26,12 @@ RT_ProcessorBase::RT_ProcessorBase()
 #else
     :
 #endif
-      mRTSTFTManager(this), mParameterManager(this)
+      mRTSTFTManager(this), mParameterManager(this),
+      mGUIStateManager(this, {
+                                 RT_MANIP_GUI_IDS[RT_MANIP_GAIN],
+                                 RT_MANIP_GUI_IDS[RT_MANIP_GATE],
+                                 RT_MANIP_GUI_IDS[RT_MANIP_LIMIT],
+                             })
 {
 }
 
@@ -44,6 +49,10 @@ RT_LookAndFeel::Manager *RT_ProcessorBase::getLookAndFeelManager()
 RT_ParameterManager *RT_ProcessorBase::getParameterManager()
 {
   return &mParameterManager;
+}
+RT_GUIStateManager *RT_ProcessorBase::getGUIStateManager()
+{
+  return &mGUIStateManager;
 }
 
 //==============================================================================
@@ -143,12 +152,9 @@ void RT_ProcessorBase::getStateInformation(juce::MemoryBlock &destData)
   auto state = std::make_unique<juce::XmlElement>("rtstft_ctl_state");
 
   state->addChildElement(paramState.release());
-  DBG(state->toString());
 
   copyXmlToBinary(*state, destData);
-  auto size = ((uint32_t *)destData.getData())[1];
-  DBG((int)size);
-  DBG(destData.getSize());
+  auto size          = ((uint32_t *)destData.getData())[1];
   auto manips_stream = juce::MemoryOutputStream(destData, true);
   manips_stream.setPosition(size + 9);
   mRTSTFTManager.writeManipsToFile(manips_stream);
@@ -160,14 +166,13 @@ void RT_ProcessorBase::setStateInformation(const void *data, int sizeInBytes)
   // block, whose contents will have been created by the getStateInformation()
   // call.
   auto state = getXmlFromBinary(data, sizeInBytes);
-  DBG(state->toString());
   mParameterManager.getValueTreeState()->replaceState(
       juce::ValueTree::fromXml(*state->getChildByName("PARAMETER_TREE")));
 
   int xml_offset
       = ((uint32_t *)data)[1] + 9; // includes magic number, size int, and
                                    // trailing nullterm in XML binary
-  const void *manips_binary_ptr = (const void *)(((char*)data) + xml_offset);
+  const void *manips_binary_ptr = (const void *)(((char *)data) + xml_offset);
   mRTSTFTManager.readManipsFromBinary(manips_binary_ptr);
 
   // mRTSTFTManager.deserializeParamsStruct(state->getChildByName("rt_params"));

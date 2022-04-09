@@ -9,7 +9,8 @@
 */
 
 #include "RT_CommandLineContainer.h"
-#include <JuceHeader.h>
+#include "../../Managers/DSPStateManagers/RTSTFT_Manager.h"
+#include "../../Managers/GUIStateManagers/RT_GUIStateManager.h"
 
 //==============================================================================
 RT_CommandLineContainer::RT_CommandLineContainer(
@@ -35,7 +36,9 @@ RT_CommandLineContainer::RT_CommandLineContainer(
     mCommandLineEntry.clear();
     mCommandLineEntry.repaint();
     mInterface->getRTSTFTManager()->executeCMDCommand(text);
-    mErrorMessageContainer.setText(mInterface->getRTSTFTManager()->getCMDMessage(), juce::NotificationType::dontSendNotification);
+    mErrorMessageContainer.setText(
+        mInterface->getRTSTFTManager()->getCMDMessage(),
+        juce::NotificationType::dontSendNotification);
   };
   addAndMakeVisible(mCommandLineEntry);
 
@@ -92,14 +95,15 @@ void RT_CommandLineContainer::showNextStringInHistory(bool reverse)
     return;
   }
   juce::String str;
-  
+
   if (reverse) {
     if (mHistoryIterator != mCommandHistory.begin()) {
       str = *--mHistoryIterator;
     }
     mCommandLineEntry.setText(str,
                               juce::NotificationType::dontSendNotification);
-  } else {
+  }
+  else {
     if (mHistoryIterator == mCommandHistory.end()) {
       --mHistoryIterator;
     }
@@ -108,7 +112,6 @@ void RT_CommandLineContainer::showNextStringInHistory(bool reverse)
                               juce::NotificationType::dontSendNotification);
   }
 }
-
 
 void RT_CommandLineContainer::newHistoryCommand(juce::String &s)
 {
