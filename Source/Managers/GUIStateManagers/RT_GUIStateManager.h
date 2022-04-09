@@ -9,3 +9,6 @@
 */
 
 #pragma once
+
+#include "../Interface/RT_ProcessorInterface.h"
+class RT_GUIStateManager {}

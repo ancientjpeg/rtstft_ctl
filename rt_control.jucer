@@ -74,6 +74,10 @@
                 file="Source/Components/Layout/RT_MainDisplay.h"/>
         </GROUP>
         <GROUP id="{07A2DC33-AEA2-1F87-D5B1-31130BD8B1C4}" name="Interactive">
+          <FILE id="u9CuUr" name="RT_SelectorMenu.cpp" compile="1" resource="0"
+                file="Source/Components/Interactive/RT_SelectorMenu.cpp"/>
+          <FILE id="jTRtXo" name="RT_SelectorMenu.h" compile="0" resource="0"
+                file="Source/Components/Interactive/RT_SelectorMenu.h"/>
           <FILE id="BMaYER" name="RT_Sliders.cpp" compile="1" resource="0" file="Source/Components/Interactive/RT_Sliders.cpp"/>
           <FILE id="f9YAr0" name="RT_Sliders.h" compile="0" resource="0" file="Source/Components/Interactive/RT_Sliders.h"/>
         </GROUP>
@@ -86,10 +90,20 @@
                 file="Source/Managers/DSPStateManagers/RT_ParameterManager.cpp"/>
           <FILE id="TRBpat" name="RT_ParameterManager.h" compile="0" resource="0"
                 file="Source/Managers/DSPStateManagers/RT_ParameterManager.h"/>
+          <FILE id="u0HMAw" name="RT_PresetManager.cpp" compile="1" resource="0"
+                file="Source/Managers/DSPStateManagers/RT_PresetManager.cpp"/>
+          <FILE id="fxgUck" name="RT_PresetManager.h" compile="0" resource="0"
+                file="Source/Managers/DSPStateManagers/RT_PresetManager.h"/>
           <FILE id="pmoXv9" name="RTSTFT_Manager.cpp" compile="1" resource="0"
                 file="Source/Managers/DSPStateManagers/RTSTFT_Manager.cpp"/>
           <FILE id="OCTN76" name="RTSTFT_Manager.h" compile="0" resource="0"
                 file="Source/Managers/DSPStateManagers/RTSTFT_Manager.h"/>
+        </GROUP>
+        <GROUP id="{75E36CE7-5324-0A96-0FAB-460C253DB8E3}" name="GUIStateManagers">
+          <FILE id="tla6hH" name="RT_GUIStateManager.cpp" compile="1" resource="0"
+                file="Source/Managers/GUIStateManagers/RT_GUIStateManager.cpp"/>
+          <FILE id="aM1wDQ" name="RT_GUIStateManager.h" compile="0" resource="0"
+                file="Source/Managers/GUIStateManagers/RT_GUIStateManager.h"/>
         </GROUP>
         <GROUP id="{2B24316A-AEF2-555D-48BE-0495AD46AFF8}" name="Interface">
           <FILE id="EQm0Mk" name="RT_ProcessorInterface.h" compile="0" resource="0"
