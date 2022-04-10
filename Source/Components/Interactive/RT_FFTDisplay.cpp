@@ -54,6 +54,14 @@ void RT_FFTDisplay::paint(juce::Graphics &g)
   }
 }
 
+int RT_FFTDisplay::xPosToManipsIndex(int inXPos) { return inXPos / getWidth(); }
+int RT_FFTDisplay::manipsIndexToXPos(int inIndex)
+{
+  return getWidth()
+         / rt_manip_len(mInterface->getRTSTFTManager()->getParamsStruct())
+         * inIndex;
+}
+
 void RT_FFTDisplay::resized()
 {
   // This method is where you should set the bounds of any child
@@ -65,6 +73,23 @@ void RT_FFTDisplay::timerCallback() { repaint(); }
 void RT_FFTDisplay::onManipChanged(rt_manip_flavor_t inManipFlavor)
 {
   copyManips(inManipFlavor);
+}
+
+void RT_FFTDisplay::mouseDrag(const juce::MouseEvent &event)
+{
+  DBG(event.x);
+  auto p          = mInterface->getRTSTFTManager()->getParamsStruct();
+  int  numManips  = rt_manip_len(p);
+  int  manipIndex = xPosToManipsIndex(event.x);
+  if (manipIndex >= 0 && manipIndex < numManips) {
+    rt_manip_flavor_t active_manip
+        = (rt_manip_flavor_t)mInterface->getGUIStateManager()
+              ->getSelectorData()
+              ->activeField;
+    float newVal = (float)event.y / getHeight();
+    newVal       = std::clamp<float>(newVal, 0.f, 1.f);
+    rt_manip_set_bin_single(p, p->chans[0], active_manip, manipIndex, newVal);
+  }
 }
 
 void RT_FFTDisplay::copyManips(rt_manip_flavor_t inTargetManipFlavor)

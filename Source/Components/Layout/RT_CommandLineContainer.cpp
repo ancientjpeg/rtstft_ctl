@@ -31,8 +31,9 @@ RT_CommandLineContainer::RT_CommandLineContainer(
                                            juce::Colours::lightgrey);
   mCommandLineEntry.onReturnKey = [this]() {
     auto text = mCommandLineEntry.getText();
-    newHistoryCommand(text);
-    mHistoryIterator = mCommandHistory.begin();
+    auto hist = mInterface->getGUIStateManager();
+    hist->pushNewHistoryCommand(text);
+    hist->resetCommandHistoryPos();
     mCommandLineEntry.clear();
     mCommandLineEntry.repaint();
     mInterface->getRTSTFTManager()->executeCMDCommand(text);
@@ -52,7 +53,6 @@ RT_CommandLineContainer::RT_CommandLineContainer(
   mErrorMessageContainer.setFont(juce::Font(8));
   addAndMakeVisible(mErrorMessageContainer);
 
-  mHistoryIterator = mCommandHistory.begin();
   mCommandLineEntry.addKeyListener(this);
 }
 
@@ -81,42 +81,18 @@ void RT_CommandLineContainer::resized()
 bool RT_CommandLineContainer::keyPressed(const juce::KeyPress &kp,
                                          juce::Component      *orig)
 {
+  auto guiState = mInterface->getGUIStateManager();
+  if (!mCommandLineEntry.isTextInputActive()
+      || guiState->commandHistoryIsEmpty()) {
+    return false;
+  }
   if (kp == juce::KeyPress::upKey) {
-    showNextStringInHistory();
+    mCommandLineEntry.setText(guiState->getNextStringInHistory(false),
+                              juce::NotificationType::dontSendNotification);
   }
   else if (kp == juce::KeyPress::downKey) {
-    showNextStringInHistory(true);
+    mCommandLineEntry.setText(guiState->getNextStringInHistory(true),
+                              juce::NotificationType::dontSendNotification);
   }
   return false;
-}
-void RT_CommandLineContainer::showNextStringInHistory(bool reverse)
-{
-  if (!mCommandLineEntry.isTextInputActive() || mCommandHistory.empty()) {
-    return;
-  }
-  juce::String str;
-
-  if (reverse) {
-    if (mHistoryIterator != mCommandHistory.begin()) {
-      str = *--mHistoryIterator;
-    }
-    mCommandLineEntry.setText(str,
-                              juce::NotificationType::dontSendNotification);
-  }
-  else {
-    if (mHistoryIterator == mCommandHistory.end()) {
-      --mHistoryIterator;
-    }
-    str = *mHistoryIterator++;
-    mCommandLineEntry.setText(str,
-                              juce::NotificationType::dontSendNotification);
-  }
-}
-
-void RT_CommandLineContainer::newHistoryCommand(juce::String &s)
-{
-  mCommandHistory.push_front(s);
-  if (mCommandHistory.size() > 3) {
-    mCommandHistory.pop_back();
-  }
 }

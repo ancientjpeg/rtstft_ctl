@@ -31,7 +31,11 @@ public:
   void paint(juce::Graphics &) override;
   void resized() override;
   void timerCallback() override;
-  void onManipChanged(rt_manip_flavor_t inManipFlavor);
+  void mouseDrag(const juce::MouseEvent &event) override;
+
+  int  xPosToManipsIndex(int inXPos);
+  int  manipsIndexToXPos(int inIndex);
+  void onManipChanged(rt_manip_flavor_t inManipFlavor) override;
 
 private:
   void copyManips(rt_manip_flavor_t inTargetManipFlavor);

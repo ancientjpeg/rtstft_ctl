@@ -33,5 +33,6 @@ public:
   juce::String                   getNextStringInHistory(bool reverse);
   void                           pushNewHistoryCommand(juce::String &s);
   bool                           commandHistoryIsEmpty();
+  void                           resetCommandHistoryPos();
   RT_SelectorMenu::SelectorData *getSelectorData();
 };

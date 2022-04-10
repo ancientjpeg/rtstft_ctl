@@ -17,6 +17,7 @@ RT_GUIStateManager::RT_GUIStateManager(
     : mInterface(inInterface), mCommandHistoryMax(inCommandHistoryMaxSize),
       mManipSelectorData(inManipSelectorFields)
 {
+  mHistoryIterator = mCommandHistory.begin();
 }
 
 RT_GUIStateManager::~RT_GUIStateManager() {}
@@ -41,6 +42,11 @@ juce::String RT_GUIStateManager::getNextStringInHistory(bool reverse)
     str = *mHistoryIterator++;
     return str;
   }
+}
+
+void RT_GUIStateManager::resetCommandHistoryPos()
+{
+  mHistoryIterator = mCommandHistory.begin();
 }
 
 bool RT_GUIStateManager::commandHistoryIsEmpty()

@@ -28,14 +28,10 @@ public:
   bool keyPressed(const juce::KeyPress &kp, juce::Component *orig) override;
 
 private:
-  int          mBorderSize;
-  juce::String mEntryPlaceholderText = "Enter your rt_cmd commands here.";
-  std::list<juce::String>           mCommandHistory;
-  std::list<juce::String>::iterator mHistoryIterator;
-  juce::Label                       mCommandLinePrompt, mErrorMessageContainer;
-  juce::TextEditor                  mCommandLineEntry;
+  int              mBorderSize;
+  juce::String     mEntryPlaceholderText = "Enter your rt_cmd commands here.";
+  juce::Label      mCommandLinePrompt, mErrorMessageContainer;
+  juce::TextEditor mCommandLineEntry;
 
-  void showNextStringInHistory(bool reverse = false);
-  void newHistoryCommand(juce::String &s);
   JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(RT_CommandLineContainer)
 };
