@@ -13,7 +13,7 @@
 #include "../../Components/Interactive/RT_SelectorMenu.h"
 #include "../Interface/RT_ProcessorInterface.h"
 
-static const juce::StringArray RT_MANIP_GUI_IDS = {"Gate", "Gain", "Limit"};
+static const juce::StringArray RT_MANIP_GUI_IDS = {"Gain", "Gate", "Limit"};
 
 class RT_GUIStateManager {
   RT_ProcessorInterface            *mInterface;
