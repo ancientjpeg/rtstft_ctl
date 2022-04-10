@@ -124,10 +124,11 @@ void         RTSTFT_Manager::writeManipsToFile(juce::MemoryOutputStream &stream)
 void RTSTFT_Manager::readManipsFromBinary(const void *manips_binary_ptr)
 {
   int     manip_block_len = ((int32_t *)manips_binary_ptr)[0];
-  rt_uint i, current_block_len = rt_manip_block_len(p);
+  rt_uint current_block_len = rt_manip_block_len(p);
   if (manip_block_len == current_block_len) {
+    void *ptr = (float*)manips_binary_ptr + 4;
     auto temp_stream = juce::MemoryOutputStream(mManipsTemp, false);
-    temp_stream.write(manips_binary_ptr, current_block_len * sizeof(float));
+    temp_stream.write(ptr, current_block_len * sizeof(float));
   }
 
   if (mInitialized) {

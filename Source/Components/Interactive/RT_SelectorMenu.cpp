@@ -41,10 +41,17 @@ void RT_SelectorMenu::mouseDown(const juce::MouseEvent &event)
 {
   int numFields    = mSelectorData->fields.size();
   int newSelection = event.getMouseDownX() / (getWidth() / numFields);
-  if (mSelectorData->activeField != -1) {
+  if (mSelectorData->activeField == newSelection) {
     mSelectorData->fields[mSelectorData->activeField].active = false;
+    mSelectorData->activeField = -1;
   }
-  mSelectorData->activeField                               = newSelection;
-  mSelectorData->fields[mSelectorData->activeField].active = true;
+  else {
+    if (mSelectorData->activeField != -1) {
+      mSelectorData->fields[mSelectorData->activeField].active = false;
+    }
+    mSelectorData->activeField                               = newSelection;
+    mSelectorData->fields[mSelectorData->activeField].active = true;
+  }
+
   repaint();
 }

@@ -9,6 +9,8 @@
 */
 
 #include "RT_FFTDisplay.h"
+#include "../../Managers/DSPStateManagers/RTSTFT_Manager.h"
+#include "../../Managers/GUIStateManagers/RT_GUIStateManager.h"
 
 //==============================================================================
 RT_FFTDisplay::RT_FFTDisplay(RT_ProcessorInterface *inInterface)
@@ -110,7 +112,6 @@ void RT_FFTDisplay::onManipChanged(rt_manip_flavor_t inManipFlavor)
 
 void RT_FFTDisplay::mouseDrag(const juce::MouseEvent &event)
 {
-  DBG(event.x);
   auto p          = mInterface->getRTSTFTManager()->getParamsStruct();
   int  numManips  = rt_manip_len(p);
   int  manipIndex = xPosToManipsIndex(event.x);
@@ -118,7 +119,7 @@ void RT_FFTDisplay::mouseDrag(const juce::MouseEvent &event)
       = mInterface->getGUIStateManager()->getSelectorData()->activeField;
   if (manipIndex >= 0 && manipIndex < numManips && activeField >= 0) {
     rt_manip_flavor_t active_manip = (rt_manip_flavor_t)activeField;
-    float             newVal       = (float)event.y / getHeight();
+    float             newVal       = (float)event.y / getHeight() + rt_get_manip_val(p, active_manip);
     newVal                         = std::clamp<float>(1.f - newVal, 0.f, 1.f);
     rt_manip_set_bin_single(p, p->chans[0], active_manip, manipIndex, newVal);
   }
