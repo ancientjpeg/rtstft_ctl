@@ -19,7 +19,7 @@ RT_ParameterManager::RT_ParameterManager(RT_ProcessorInterface *inInterface)
   RTSTFT_Manager *rtstft_obj = mInterface->getRTSTFTManager();
   for (int i = 0; i < RT_PARAM_FLAVOR_COUNT; i++) {
     parameters.push_back(std::make_unique<juce::AudioParameterFloat>(
-        RT_PARAM_IDS[i], RT_PARAM_IDS[i], RT_PARAM_RANGES[i],
+        RT_PARAM_IDS[i], RT_PARAM_NAMES[i], RT_PARAM_RANGES[i],
         RT_PARAM_DEFAULTS[i]));
   }
   mValueTreeState.reset(new juce::AudioProcessorValueTreeState(

@@ -20,7 +20,8 @@ RT_GUIControlsContainer::RT_GUIControlsContainer(
 {
   for (int i = 0; i < RT_PARAM_FLAVOR_COUNT; i++) {
     mKnobs.add(std::make_unique<RT_Sliders::LabelledRotaryKnob>(
-        RT_PARAM_RANGES.getRawDataPointer() + i, RT_PARAM_IDS[i], 0.3f));
+        RT_PARAM_RANGES.getRawDataPointer() + i, RT_PARAM_IDS[i].toLowerCase(),
+        0.3f));
     mKnobAttachments.add(
         std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(
             *mInterface->getParameterManager()->getValueTreeState(),

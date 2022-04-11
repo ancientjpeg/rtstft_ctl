@@ -18,7 +18,7 @@ RT_SelectorMenu::RT_SelectorMenu(RT_ProcessorInterface *inInterface)
 }
 void RT_SelectorMenu::paint(juce::Graphics &g)
 {
-  juce::Font font = juce::Font(12, juce::Font::bold);
+  juce::Font font = juce::Font(12, 0);
   g.setFont(font);
   using enum juce::LookAndFeel_V4::ColourScheme::UIColour;
   auto cols       = getLookAndFeel_V4().getCurrentColourScheme();
@@ -33,7 +33,7 @@ void RT_SelectorMenu::paint(juce::Graphics &g)
         font.getStringWidth(d.selectionID), 14);
     color_id = d.active ? highlightedText : defaultText;
     g.setColour(cols.getUIColour(color_id));
-    g.drawText(d.selectionID, text_bounds, 12);
+    g.drawText(d.selectionID.toLowerCase(), text_bounds, 12);
   }
 }
 void RT_SelectorMenu::resized() {}
@@ -43,7 +43,7 @@ void RT_SelectorMenu::mouseDown(const juce::MouseEvent &event)
   int newSelection = event.getMouseDownX() / (getWidth() / numFields);
   if (mSelectorData->activeField == newSelection) {
     mSelectorData->fields[mSelectorData->activeField].active = false;
-    mSelectorData->activeField = -1;
+    mSelectorData->activeField                               = -1;
   }
   else {
     if (mSelectorData->activeField != -1) {

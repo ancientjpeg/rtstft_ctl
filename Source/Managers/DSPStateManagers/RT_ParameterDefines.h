@@ -16,6 +16,10 @@
 static const juce::StringArray RT_PARAM_IDS{
     "Pitch Ratio", "Retention",  "Phase Mod",  "Phase Chaos",
     "Gain Nudge",  "Gate Nudge", "Limit Nudge"};
+static const juce::StringArray RT_PARAM_NAMES{
+  "pitch ratio", "retention",  "phase mod",  "phase chaos",
+  "gain nudge",  "gate nudge", "limit nudge"
+};
 static const juce::Array<juce::NormalisableRange<float>> RT_PARAM_RANGES{
     juce::NormalisableRange<float>(0.5f, 2.f, 0.f,
                                    std::log(0.5) / std::log(1. / 3.)),

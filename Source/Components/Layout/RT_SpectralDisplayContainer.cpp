@@ -9,6 +9,7 @@
 */
 
 #include "RT_SpectralDisplayContainer.h"
+#include "../../Managers/LookAndFeelManagement/RT_LookAndFeelManagement.h"
 #include "../Interactive/RT_FFTDisplay.h"
 
 //==============================================================================
@@ -23,11 +24,17 @@ RT_SpectralDisplayContainer::RT_SpectralDisplayContainer(
 
 RT_SpectralDisplayContainer::~RT_SpectralDisplayContainer() {}
 
-void RT_SpectralDisplayContainer::paintInBorder(juce::Graphics &g) {}
+void RT_SpectralDisplayContainer::paintInBorder(juce::Graphics &g)
+{
+  g.setColour(
+      getLookAndFeel_V4().getCurrentColourScheme().getUIColour(defaultFill));
+  g.fillRect(mDisplaySeparation);
+}
 
 void RT_SpectralDisplayContainer::resized()
 {
   auto bounds = getBoundsAdj();
   mManipSelectorMenu.setBounds(bounds.removeFromTop(40));
+  mDisplaySeparation = bounds.removeFromTop(RT_LookAndFeel::widgetBorderSize);
   mFFTDisplay.setBounds(bounds);
 }
