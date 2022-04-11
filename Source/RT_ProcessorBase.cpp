@@ -27,11 +27,13 @@ RT_ProcessorBase::RT_ProcessorBase()
     :
 #endif
       mRTSTFTManager(this), mParameterManager(this),
-      mGUIStateManager(this, {
-                                 RT_MANIP_GUI_IDS[RT_MANIP_GAIN],
-                                 RT_MANIP_GUI_IDS[RT_MANIP_GATE],
-                                 RT_MANIP_GUI_IDS[RT_MANIP_LIMIT],
-                             })
+      mGUIStateManager(this,
+                       {
+                           RT_MANIP_GUI_IDS[RT_MANIP_GAIN],
+                           RT_MANIP_GUI_IDS[RT_MANIP_GATE],
+                           RT_MANIP_GUI_IDS[RT_MANIP_LIMIT],
+                       }),
+      mFileManager(this)
 {
 }
 
@@ -54,6 +56,8 @@ RT_GUIStateManager *RT_ProcessorBase::getGUIStateManager()
 {
   return &mGUIStateManager;
 }
+
+RT_FileManager *RT_ProcessorBase::getFileManager() { return &mFileManager; }
 
 //==============================================================================
 const juce::String RT_ProcessorBase::getName() const { return JucePlugin_Name; }

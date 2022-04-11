@@ -15,6 +15,7 @@ class RT_ProcessorBase;
 class RT_ParameterManager;
 class RTSTFT_Manager;
 class RT_GUIStateManager;
+class RT_FileManager;
 
 namespace RT_LookAndFeel {
 class Manager;
@@ -29,4 +30,5 @@ public:
   virtual RT_ParameterManager     *getParameterManager()   = 0;
   virtual RTSTFT_Manager          *getRTSTFTManager()      = 0;
   virtual RT_GUIStateManager      *getGUIStateManager()    = 0;
+  virtual RT_FileManager          *getFileManager()        = 0;
 };

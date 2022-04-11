@@ -14,6 +14,7 @@
 #include "Managers/GUIStateManagers/RT_GUIStateManager.h"
 #include "Managers/Interface/RT_ProcessorInterface.h"
 #include "Managers/LookAndFeelManagement/RT_LookAndFeelManagement.h"
+#include "Managers/OSManagers/RT_FileManager.h"
 #include <JuceHeader.h>
 #include <JucePluginDefines.h>
 
@@ -24,6 +25,7 @@ class RT_ProcessorBase : public RT_ProcessorInterface,
   RTSTFT_Manager          mRTSTFTManager;
   RT_ParameterManager     mParameterManager;
   RT_GUIStateManager      mGUIStateManager;
+  RT_FileManager          mFileManager;
 
 public:
   RT_ProcessorBase();
@@ -35,6 +37,7 @@ public:
   RTSTFT_Manager          *getRTSTFTManager() override;
   RT_ParameterManager     *getParameterManager() override;
   RT_GUIStateManager      *getGUIStateManager() override;
+  RT_FileManager          *getFileManager() override;
 
   //==============================================================================
   juce::AudioProcessorEditor *createEditor() override;

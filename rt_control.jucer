@@ -120,11 +120,11 @@
           <FILE id="LXcs33" name="RT_LookAndFeelManagement.h" compile="0" resource="0"
                 file="Source/Managers/LookAndFeelManagement/RT_LookAndFeelManagement.h"/>
         </GROUP>
-        <GROUP id="{1F70A4AB-0E3C-94A1-9D5A-568335DB686E}" name="OS Managers">
-          <FILE id="MyGn62" name="RT_FileManager.cpp" compile="1" resource="0"
-                file="Source/Managers/OS Managers/RT_FileManager.cpp"/>
-          <FILE id="ZQoxXw" name="RT_FileManager.h" compile="0" resource="0"
-                file="Source/Managers/OS Managers/RT_FileManager.h"/>
+        <GROUP id="{D4811AF3-DA5B-783D-8130-E282B6680009}" name="OSManagers">
+          <FILE id="qyO0lT" name="RT_FileManager.cpp" compile="1" resource="0"
+                file="Source/Managers/OSManagers/RT_FileManager.cpp"/>
+          <FILE id="ZQFsOo" name="RT_FileManager.h" compile="0" resource="0"
+                file="Source/Managers/OSManagers/RT_FileManager.h"/>
         </GROUP>
       </GROUP>
       <GROUP id="{5A4EBC78-0DD3-53D4-E95C-D71D1FE29F42}" name="Utilities">
