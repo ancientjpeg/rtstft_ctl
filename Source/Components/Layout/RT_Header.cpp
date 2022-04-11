@@ -17,6 +17,16 @@ RT_Header::RT_Header(RT_ProcessorInterface *inInterface, int inBorderSize)
 {
   // In your constructor, you should add any child components, and
   // initialise any special settings that your component needs.
+  addAndMakeVisible(mPluginTitle);
+  mPluginTitle.setText("rtstft_ctl",
+                       juce::NotificationType::dontSendNotification);
+  mPluginTitle.setFont(juce::Font(24, juce::Font::bold));
+  mPluginTitle.setEditable(false);
+  mPluginSubtitle.setText("sound_ctl",
+                          juce::NotificationType::dontSendNotification);
+  mPluginSubtitle.setEditable(false);
+  addAndMakeVisible(mPluginSubtitle);
+  addAndMakeVisible(mSettingsMenuButton);
 }
 
 RT_Header::~RT_Header() {}
@@ -39,6 +49,10 @@ void RT_Header::paintInBorder(juce::Graphics &g)
 
 void RT_Header::resized()
 {
+  auto bounds = getBoundsAdj();
+  mPluginTitle.setBounds(bounds.removeFromLeft(0.2 * getWidthAdj()));
+  mPluginSubtitle.setBounds(bounds.removeFromLeft(0.7 * getWidthAdj()));
+  mSettingsMenuButton.setBounds(bounds);
   // This method is where you should set the bounds of any child
   // components that your component contains..
 }

@@ -11,6 +11,15 @@
 #include "RT_FileManager.h"
 
 RT_FileManager::RT_FileManager(RT_ProcessorInterface *inInterface)
-    : mInterface(inInterface)
+    : mInterface(inInterface), mAppSupportDir(sc_AppSupportDirName)
 {
+  validateSupportDirectory();
+}
+
+void RT_FileManager::validateSupportDirectory()
+{
+  if (!mAppSupportDir.exists()) {
+    auto result = mAppSupportDir.createDirectory();
+    assert(result.wasOk());
+  }
 }
