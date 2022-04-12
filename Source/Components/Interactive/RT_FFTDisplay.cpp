@@ -84,17 +84,25 @@ void RT_FFTDisplay::paint(juce::Graphics &g)
   }
 }
 
-int RT_FFTDisplay::xPosToManipsIndex(int inXPos)
+int RT_FFTDisplay::xPosToManipsIndex(float inXPos)
 {
-  return inXPos
-         * rt_manip_len(mInterface->getRTSTFTManager()->getParamsStruct())
-         / getWidth();
+  int manip_len
+      = rt_manip_len(mInterface->getRTSTFTManager()->getParamsStruct());
+  int ret = inXPos * manip_len / getWidth();
+  return std::clamp<int>(ret, 0, manip_len);
 }
-int RT_FFTDisplay::manipsIndexToXPos(int inIndex)
+float RT_FFTDisplay::manipsIndexToXPos(int inIndex)
 {
-  return getWidth()
+  return (float)getWidth()
          / rt_manip_len(mInterface->getRTSTFTManager()->getParamsStruct())
          * inIndex;
+}
+
+float RT_FFTDisplay::yPosToRTReal(float yPos, rt_params p,
+                                  rt_manip_flavor_t activeManip)
+{
+  float value0 = yPos / getHeight() + rt_get_manip_val(p, activeManip);
+  return std::clamp<float>(1.f - value0, 0.f, 1.f);
 }
 
 void RT_FFTDisplay::resized()
@@ -110,18 +118,39 @@ void RT_FFTDisplay::onManipChanged(rt_manip_flavor_t inManipFlavor)
   copyManips(inManipFlavor);
 }
 
+void RT_FFTDisplay::mouseDown(const juce::MouseEvent &event)
+{
+  mLastDragPos = event.position;
+}
+
 void RT_FFTDisplay::mouseDrag(const juce::MouseEvent &event)
 {
-  auto p          = mInterface->getRTSTFTManager()->getParamsStruct();
-  int  numManips  = rt_manip_len(p);
-  int  manipIndex = xPosToManipsIndex(event.x);
+  // save last pos and account for any positions between last pos and this pos
+  // recurse this
+  auto p = mInterface->getRTSTFTManager()->getParamsStruct();
   int  activeField
       = mInterface->getGUIStateManager()->getSelectorData()->activeField;
-  if (manipIndex >= 0 && manipIndex < numManips && activeField >= 0) {
-    rt_manip_flavor_t active_manip = (rt_manip_flavor_t)activeField;
-    float             newVal       = (float)event.y / getHeight() + rt_get_manip_val(p, active_manip);
-    newVal                         = std::clamp<float>(1.f - newVal, 0.f, 1.f);
-    rt_manip_set_bin_single(p, p->chans[0], active_manip, manipIndex, newVal);
+  if (activeField == -1) {
+    return;
+  }
+  rt_manip_flavor_t activeManip   = (rt_manip_flavor_t)activeField;
+  int               lastPosIndex  = xPosToManipsIndex(mLastDragPos.x);
+  int               finalPosIndex = xPosToManipsIndex(event.position.x);
+  int               indexDiff     = finalPosIndex - lastPosIndex;
+  int               indexDiffSign = indexDiff >= 0 ? 1 : -1;
+
+  rt_manip_set_bin_single(p, p->chans[0], activeManip, lastPosIndex,
+                          yPosToRTReal(mLastDragPos.y, p, activeManip));
+  if (indexDiff != 0) {
+    float nextIndexXPos = manipsIndexToXPos(lastPosIndex + indexDiffSign);
+    float nextIndexYPos
+        = juce::jmap((float)lastPosIndex + indexDiffSign, (float)lastPosIndex,
+                     (float)finalPosIndex, mLastDragPos.y, event.position.y);
+    mLastDragPos.setXY(nextIndexXPos, nextIndexYPos);
+    mouseDrag(event);
+  }
+  else {
+    mLastDragPos = event.position;
   }
 }
 

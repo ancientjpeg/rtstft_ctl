@@ -22,7 +22,8 @@ class RT_FFTDisplay : public RT_Component,
                       public juce::Timer,
                       public RTSTFT_Manager::Listener {
   std::unique_ptr<rt_real[]> mLocalManipCopies;
-
+                        juce::Point<float> mLastDragPos;
+                        
 public:
   RT_FFTDisplay(RT_ProcessorInterface *inInterface);
   ~RT_FFTDisplay() override;
@@ -31,9 +32,12 @@ public:
   void resized() override;
   void timerCallback() override;
   void mouseDrag(const juce::MouseEvent &event) override;
+  void mouseDown(const juce::MouseEvent &event) override;
+                        
 
-  int  xPosToManipsIndex(int inXPos);
-  int  manipsIndexToXPos(int inIndex);
+  int  xPosToManipsIndex(float inXPos);
+  float  manipsIndexToXPos(int inIndex);
+                        float yPosToRTReal(float yPos, rt_params p, rt_manip_flavor_t activeManip);
   void onManipChanged(rt_manip_flavor_t inManipFlavor) override;
 
 private:
