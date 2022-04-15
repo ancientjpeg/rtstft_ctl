@@ -25,6 +25,25 @@ RTSTFT_Manager::~RTSTFT_Manager()
     p = NULL; // superfluous but always a good practice
   }
 }
+void RTSTFT_Manager::resetParamsStruct(int inNumChans, float inSampleRate,
+                                       int inSamplesPerBlock, int inFFTSize,
+                                       int inOverlapFactor)
+{
+  // this needs some work
+  if (mInitialized) {
+    mInitialized = false;
+    rt_clean(p);
+    p = NULL;
+  }
+  mCurrentSampleRate  = inSampleRate;
+  mNumChannels        = inNumChans;
+  int samplesPerBlock = mCurrentSamplesPerBlock
+      = RT_Utilities::getNearestPowerOfTwo(inSamplesPerBlock);
+  p = rt_init(mNumChannels, inFFTSize, mCurrentSamplesPerBlock, inOverlapFactor,
+              0, mCurrentSampleRate);
+  p->listener  = {(void *)this, &RTSTFT_CMDListenerCallback};
+  mInitialized = true;
+}
 
 const rt_params RTSTFT_Manager::getParamsStruct() { return p; }
 
@@ -66,17 +85,6 @@ void RTSTFT_Manager::parameterChanged(const juce::String &parameterID,
   }
 }
 
-void RTSTFT_Manager::changeFFTSize(int inNewFFTSize)
-{
-  if (!juce::isPowerOfTwo(inNewFFTSize) || inNewFFTSize > p->fft_max
-      || !mInitialized) {
-    return;
-  }
-  mInterface->getProcessor()->suspendProcessing(true);
-  rt_set_fft_size(p, inNewFFTSize, p->pad_factor);
-  mInterface->getProcessor()->suspendProcessing(false);
-}
-
 void RTSTFT_Manager::executeCMDCommand(juce::String inCMDString)
 {
   mCMDErrorState = rt_parse_and_execute(p, inCMDString.toRawUTF8());
@@ -109,6 +117,19 @@ void RTSTFT_Manager::readManipsFromBinary()
   if (manip_block_len == current_block_len) {
   }
 }
+
+void RTSTFT_Manager::changeFFTSize(int inNewFFTSize)
+{
+  if (!juce::isPowerOfTwo(inNewFFTSize) || inNewFFTSize > p->fft_max
+      || !mInitialized) {
+    return;
+  }
+  mInterface->getProcessor()->suspendProcessing(true);
+  rt_set_fft_size(p, inNewFFTSize, p->pad_factor);
+  mInterface->getProcessor()->suspendProcessing(false);
+}
+
+//=============================================================================
 
 void RTSTFT_Manager::RTSTFT_ManagerCMDCallback(rt_listener_return_t const info)
 {

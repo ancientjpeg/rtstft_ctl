@@ -48,8 +48,6 @@ public:
 
   void            writeManipsToFile(juce::MemoryOutputStream &stream);
   void            readManipsFromBinary();
-  void            setManipsFromTemp();
-  void            storeManipsAsTemp();
 
   void RTSTFT_ManagerCMDCallback(rt_cpp_listener_return_t const info);
 

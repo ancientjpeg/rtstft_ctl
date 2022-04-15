@@ -176,6 +176,7 @@ void RT_ProcessorBase::setStateInformation(const void *data, int sizeInBytes)
 
 void RT_ProcessorBase::setStateFromStateInformation()
 {
+  DBG("SET STATE IS HERE !");
   auto data = mStateInformation.getData();
   assert(data != nullptr);
 
