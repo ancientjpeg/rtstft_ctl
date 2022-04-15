@@ -33,13 +33,13 @@ RT_ProcessorBase::RT_ProcessorBase()
                            RT_MANIP_GUI_IDS[RT_MANIP_GATE],
                            RT_MANIP_GUI_IDS[RT_MANIP_LIMIT],
                        }),
-      mFileManager(this)
+      mFileManager(this), mStateInformation(nullptr, 0)
 {
 }
 
 RT_ProcessorBase::~RT_ProcessorBase() {}
 //==============================================================================
-juce::AudioProcessor *RT_ProcessorBase::getProcessor() { return this; }
+RT_ProcessorBase *RT_ProcessorBase::getProcessor() { return this; }
 
 RTSTFT_Manager *RT_ProcessorBase::getRTSTFTManager() { return &mRTSTFTManager; }
 
@@ -169,15 +169,32 @@ void RT_ProcessorBase::setStateInformation(const void *data, int sizeInBytes)
   // You should use this method to restore your parameters from this memory
   // block, whose contents will have been created by the getStateInformation()
   // call.
-  auto state = getXmlFromBinary(data, sizeInBytes);
+  mStateInformation = juce::MemoryBlock(data, sizeInBytes);
+
+  // mRTSTFTManager.deserializeParamsStruct(state->getChildByName("rt_params"));
+}
+
+void RT_ProcessorBase::setStateFromStateInformation()
+{
+  auto data = mStateInformation.getData();
+  assert(data != nullptr);
+
+  auto state = getXmlFromBinary(data, mStateInformation.getSize());
   mParameterManager.getValueTreeState()->replaceState(
       juce::ValueTree::fromXml(*state->getChildByName("PARAMETER_TREE")));
 
-  int xml_offset
+  int mXMLOffset
       = ((uint32_t *)data)[1] + 9; // includes magic number, size int, and
                                    // trailing nullterm in XML binary
-  const void *manips_binary_ptr = (const void *)(((char *)data) + xml_offset);
-  mRTSTFTManager.readManipsFromBinary(manips_binary_ptr);
+  char *manips_binary_ptr = ((char *)data) + mXMLOffset;
+  mRTSTFTManager.readManipsFromBinary();
+}
 
-  // mRTSTFTManager.deserializeParamsStruct(state->getChildByName("rt_params"));
+const void *RT_ProcessorBase::getManipsBinaryPointer()
+{
+  if (mXMLOffset == -1) {
+    return nullptr;
+  }
+  const char *data = (const char *)mStateInformation.getData();
+  return (const void *)(data + mXMLOffset);
 }

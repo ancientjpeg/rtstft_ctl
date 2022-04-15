@@ -25,7 +25,7 @@ class RT_ProcessorInterface {
 
 public:
   virtual ~RT_ProcessorInterface() {}
-  virtual juce::AudioProcessor    *getProcessor()          = 0;
+  virtual RT_ProcessorBase        *getProcessor()          = 0;
   virtual RT_LookAndFeel::Manager *getLookAndFeelManager() = 0;
   virtual RT_ParameterManager     *getParameterManager()   = 0;
   virtual RTSTFT_Manager          *getRTSTFTManager()      = 0;

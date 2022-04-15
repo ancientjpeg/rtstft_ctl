@@ -27,12 +27,15 @@ class RT_ProcessorBase : public RT_ProcessorInterface,
   RT_GUIStateManager      mGUIStateManager;
   RT_FileManager          mFileManager;
 
+  juce::MemoryBlock       mStateInformation;
+  int                     mXMLOffset = -1;
+
 public:
   RT_ProcessorBase();
   virtual ~RT_ProcessorBase();
 
   //==============================================================================
-  juce::AudioProcessor    *getProcessor() override;
+  RT_ProcessorBase        *getProcessor() override;
   RT_LookAndFeel::Manager *getLookAndFeelManager() override;
   RTSTFT_Manager          *getRTSTFTManager() override;
   RT_ParameterManager     *getParameterManager() override;
@@ -59,8 +62,10 @@ public:
   void changeProgramName(int index, const juce::String &newName) override;
 
   //==============================================================================
-  void getStateInformation(juce::MemoryBlock &destData) override;
-  void setStateInformation(const void *data, int sizeInBytes) override;
+  void        getStateInformation(juce::MemoryBlock &destData) override;
+  void        setStateInformation(const void *data, int sizeInBytes) override;
+  void        setStateFromStateInformation();
+  const void *getManipsBinaryPointer();
 
   //==============================================================================
 

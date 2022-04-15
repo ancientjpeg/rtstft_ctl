@@ -23,7 +23,7 @@ RT_ParameterManager::RT_ParameterManager(RT_ProcessorInterface *inInterface)
         RT_PARAM_DEFAULTS[i]));
   }
   mValueTreeState.reset(new juce::AudioProcessorValueTreeState(
-      *mInterface->getProcessor(), nullptr, "PARAMETER_TREE",
+      (juce::AudioProcessor &)*mInterface->getProcessor(), nullptr, "PARAMETER_TREE",
       {parameters.begin(), parameters.end()}));
   for (int i = 0; i < RT_PARAM_FLAVOR_COUNT; i++) {
     mValueTreeState->addParameterListener(RT_PARAM_IDS[i], rtstft_obj);

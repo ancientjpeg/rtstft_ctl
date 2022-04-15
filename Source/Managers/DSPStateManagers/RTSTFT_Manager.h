@@ -28,7 +28,6 @@ class RTSTFT_Manager : public juce::AudioProcessorValueTreeState::Listener {
   bool                   mLastUpdateWasCMD = false;
   juce::String           mCMDMessage       = "";
   int                    mCMDErrorState    = 0;
-  juce::MemoryBlock      mManipsTemp;
 
 public:
   RTSTFT_Manager(RT_ProcessorInterface *inInterface);
@@ -48,7 +47,7 @@ public:
   juce::String    getCMDMessage();
 
   void            writeManipsToFile(juce::MemoryOutputStream &stream);
-  void            readManipsFromBinary(const void *manips_binary_ptr);
+  void            readManipsFromBinary();
   void            setManipsFromTemp();
   void            storeManipsAsTemp();
 
