@@ -148,9 +148,6 @@ juce::AudioProcessorEditor *RT_ProcessorBase::createEditor()
 //==============================================================================
 void RT_ProcessorBase::getStateInformation(juce::MemoryBlock &destData)
 {
-  // You should use this method to store your parameters in the memory block.
-  // You could do that either as raw data, or use the XML or ValueTree classes
-  // as intermediaries to make it easy to save and load complex data.
   auto paramState
       = mParameterManager.getValueTreeState()->copyState().createXml();
   auto state = std::make_unique<juce::XmlElement>("rtstft_ctl_state");
@@ -186,7 +183,9 @@ void RT_ProcessorBase::verifyStateIsUpToDate()
 
   mXMLOffset = ((uint32_t *)data)[1] + 9; // includes magic number, size int,
                                           // and trailing nullterm in XML binary
-  mRTSTFTManager.readManipsFromBinary();
+  mRTSTFTManager.readManipsFromBinary(
+      true); // utilize a threaded FFT size update so we don't risk blocking the
+             // main thread
   mAwaitingStateUpdate = false;
 }
 

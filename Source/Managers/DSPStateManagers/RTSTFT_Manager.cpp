@@ -62,6 +62,11 @@ void RTSTFT_Manager::resetParamsStruct(int inFFTSize, int inOverlapFactor)
     p = rt_init(mNumChannels, inFFTSize, mCurrentSamplesPerBlock,
                 inOverlapFactor, 0, mCurrentSampleRate);
   }
+  else if (mInitialized
+           && (inFFTSize != p->fft_size
+               || inOverlapFactor != p->overlap_factor)) {
+    changeFFTSize(inFFTSize, inOverlapFactor);
+  }
   p->listener  = {(void *)this, &RTSTFT_CMDListenerCallback};
   mInitialized = true;
 }
@@ -75,16 +80,7 @@ void RTSTFT_Manager::parameterChanged(const juce::String &parameterID,
   if (paramFlavor < 0 || paramFlavor >= RT_PARAM_FLAVOR_COUNT) {
     // error handling here...
   }
-  if (!mLastUpdateWasCMD) {
-    // this is stupid and dumb as it's not guarunteed threadsafe (i.e. incoming
-    // value could be different from the CMD-derived value) I just have it here
-    // as a reminder in case things go wrong that I might need a more foolproof
-    // method of setting the Valuetree i.e., DELET THIS
-    rt_set_single_param(p, (rt_param_flavor_t)paramFlavor, newValue);
-  }
-  else {
-    mLastUpdateWasCMD = false;
-  }
+  rt_set_single_param(p, (rt_param_flavor_t)paramFlavor, newValue);
 }
 
 void RTSTFT_Manager::executeCMDCommand(juce::String inCMDString)
@@ -96,7 +92,7 @@ void RTSTFT_Manager::executeCMDCommand(juce::String inCMDString)
 int          RTSTFT_Manager::getCMDErrorState() { return mCMDErrorState; }
 juce::String RTSTFT_Manager::getCMDMessage() { return mCMDMessage; }
 
-void         RTSTFT_Manager::readManipsFromBinary()
+void         RTSTFT_Manager::readManipsFromBinary(bool inThreadedFFTUpdate)
 {
   assert(mInitialized);
   auto        processor = (RT_ProcessorBase *)(mInterface->getProcessor());
@@ -106,7 +102,7 @@ void         RTSTFT_Manager::readManipsFromBinary()
   if (magicNumber != ManipsBinaryMagicNumber) {
     return;
   }
-  void *ptr              = (float *)manipsBinaryPtr + 4;
+  void *ptr              = (char *)manipsBinaryPtr + 4;
 
   int   newFFTSize       = 2048; // TEST
   int   newPadFactor     = 0;
@@ -136,13 +132,18 @@ void RTSTFT_Manager::writeManipsToFile(juce::MemoryOutputStream &stream)
 }
 
 void RTSTFT_Manager::changeFFTSize(int inNewFFTSize, int inNewOverlapFactor,
-                                   int inNewPadFactor)
+                                   int inNewPadFactor, bool threaded = false)
 {
   assert(mInitialized);
   mThreadFFTSize       = inNewFFTSize;
   mThreadOverlapFactor = inNewOverlapFactor;
   mThreadPadFactor     = inNewPadFactor;
-  mFFTSetterThread.run();
+  if (threaded) {
+    mFFTSetterThread.run();
+  }
+  else {
+    changeFFTSizeInternal();
+  }
 }
 
 void RTSTFT_Manager::changeFFTSizeInternal()
@@ -158,20 +159,28 @@ void RTSTFT_Manager::changeFFTSizeInternal()
   mInterface->getProcessor()->suspendProcessing(false);
 }
 
+void RTSTFT_Manager::awaitFFTSizeChange()
+{
+  // just crash  out on an unexpectedly long wait time
+  assert(mFFTSetterThread.waitForThreadToExit(5000));
+}
+
 //=============================================================================
 
 void RTSTFT_Manager::RTSTFT_ManagerCMDCallback(rt_listener_return_t const info)
 {
   if (info.param_flavor != RT_PARAM_FLAVOR_UNDEFINED) {
-    mLastUpdateWasCMD = true;
-    auto param
-        = mInterface->getParameterManager()->getValueTreeState()->getParameter(
-            RT_PARAM_IDS[info.param_flavor]);
-    param->setValueNotifyingHost(info.param_value);
+    //    auto param
+    //        =
+    //        mInterface->getParameterManager()->getValueTreeState()->getParameter(
+    //            RT_PARAM_IDS[info.param_flavor]);
+    //    param->setValueNotifyingHost(info.param_value); // only needed if i
+    //    ever put the knob params in rt_cmd
   }
   else if (info.manip_flavor != RT_MANIP_FLAVOR_UNDEFINED) {
-    mListenerList.call(
-        [&info](Listener &l) { l.onManipChanged(info.manip_flavor); });
+    //    mListenerList.call(
+    //        [&info](Listener &l) { l.onManipChanged(info.manip_flavor); }); //
+    //        also unecessary now
   }
 }
 

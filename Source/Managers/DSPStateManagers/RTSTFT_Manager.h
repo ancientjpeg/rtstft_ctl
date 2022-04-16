@@ -24,20 +24,21 @@ public:
   RTSTFT_Manager(RT_ProcessorInterface *inInterface);
   ~RTSTFT_Manager();
   void resetParamsStruct(int inFFTSize = 2048, int inOverlapFactor = 8);
-  const rt_params getParamsStruct();
-  void            prepareToPlay(double inSampleRate, int inSamplesPerBlock);
-  void            processBlock(juce::AudioBuffer<float> &buffer);
-  void            releaseResources();
-  void            parameterChanged(const juce::String &parameterID,
-                                   float               newValue) override;
-  void            changeFFTSize(int inNewFFTSize, int inNewOverlapFactor,
-                                int inNewPadFactor = 0);
-  void            executeCMDCommand(juce::String inCMDString);
-  int             getCMDErrorState();
-  juce::String    getCMDMessage();
+  const rt_params  getParamsStruct();
+  void             prepareToPlay(double inSampleRate, int inSamplesPerBlock);
+  void             processBlock(juce::AudioBuffer<float> &buffer);
+  void             releaseResources();
+  void             parameterChanged(const juce::String &parameterID,
+                                    float               newValue) override;
+  void             changeFFTSize(int inNewFFTSize, int inNewOverlapFactor,
+                                 int inNewPadFactor = 0, bool threaded = false);
+  void             awaitFFTSizeChange();
+  void             executeCMDCommand(juce::String inCMDString);
+  int              getCMDErrorState();
+  juce::String     getCMDMessage();
 
-  void            writeManipsToFile(juce::MemoryOutputStream &stream);
-  void            readManipsFromBinary();
+  void             writeManipsToFile(juce::MemoryOutputStream &stream);
+  void             readManipsFromBinary(bool inThreadedFFTUpdate = false);
   static const int ManipsBinaryMagicNumber = 0xBEEFED05;
 
   void RTSTFT_ManagerCMDCallback(rt_cpp_listener_return_t const info);
@@ -77,10 +78,9 @@ private:
   float                  mCurrentSampleRate;
   int                    mThreadFFTSize, mThreadOverlapFactor, mThreadPadFactor;
   int                    mNumChannels;
-  bool                   mInitialized = false, mTempManipsNeedRead = false;
-  bool                   mLastUpdateWasCMD = false;
-  juce::String           mCMDMessage       = "";
-  int                    mCMDErrorState    = 0;
+  bool         mInitialized = false, mFrameSizeWasFromPresetRead = false;
+  juce::String mCMDMessage    = "";
+  int          mCMDErrorState = 0;
   juce::ListenerList<Listener> mListenerList;
   void                         changeFFTSizeInternal();
 };
