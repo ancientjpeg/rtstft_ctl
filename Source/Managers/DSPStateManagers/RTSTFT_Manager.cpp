@@ -106,8 +106,9 @@ void         RTSTFT_Manager::writeManipsToFile(juce::MemoryOutputStream &stream)
 
 void RTSTFT_Manager::readManipsFromBinary()
 {
+  auto processor = (RT_ProcessorBase *)(mInterface->getProcessor());
   const void *manips_binary_ptr
-      = mInterface->getProcessor()->getManipsBinaryPointer();
+      = processor->getManipsBinaryPointer();
   assert(manips_binary_ptr != nullptr);
   int     manip_block_len   = ((int32_t *)manips_binary_ptr)[0];
   int     read_manip_len    = manip_block_len / RT_PARAM_FLAVOR_COUNT;

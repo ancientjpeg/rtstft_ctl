@@ -18,8 +18,8 @@
 #include <JuceHeader.h>
 #include <JucePluginDefines.h>
 
-class RT_ProcessorBase : public RT_ProcessorInterface,
-                         public juce::AudioProcessor {
+class RT_ProcessorBase : public juce::AudioProcessor,
+                         public RT_ProcessorInterface {
 
   RT_LookAndFeel::Manager mLookAndFeelManager;
   RTSTFT_Manager          mRTSTFTManager;
@@ -35,7 +35,7 @@ public:
   virtual ~RT_ProcessorBase();
 
   //==============================================================================
-  RT_ProcessorBase        *getProcessor() override;
+  juce::AudioProcessor    *getProcessor() override;
   RT_LookAndFeel::Manager *getLookAndFeelManager() override;
   RTSTFT_Manager          *getRTSTFTManager() override;
   RT_ParameterManager     *getParameterManager() override;

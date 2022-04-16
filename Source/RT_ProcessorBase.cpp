@@ -39,7 +39,7 @@ RT_ProcessorBase::RT_ProcessorBase()
 
 RT_ProcessorBase::~RT_ProcessorBase() {}
 //==============================================================================
-RT_ProcessorBase *RT_ProcessorBase::getProcessor() { return this; }
+juce::AudioProcessor *RT_ProcessorBase::getProcessor() { return this; }
 
 RTSTFT_Manager *RT_ProcessorBase::getRTSTFTManager() { return &mRTSTFTManager; }
 
