@@ -9,13 +9,14 @@
 */
 
 #include "RT_SelectorMenu.h"
-#include "../../Managers/StateManagers/RT_StateManager.h"
+#include "../../Managers/StateManagers/RT_PropertyManager.h"
 
 RT_SelectorMenu::RT_SelectorMenu(RT_ProcessorInterface *inInterface)
     : RT_Component(inInterface),
       mSelectorData(mInterface->getGUIStateManager()->getSelectorData())
 {
 }
+
 void RT_SelectorMenu::paint(juce::Graphics &g)
 {
   juce::Font font = juce::Font(12, 0);

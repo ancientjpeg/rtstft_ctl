@@ -10,7 +10,7 @@
 
 #include "RT_FFTDisplay.h"
 #include "../../Managers/DSPStateManagers/RTSTFT_Manager.h"
-#include "../../Managers/StateManagers/RT_StateManager.h"
+#include "../../Managers/StateManagers/RT_PropertyManager.h"
 
 //==============================================================================
 RT_FFTDisplay::RT_FFTDisplay(RT_ProcessorInterface *inInterface)

@@ -15,7 +15,7 @@ class RT_AudioProcessor;
 class RT_ProcessorBase;
 class RT_ParameterManager;
 class RTSTFT_Manager;
-class RT_StateManager;
+class RT_PropertyManager;
 class RT_FileManager;
 
 namespace RT_LookAndFeel {
@@ -30,6 +30,6 @@ public:
   virtual RT_LookAndFeel::Manager *getLookAndFeelManager() = 0;
   virtual RT_ParameterManager     *getParameterManager()   = 0;
   virtual RTSTFT_Manager          *getRTSTFTManager()      = 0;
-  virtual RT_StateManager         *getGUIStateManager()    = 0;
+  virtual RT_PropertyManager      *getGUIStateManager()    = 0;
   virtual RT_FileManager          *getFileManager()        = 0;
 };

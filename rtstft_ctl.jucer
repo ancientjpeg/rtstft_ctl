@@ -121,10 +121,10 @@
                 file="Source/Managers/StateManagers/RT_PresetManager.cpp"/>
           <FILE id="JgPyPe" name="RT_PresetManager.h" compile="0" resource="0"
                 file="Source/Managers/StateManagers/RT_PresetManager.h"/>
-          <FILE id="hKBywp" name="RT_StateManager.cpp" compile="1" resource="0"
-                file="Source/Managers/StateManagers/RT_StateManager.cpp"/>
-          <FILE id="pCyUCu" name="RT_StateManager.h" compile="0" resource="0"
-                file="Source/Managers/StateManagers/RT_StateManager.h"/>
+          <FILE id="hKBywp" name="RT_PropertyManager.cpp" compile="1" resource="0"
+                file="Source/Managers/StateManagers/RT_PropertyManager.cpp"/>
+          <FILE id="pCyUCu" name="RT_PropertyManager.h" compile="0" resource="0"
+                file="Source/Managers/StateManagers/RT_PropertyManager.h"/>
         </GROUP>
       </GROUP>
       <GROUP id="{5A4EBC78-0DD3-53D4-E95C-D71D1FE29F42}" name="Utilities">

@@ -52,7 +52,7 @@ RT_ParameterManager *RT_ProcessorBase::getParameterManager()
 {
   return &mParameterManager;
 }
-RT_StateManager *RT_ProcessorBase::getGUIStateManager()
+RT_PropertyManager *RT_ProcessorBase::getGUIStateManager()
 {
   return &mGUIStateManager;
 }
@@ -183,9 +183,7 @@ void RT_ProcessorBase::verifyStateIsUpToDate()
 
   mXMLOffset = ((uint32_t *)data)[1] + 9; // includes magic number, size int,
                                           // and trailing nullterm in XML binary
-  mRTSTFTManager.readManipsFromBinary(
-      true); // utilize a threaded FFT size update so we don't risk blocking the
-             // main thread
+  mRTSTFTManager.readManipsFromBinary(true);
   mAwaitingStateUpdate = false;
 }
 
