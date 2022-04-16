@@ -102,9 +102,13 @@ void         RTSTFT_Manager::readManipsFromBinary()
   auto        processor = (RT_ProcessorBase *)(mInterface->getProcessor());
   const void *manipsBinaryPtr = processor->getManipsBinaryPointer();
   assert(manipsBinaryPtr != nullptr);
+  int magicNumber = *(int32_t *)manipsBinaryPtr;
+  if (magicNumber != ManipsBinaryMagicNumber) {
+    return;
+  }
   void *ptr              = (float *)manipsBinaryPtr + 4;
 
-  int   newFFTSize       = 1024; // TEST
+  int   newFFTSize       = 2048; // TEST
   int   newPadFactor     = 0;
   int   newOverlapFactor = 8;
   // to prevent bad reads from older builds
@@ -123,7 +127,7 @@ void         RTSTFT_Manager::readManipsFromBinary()
 
 void RTSTFT_Manager::writeManipsToFile(juce::MemoryOutputStream &stream)
 {
-  stream.writeInt(p->fft_size);
+  stream.writeInt(ManipsBinaryMagicNumber);
   rt_uint i;
   for (i = 0; i < p->num_chans; i++) {
     stream.write(p->chans[i]->manip->manips,
@@ -134,6 +138,7 @@ void RTSTFT_Manager::writeManipsToFile(juce::MemoryOutputStream &stream)
 void RTSTFT_Manager::changeFFTSize(int inNewFFTSize, int inNewOverlapFactor,
                                    int inNewPadFactor)
 {
+  assert(mInitialized);
   mThreadFFTSize       = inNewFFTSize;
   mThreadOverlapFactor = inNewOverlapFactor;
   mThreadPadFactor     = inNewPadFactor;
@@ -145,6 +150,7 @@ void RTSTFT_Manager::changeFFTSizeInternal()
 {
   if (!juce::isPowerOfTwo(mThreadFFTSize) || mThreadFFTSize > p->fft_max
       || !mInitialized) {
+    mInterface->getProcessor()->suspendProcessing(false);
     return;
   }
   rt_set_fft_size(p, mThreadFFTSize, mThreadOverlapFactor, mThreadPadFactor);

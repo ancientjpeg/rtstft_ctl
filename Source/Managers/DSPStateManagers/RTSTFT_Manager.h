@@ -23,7 +23,7 @@ class RTSTFT_Manager : public juce::AudioProcessorValueTreeState::Listener {
 public:
   RTSTFT_Manager(RT_ProcessorInterface *inInterface);
   ~RTSTFT_Manager();
-  void resetParamsStruct(int inFFTSize = 256, int inOverlapFactor = 4);
+  void resetParamsStruct(int inFFTSize = 2048, int inOverlapFactor = 8);
   const rt_params getParamsStruct();
   void            prepareToPlay(double inSampleRate, int inSamplesPerBlock);
   void            processBlock(juce::AudioBuffer<float> &buffer);
@@ -38,6 +38,7 @@ public:
 
   void            writeManipsToFile(juce::MemoryOutputStream &stream);
   void            readManipsFromBinary();
+  static const int ManipsBinaryMagicNumber = 0xBEEFED05;
 
   void RTSTFT_ManagerCMDCallback(rt_cpp_listener_return_t const info);
 

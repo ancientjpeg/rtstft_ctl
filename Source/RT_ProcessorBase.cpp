@@ -174,6 +174,7 @@ void RT_ProcessorBase::setStateInformation(const void *data, int sizeInBytes)
 
 void RT_ProcessorBase::verifyStateIsUpToDate()
 {
+//  return; // TEST
   if (!mAwaitingStateUpdate) {
     return;
   }

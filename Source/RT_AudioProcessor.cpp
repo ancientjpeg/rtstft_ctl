@@ -19,8 +19,8 @@ RT_AudioProcessor::~RT_AudioProcessor() {}
 //==============================================================================
 void RT_AudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
 {
-  verifyStateIsUpToDate();
   mRTSTFTManager.prepareToPlay(sampleRate, samplesPerBlock);
+  verifyStateIsUpToDate();
 }
 
 void RT_AudioProcessor::processBlock(juce::AudioBuffer<float> &buffer,
