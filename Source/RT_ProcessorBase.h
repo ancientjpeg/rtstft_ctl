@@ -18,7 +18,6 @@
 #include <JuceHeader.h>
 #include <JucePluginDefines.h>
 
-
 class RT_ProcessorBase : public juce::AudioProcessor,
                          public RT_ProcessorInterface {
 
@@ -42,7 +41,7 @@ public:
   RT_LookAndFeel::Manager *getLookAndFeelManager() override;
   RTSTFT_Manager          *getRTSTFTManager() override;
   RT_ParameterManager     *getParameterManager() override;
-  RT_PropertyManager      *getGUIStateManager() override;
+  RT_PropertyManager      *getPropertyManager() override;
   RT_FileManager          *getFileManager() override;
 
   //==============================================================================

@@ -38,7 +38,7 @@ void RT_FFTDisplay::paint(juce::Graphics &g)
 {
 
   auto cs          = getLookAndFeel_V4().getCurrentColourScheme();
-  auto manip_state = mInterface->getGUIStateManager()->getSelectorData();
+  auto manip_state = mInterface->getPropertyManager()->getSelectorData();
   g.fillAll(cs.getUIColour(windowBackground));
 
   const rt_params p = mInterface->getRTSTFTManager()->getParamsStruct();
@@ -129,7 +129,7 @@ void RT_FFTDisplay::mouseDrag(const juce::MouseEvent &event)
   // recurse this
   auto p = mInterface->getRTSTFTManager()->getParamsStruct();
   int  activeField
-      = mInterface->getGUIStateManager()->getSelectorData()->activeField;
+      = mInterface->getPropertyManager()->getSelectorData()->activeField;
   if (activeField == -1) {
     return;
   }

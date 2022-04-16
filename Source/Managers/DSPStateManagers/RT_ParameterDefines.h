@@ -33,3 +33,15 @@ static const juce::Array<juce::NormalisableRange<float>> RT_PARAM_RANGES{
 static const float
     RT_PARAM_DEFAULTS[RT_PARAM_FLAVOR_COUNT] // should be RT_PARAM_FLAVOR_COUNT
     = {1.f, 1.f, 1.f, 0.f, 0.f, 0.f, 0.f};
+
+/* property defines */
+static const juce::StringArray RT_MANIP_GUI_IDS = {"Gain", "Gate", "Limit"};
+
+enum RT_FFT_MODIFIERS {
+  RT_FFT_MODIFIER_FFT_SIZE,
+  RT_FFT_MODIFIER_OVERLAP_FACTOR,
+  RT_FFT_MODIFIER_PAD_FACTOR,
+  RT_FFT_MODIFIERS_COUNT,
+};
+static const juce::StringArray RT_FFT_MODIFIER_IDS
+= {"fft_size", "overlap_factor", "pad_factor"};

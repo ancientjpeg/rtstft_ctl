@@ -30,6 +30,6 @@ public:
   virtual RT_LookAndFeel::Manager *getLookAndFeelManager() = 0;
   virtual RT_ParameterManager     *getParameterManager()   = 0;
   virtual RTSTFT_Manager          *getRTSTFTManager()      = 0;
-  virtual RT_PropertyManager      *getGUIStateManager()    = 0;
+  virtual RT_PropertyManager      *getPropertyManager()    = 0;
   virtual RT_FileManager          *getFileManager()        = 0;
 };

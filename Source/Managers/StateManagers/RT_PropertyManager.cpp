@@ -9,17 +9,35 @@
 */
 
 #include "RT_PropertyManager.h"
+#include "../DSPStateManagers/RTSTFT_Manager.h"
 
 RT_PropertyManager::RT_PropertyManager(
     RT_ProcessorInterface              *inInterface,
     std::initializer_list<juce::String> inManipSelectorFields,
     int                                 inCommandHistoryMaxSize)
     : mInterface(inInterface), mValueTree("rt_properties"),
-
       mCommandHistoryMax(inCommandHistoryMaxSize),
       mManipSelectorData(inManipSelectorFields)
 {
+  const rt_params p = mInterface->getRTSTFTManager()->getParamsStruct();
+
+  mValueTree.appendChild(
+      juce::ValueTree(
+          "rt_params",
+          {
+              {RT_FFT_MODIFIER_IDS[RT_FFT_MODIFIER_FFT_SIZE], (int)p->fft_size},
+              {RT_FFT_MODIFIER_IDS[RT_FFT_MODIFIER_OVERLAP_FACTOR],
+               (int)p->overlap_factor},
+              {RT_FFT_MODIFIER_IDS[RT_FFT_MODIFIER_PAD_FACTOR],
+               (int)p->pad_factor},
+              {"manip_multichannel", p->manip_multichannel},
+          },
+          {juce::ValueTree("rt_chans", {}, {})
+
+          }),
+      nullptr);
   mHistoryIterator = mCommandHistory.begin();
+  mValueTree.addListener(mInterface->getRTSTFTManager());
 }
 
 RT_PropertyManager::~RT_PropertyManager() {}

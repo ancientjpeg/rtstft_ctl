@@ -31,7 +31,7 @@ RT_CommandLineContainer::RT_CommandLineContainer(
                                            juce::Colours::lightgrey);
   mCommandLineEntry.onReturnKey = [this]() {
     auto text = mCommandLineEntry.getText();
-    auto hist = mInterface->getGUIStateManager();
+    auto hist = mInterface->getPropertyManager();
     hist->pushNewHistoryCommand(text);
     hist->resetCommandHistoryPos();
     mCommandLineEntry.clear();
@@ -81,7 +81,7 @@ void RT_CommandLineContainer::resized()
 bool RT_CommandLineContainer::keyPressed(const juce::KeyPress &kp,
                                          juce::Component      *orig)
 {
-  auto guiState = mInterface->getGUIStateManager();
+  auto guiState = mInterface->getPropertyManager();
   if (!mCommandLineEntry.isTextInputActive()
       || guiState->commandHistoryIsEmpty()) {
     return false;

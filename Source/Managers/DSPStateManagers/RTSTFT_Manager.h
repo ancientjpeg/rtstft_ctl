@@ -18,23 +18,26 @@ typedef struct RTSTFT_Params_Listener_Return_Data rt_cpp_listener_return_t;
 
 using rt_param_flavor_t = RT_PARAM_FLAVOR;
 
-class RTSTFT_Manager : public juce::AudioProcessorValueTreeState::Listener {
+class RTSTFT_Manager : public juce::AudioProcessorValueTreeState::Listener,
+                       public juce::ValueTree::Listener {
 
 public:
   RTSTFT_Manager(RT_ProcessorInterface *inInterface);
   ~RTSTFT_Manager();
   void resetParamsStruct(int inFFTSize = 2048, int inOverlapFactor = 8);
-  const rt_params  getParamsStruct();
-  void             prepareToPlay(double inSampleRate, int inSamplesPerBlock);
-  void             processBlock(juce::AudioBuffer<float> &buffer);
-  void             releaseResources();
-  void             parameterChanged(const juce::String &parameterID,
-                                    float               newValue) override;
-  void             changeFFTSize(int inNewFFTSize, int inNewOverlapFactor,
-                                 int inNewPadFactor = 0, bool threaded = false);
-  void             awaitFFTSizeChange();
-  void             executeCMDCommand(juce::String inCMDString);
-  int              getCMDErrorState();
+  const rt_params getParamsStruct();
+  void            prepareToPlay(double inSampleRate, int inSamplesPerBlock);
+  void            processBlock(juce::AudioBuffer<float> &buffer);
+  void            releaseResources();
+  void            parameterChanged(const juce::String &parameterID,
+                                   float               newValue) override;
+  void valueTreePropertyChanged(juce::ValueTree &treeWhosePropertyHasChanged,
+                                const juce::Identifier &property) override;
+  void changeFFTSize(int inNewFFTSize, int inNewOverlapFactor,
+                     int inNewPadFactor = 0, bool threaded = false);
+  void awaitFFTSizeChange();
+  void executeCMDCommand(juce::String inCMDString);
+  int  getCMDErrorState();
   juce::String     getCMDMessage();
 
   void             writeManipsToFile(juce::MemoryOutputStream &stream);
@@ -78,9 +81,9 @@ private:
   float                  mCurrentSampleRate;
   int                    mThreadFFTSize, mThreadOverlapFactor, mThreadPadFactor;
   int                    mNumChannels;
-  bool         mInitialized = false, mFrameSizeWasFromPresetRead = false;
-  juce::String mCMDMessage    = "";
-  int          mCMDErrorState = 0;
+  bool                   mInitialized   = false;
+  juce::String           mCMDMessage    = "";
+  int                    mCMDErrorState = 0;
   juce::ListenerList<Listener> mListenerList;
   void                         changeFFTSizeInternal();
 };

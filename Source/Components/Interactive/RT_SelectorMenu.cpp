@@ -13,7 +13,7 @@
 
 RT_SelectorMenu::RT_SelectorMenu(RT_ProcessorInterface *inInterface)
     : RT_Component(inInterface),
-      mSelectorData(mInterface->getGUIStateManager()->getSelectorData())
+      mSelectorData(mInterface->getPropertyManager()->getSelectorData())
 {
 }
 

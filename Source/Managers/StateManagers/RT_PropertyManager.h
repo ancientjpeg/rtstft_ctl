@@ -11,9 +11,8 @@
 #pragma once
 
 #include "../../Components/Interactive/RT_SelectorMenu.h"
+#include "../DSPStateManagers/RT_ParameterDefines.h"
 #include "../Interface/RT_ProcessorInterface.h"
-
-static const juce::StringArray RT_MANIP_GUI_IDS = {"Gain", "Gate", "Limit"};
 
 class RT_PropertyManager {
   RT_ProcessorInterface            *mInterface;

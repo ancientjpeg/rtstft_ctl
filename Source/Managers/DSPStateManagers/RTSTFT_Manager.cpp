@@ -83,6 +83,29 @@ void RTSTFT_Manager::parameterChanged(const juce::String &parameterID,
   rt_set_single_param(p, (rt_param_flavor_t)paramFlavor, newValue);
 }
 
+void RTSTFT_Manager::valueTreePropertyChanged(
+    juce::ValueTree        &treeWhosePropertyHasChanged,
+    const juce::Identifier &property)
+{
+  juce::var val = treeWhosePropertyHasChanged.getProperty(property);
+
+  // this is so so so dumb
+  if (property
+      == (juce::Identifier)RT_FFT_MODIFIER_IDS[RT_FFT_MODIFIER_FFT_SIZE]) {
+    rt_set_fft_size(p, (int)val, p->overlap_factor, p->pad_factor);
+  }
+  else if (property
+           == (juce::Identifier)
+               RT_FFT_MODIFIER_IDS[RT_FFT_MODIFIER_OVERLAP_FACTOR]) {
+    rt_set_fft_size(p, p->frame_size, (int)val, p->pad_factor);
+  }
+  else if (property
+           == (juce::Identifier)
+               RT_FFT_MODIFIER_IDS[RT_FFT_MODIFIER_PAD_FACTOR]) {
+    rt_set_fft_size(p, p->frame_size, p->overlap_factor, (int)val);
+  }
+}
+
 void RTSTFT_Manager::executeCMDCommand(juce::String inCMDString)
 {
   mCMDErrorState = rt_parse_and_execute(p, inCMDString.toRawUTF8());
