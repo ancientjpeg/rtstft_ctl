@@ -166,17 +166,17 @@ void RT_ProcessorBase::getStateInformation(juce::MemoryBlock &destData)
 
 void RT_ProcessorBase::setStateInformation(const void *data, int sizeInBytes)
 {
-  // You should use this method to restore your parameters from this memory
-  // block, whose contents will have been created by the getStateInformation()
-  // call.
-  mStateInformation = juce::MemoryBlock(data, sizeInBytes);
-
+  DBG("SET STATE IS HERE !");
+  mStateInformation    = juce::MemoryBlock(data, sizeInBytes);
+  mAwaitingStateUpdate = true;
   // mRTSTFTManager.deserializeParamsStruct(state->getChildByName("rt_params"));
 }
 
-void RT_ProcessorBase::setStateFromStateInformation()
+void RT_ProcessorBase::verifyStateIsUpToDate()
 {
-  DBG("SET STATE IS HERE !");
+  if (!mAwaitingStateUpdate) {
+    return;
+  }
   auto data = mStateInformation.getData();
   assert(data != nullptr);
 
@@ -184,11 +184,11 @@ void RT_ProcessorBase::setStateFromStateInformation()
   mParameterManager.getValueTreeState()->replaceState(
       juce::ValueTree::fromXml(*state->getChildByName("PARAMETER_TREE")));
 
-  int mXMLOffset
+ mXMLOffset
       = ((uint32_t *)data)[1] + 9; // includes magic number, size int, and
                                    // trailing nullterm in XML binary
-  char *manips_binary_ptr = ((char *)data) + mXMLOffset;
   mRTSTFTManager.readManipsFromBinary();
+  mAwaitingStateUpdate = false;
 }
 
 const void *RT_ProcessorBase::getManipsBinaryPointer()

@@ -19,29 +19,19 @@ typedef struct RTSTFT_Params_Listener_Return_Data rt_cpp_listener_return_t;
 using rt_param_flavor_t = RT_PARAM_FLAVOR;
 
 class RTSTFT_Manager : public juce::AudioProcessorValueTreeState::Listener {
-  RT_ProcessorInterface *mInterface;
-  rt_params              p;
-  int                    mCurrentSamplesPerBlock;
-  float                  mCurrentSampleRate = -1;
-  int                    mNumChannels;
-  bool                   mInitialized = false, mTempManipsNeedRead = false;
-  bool                   mLastUpdateWasCMD = false;
-  juce::String           mCMDMessage       = "";
-  int                    mCMDErrorState    = 0;
 
 public:
   RTSTFT_Manager(RT_ProcessorInterface *inInterface);
   ~RTSTFT_Manager();
-  void resetParamsStruct(int inNumChans = 2, float inSampleRate = 44100.f,
-                         int inSamplesPerBlock = 2048, int inFFTSize = 2048,
-                         int inOverlapFactor = 8);
+  void resetParamsStruct(int inFFTSize = 256, int inOverlapFactor = 4);
   const rt_params getParamsStruct();
   void            prepareToPlay(double inSampleRate, int inSamplesPerBlock);
   void            processBlock(juce::AudioBuffer<float> &buffer);
   void            releaseResources();
   void            parameterChanged(const juce::String &parameterID,
                                    float               newValue) override;
-  void            changeFFTSize(int inNewFFTSize);
+  void            changeFFTSize(int inNewFFTSize, int inNewOverlapFactor,
+                                int inNewPadFactor = 0);
   void            executeCMDCommand(juce::String inCMDString);
   int             getCMDErrorState();
   juce::String    getCMDMessage();
@@ -61,8 +51,37 @@ public:
   };
   void addListener(Listener *l);
 
+  class FFTSetterThread : public juce::Thread {
+    RT_ProcessorInterface *mInterface;
+
+  public:
+    FFTSetterThread(RT_ProcessorInterface *inInterface)
+        : juce::Thread("FFTSetterThread"), mInterface(inInterface)
+    {
+      setCurrentThreadPriority(8);
+    }
+    ~FFTSetterThread() = default;
+    void run() override
+    {
+      DBG("THREAD RUN");
+      mInterface->getRTSTFTManager()->changeFFTSizeInternal();
+    }
+  };
+
 private:
+  RT_ProcessorInterface *mInterface;
+  rt_params              p;
+  FFTSetterThread        mFFTSetterThread;
+  int                    mCurrentSamplesPerBlock;
+  float                  mCurrentSampleRate;
+  int                    mThreadFFTSize, mThreadOverlapFactor, mThreadPadFactor;
+  int                    mNumChannels;
+  bool                   mInitialized = false, mTempManipsNeedRead = false;
+  bool                   mLastUpdateWasCMD = false;
+  juce::String           mCMDMessage       = "";
+  int                    mCMDErrorState    = 0;
   juce::ListenerList<Listener> mListenerList;
+  void                         changeFFTSizeInternal();
 };
 
 extern "C" void RTSTFT_CMDListenerCallback(void *RTSTFTManagerPtr,

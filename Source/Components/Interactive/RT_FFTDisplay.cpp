@@ -156,6 +156,9 @@ void RT_FFTDisplay::mouseDrag(const juce::MouseEvent &event)
 
 void RT_FFTDisplay::copyManips(rt_manip_flavor_t inTargetManipFlavor)
 {
+  if (mInterface->getProcessor()->isSuspended()) {
+    return;
+  }
   const rt_params p         = mInterface->getRTSTFTManager()->getParamsStruct();
   auto            manip_len = rt_manip_len(p);
   auto            blocklen  = rt_manip_block_len(p);

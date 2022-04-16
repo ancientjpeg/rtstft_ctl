@@ -15,9 +15,13 @@
 #include "RT_ParameterManager.h"
 
 RTSTFT_Manager::RTSTFT_Manager(RT_ProcessorInterface *inInterface)
-    : mInterface(inInterface), p(NULL), mCurrentSamplesPerBlock(0)
+    : mInterface(inInterface), p(NULL), mFFTSetterThread(mInterface),
+      mCurrentSamplesPerBlock(2048), mCurrentSampleRate(0)
 {
+  mNumChannels = mInterface->getProcessor()->getChannelCountOfBus(true, 0);
+  resetParamsStruct();
 }
+
 RTSTFT_Manager::~RTSTFT_Manager()
 {
   if (mInitialized) {
@@ -25,37 +29,20 @@ RTSTFT_Manager::~RTSTFT_Manager()
     p = NULL; // superfluous but always a good practice
   }
 }
-void RTSTFT_Manager::resetParamsStruct(int inNumChans, float inSampleRate,
-                                       int inSamplesPerBlock, int inFFTSize,
-                                       int inOverlapFactor)
-{
-  // this needs some work
-  if (mInitialized) {
-    mInitialized = false;
-    rt_clean(p);
-    p = NULL;
-  }
-  mCurrentSampleRate  = inSampleRate;
-  mNumChannels        = inNumChans;
-  int samplesPerBlock = mCurrentSamplesPerBlock
-      = RT_Utilities::getNearestPowerOfTwo(inSamplesPerBlock);
-  p = rt_init(mNumChannels, inFFTSize, mCurrentSamplesPerBlock, inOverlapFactor,
-              0, mCurrentSampleRate);
-  p->listener  = {(void *)this, &RTSTFT_CMDListenerCallback};
-  mInitialized = true;
-}
-
-const rt_params RTSTFT_Manager::getParamsStruct() { return p; }
 
 void RTSTFT_Manager::prepareToPlay(double inSampleRate, int inSamplesPerBlock)
 {
+  mCurrentSampleRate = inSampleRate;
+  auto checkSamplesPerBlock
+      = RT_Utilities::getNearestPowerOfTwo(inSamplesPerBlock);
   int numChannels = mInterface->getProcessor()->getChannelCountOfBus(true, 0);
-  if (!mInitialized) {
-    resetParamsStruct(numChannels, inSampleRate, inSamplesPerBlock);
+  if (inSamplesPerBlock < mCurrentSamplesPerBlock) {
+    mCurrentSamplesPerBlock = inSamplesPerBlock;
+    mInitialized            = false;
+    resetParamsStruct();
   }
-  assert(inSamplesPerBlock < mCurrentSamplesPerBlock);
   if (inSampleRate != p->sample_rate) {
-    p->sample_rate = inSampleRate;
+    rt_set_sample_rate(p, inSampleRate);
   }
 }
 
@@ -65,6 +52,21 @@ void RTSTFT_Manager::processBlock(juce::AudioBuffer<float> &buffer)
 }
 
 void RTSTFT_Manager::releaseResources() { rt_flush(p); }
+
+void RTSTFT_Manager::resetParamsStruct(int inFFTSize, int inOverlapFactor)
+{
+  if (!mInitialized || mNumChannels != p->num_chans) {
+    if (p != NULL) {
+      rt_clean(p);
+    }
+    p = rt_init(mNumChannels, inFFTSize, mCurrentSamplesPerBlock,
+                inOverlapFactor, 0, mCurrentSampleRate);
+  }
+  p->listener  = {(void *)this, &RTSTFT_CMDListenerCallback};
+  mInitialized = true;
+}
+
+const rt_params RTSTFT_Manager::getParamsStruct() { return p; }
 
 void RTSTFT_Manager::parameterChanged(const juce::String &parameterID,
                                       float               newValue)
@@ -94,9 +96,34 @@ void RTSTFT_Manager::executeCMDCommand(juce::String inCMDString)
 int          RTSTFT_Manager::getCMDErrorState() { return mCMDErrorState; }
 juce::String RTSTFT_Manager::getCMDMessage() { return mCMDMessage; }
 
-void         RTSTFT_Manager::writeManipsToFile(juce::MemoryOutputStream &stream)
+void         RTSTFT_Manager::readManipsFromBinary()
 {
-  stream.writeInt(rt_manip_block_len(p));
+  assert(mInitialized);
+  auto        processor = (RT_ProcessorBase *)(mInterface->getProcessor());
+  const void *manipsBinaryPtr = processor->getManipsBinaryPointer();
+  assert(manipsBinaryPtr != nullptr);
+  void *ptr              = (float *)manipsBinaryPtr + 4;
+
+  int   newFFTSize       = 1024; // TEST
+  int   newPadFactor     = 0;
+  int   newOverlapFactor = 8;
+  // to prevent bad reads from older builds
+  if (newFFTSize > p->fft_max) {
+    return;
+  }
+  if (newFFTSize != p->fft_size) {
+    changeFFTSize(newFFTSize, newOverlapFactor, newPadFactor);
+  }
+  rt_manip_overwrite_manips(p, p->chans[0], (rt_real *)ptr,
+                            rt_manip_block_len(p));
+  // for (int i = 0; i < p->num_chans; i++) {
+  //   rt_manip_overwrite_manips(p, p->chans[i], );
+  // }
+}
+
+void RTSTFT_Manager::writeManipsToFile(juce::MemoryOutputStream &stream)
+{
+  stream.writeInt(p->fft_size);
   rt_uint i;
   for (i = 0; i < p->num_chans; i++) {
     stream.write(p->chans[i]->manip->manips,
@@ -104,29 +131,24 @@ void         RTSTFT_Manager::writeManipsToFile(juce::MemoryOutputStream &stream)
   }
 }
 
-void RTSTFT_Manager::readManipsFromBinary()
+void RTSTFT_Manager::changeFFTSize(int inNewFFTSize, int inNewOverlapFactor,
+                                   int inNewPadFactor)
 {
-  auto processor = (RT_ProcessorBase *)(mInterface->getProcessor());
-  const void *manips_binary_ptr
-      = processor->getManipsBinaryPointer();
-  assert(manips_binary_ptr != nullptr);
-  int     manip_block_len   = ((int32_t *)manips_binary_ptr)[0];
-  int     read_manip_len    = manip_block_len / RT_PARAM_FLAVOR_COUNT;
-  void   *ptr               = (float *)manips_binary_ptr + 4;
-
-  rt_uint current_block_len = rt_manip_block_len(p);
-  if (manip_block_len == current_block_len) {
-  }
+  mThreadFFTSize       = inNewFFTSize;
+  mThreadOverlapFactor = inNewOverlapFactor;
+  mThreadPadFactor     = inNewPadFactor;
+  mInterface->getProcessor()->suspendProcessing(true);
+  mFFTSetterThread.run();
 }
 
-void RTSTFT_Manager::changeFFTSize(int inNewFFTSize)
+void RTSTFT_Manager::changeFFTSizeInternal()
 {
-  if (!juce::isPowerOfTwo(inNewFFTSize) || inNewFFTSize > p->fft_max
+  if (!juce::isPowerOfTwo(mThreadFFTSize) || mThreadFFTSize > p->fft_max
       || !mInitialized) {
     return;
   }
-  mInterface->getProcessor()->suspendProcessing(true);
-  rt_set_fft_size(p, inNewFFTSize, p->pad_factor);
+  rt_set_fft_size(p, mThreadFFTSize, mThreadOverlapFactor, mThreadPadFactor);
+  rt_update_fft_size(p);
   mInterface->getProcessor()->suspendProcessing(false);
 }
 

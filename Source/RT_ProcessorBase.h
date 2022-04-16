@@ -21,6 +21,7 @@
 class RT_ProcessorBase : public juce::AudioProcessor,
                          public RT_ProcessorInterface {
 
+protected:
   RT_LookAndFeel::Manager mLookAndFeelManager;
   RTSTFT_Manager          mRTSTFTManager;
   RT_ParameterManager     mParameterManager;
@@ -28,7 +29,8 @@ class RT_ProcessorBase : public juce::AudioProcessor,
   RT_FileManager          mFileManager;
 
   juce::MemoryBlock       mStateInformation;
-  int                     mXMLOffset = -1;
+  int                     mXMLOffset           = -1;
+  bool                    mAwaitingStateUpdate = false;
 
 public:
   RT_ProcessorBase();
@@ -64,8 +66,10 @@ public:
   //==============================================================================
   void        getStateInformation(juce::MemoryBlock &destData) override;
   void        setStateInformation(const void *data, int sizeInBytes) override;
-  void        setStateFromStateInformation();
+  void        verifyStateIsUpToDate();
   const void *getManipsBinaryPointer();
+
+  static const int ManipsBinaryMagicNumber = 0x3f2f4f51;
 
   //==============================================================================
 
