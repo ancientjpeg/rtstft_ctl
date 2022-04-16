@@ -142,12 +142,12 @@ void RTSTFT_Manager::changeFFTSize(int inNewFFTSize, int inNewOverlapFactor,
   mThreadFFTSize       = inNewFFTSize;
   mThreadOverlapFactor = inNewOverlapFactor;
   mThreadPadFactor     = inNewPadFactor;
-  mInterface->getProcessor()->suspendProcessing(true);
   mFFTSetterThread.run();
 }
 
 void RTSTFT_Manager::changeFFTSizeInternal()
 {
+  mInterface->getProcessor()->suspendProcessing(true);
   if (!juce::isPowerOfTwo(mThreadFFTSize) || mThreadFFTSize > p->fft_max
       || !mInitialized) {
     mInterface->getProcessor()->suspendProcessing(false);

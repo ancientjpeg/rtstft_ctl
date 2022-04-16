@@ -184,9 +184,8 @@ void RT_ProcessorBase::verifyStateIsUpToDate()
   mParameterManager.getValueTreeState()->replaceState(
       juce::ValueTree::fromXml(*state->getChildByName("PARAMETER_TREE")));
 
- mXMLOffset
-      = ((uint32_t *)data)[1] + 9; // includes magic number, size int, and
-                                   // trailing nullterm in XML binary
+  mXMLOffset = ((uint32_t *)data)[1] + 9; // includes magic number, size int,
+                                          // and trailing nullterm in XML binary
   mRTSTFTManager.readManipsFromBinary();
   mAwaitingStateUpdate = false;
 }
