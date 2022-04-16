@@ -9,7 +9,7 @@
 */
 
 #include "RT_SelectorMenu.h"
-#include "../../Managers/GUIStateManagers/RT_GUIStateManager.h"
+#include "../../Managers/StateManagers/RT_StateManager.h"
 
 RT_SelectorMenu::RT_SelectorMenu(RT_ProcessorInterface *inInterface)
     : RT_Component(inInterface),

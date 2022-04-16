@@ -132,7 +132,7 @@ void RTSTFT_Manager::writeManipsToFile(juce::MemoryOutputStream &stream)
 }
 
 void RTSTFT_Manager::changeFFTSize(int inNewFFTSize, int inNewOverlapFactor,
-                                   int inNewPadFactor, bool threaded = false)
+                                   int inNewPadFactor, bool threaded)
 {
   assert(mInitialized);
   mThreadFFTSize       = inNewFFTSize;

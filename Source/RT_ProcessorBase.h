@@ -10,11 +10,11 @@
 
 #pragma once
 #include "Managers/DSPStateManagers/RTSTFT_Manager.h"
-#include "Managers/DSPStateManagers/RT_ParameterManager.h"
-#include "Managers/GUIStateManagers/RT_GUIStateManager.h"
+#include "Managers/StateManagers/RT_StateManager.h"
 #include "Managers/Interface/RT_ProcessorInterface.h"
 #include "Managers/LookAndFeelManagement/RT_LookAndFeelManagement.h"
 #include "Managers/OSManagers/RT_FileManager.h"
+#include "Managers/DSPStateManagers/RT_ParameterManager.h"
 #include <JuceHeader.h>
 #include <JucePluginDefines.h>
 
@@ -25,7 +25,7 @@ protected:
   RT_LookAndFeel::Manager mLookAndFeelManager;
   RTSTFT_Manager          mRTSTFTManager;
   RT_ParameterManager     mParameterManager;
-  RT_GUIStateManager      mGUIStateManager;
+  RT_StateManager         mGUIStateManager;
   RT_FileManager          mFileManager;
 
   juce::MemoryBlock       mStateInformation;
@@ -41,7 +41,7 @@ public:
   RT_LookAndFeel::Manager *getLookAndFeelManager() override;
   RTSTFT_Manager          *getRTSTFTManager() override;
   RT_ParameterManager     *getParameterManager() override;
-  RT_GUIStateManager      *getGUIStateManager() override;
+  RT_StateManager         *getGUIStateManager() override;
   RT_FileManager          *getFileManager() override;
 
   //==============================================================================

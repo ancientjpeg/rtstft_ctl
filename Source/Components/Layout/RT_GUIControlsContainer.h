@@ -10,10 +10,11 @@
 
 #pragma once
 
-#include "../../Managers/DSPStateManagers/RT_ParameterDefines.h"
 #include "../../Managers/Interface/RT_ProcessorInterface.h"
+#include "../../Managers/DSPStateManagers/RT_ParameterDefines.h"
 #include "../Interactive/RT_Sliders.h"
 #include <JuceHeader.h>
+
 
 //==============================================================================
 

@@ -1,16 +1,16 @@
 /*
   ==============================================================================
 
-    RT_GUIStateManager.cpp
+    RT_StateManager.cpp
     Created: 9 Apr 2022 12:03:40pm
     Author:  Jackson Kaplan
 
   ==============================================================================
 */
 
-#include "RT_GUIStateManager.h"
+#include "RT_StateManager.h"
 
-RT_GUIStateManager::RT_GUIStateManager(
+RT_StateManager::RT_StateManager(
     RT_ProcessorInterface              *inInterface,
     std::initializer_list<juce::String> inManipSelectorFields,
     int                                 inCommandHistoryMaxSize)
@@ -20,9 +20,9 @@ RT_GUIStateManager::RT_GUIStateManager(
   mHistoryIterator = mCommandHistory.begin();
 }
 
-RT_GUIStateManager::~RT_GUIStateManager() {}
+RT_StateManager::~RT_StateManager() {}
 
-juce::String RT_GUIStateManager::getNextStringInHistory(bool reverse)
+juce::String RT_StateManager::getNextStringInHistory(bool reverse)
 {
   juce::String str;
   if (commandHistoryIsEmpty()) {
@@ -44,16 +44,16 @@ juce::String RT_GUIStateManager::getNextStringInHistory(bool reverse)
   }
 }
 
-void RT_GUIStateManager::resetCommandHistoryPos()
+void RT_StateManager::resetCommandHistoryPos()
 {
   mHistoryIterator = mCommandHistory.begin();
 }
 
-bool RT_GUIStateManager::commandHistoryIsEmpty()
+bool RT_StateManager::commandHistoryIsEmpty()
 {
   return mCommandHistory.empty();
 }
-void RT_GUIStateManager::pushNewHistoryCommand(juce::String &s)
+void RT_StateManager::pushNewHistoryCommand(juce::String &s)
 {
   mCommandHistory.push_front(s);
   if (mCommandHistory.size() > mCommandHistoryMax) {
@@ -61,7 +61,7 @@ void RT_GUIStateManager::pushNewHistoryCommand(juce::String &s)
   }
 }
 
-RT_SelectorMenu::SelectorData *RT_GUIStateManager::getSelectorData()
+RT_SelectorMenu::SelectorData *RT_StateManager::getSelectorData()
 {
   return &mManipSelectorData;
 }

@@ -10,7 +10,7 @@
 
 #include "RT_CommandLineContainer.h"
 #include "../../Managers/DSPStateManagers/RTSTFT_Manager.h"
-#include "../../Managers/GUIStateManagers/RT_GUIStateManager.h"
+#include "../../Managers/StateManagers/RT_StateManager.h"
 
 //==============================================================================
 RT_CommandLineContainer::RT_CommandLineContainer(

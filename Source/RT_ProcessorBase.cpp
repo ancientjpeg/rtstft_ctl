@@ -52,7 +52,7 @@ RT_ParameterManager *RT_ProcessorBase::getParameterManager()
 {
   return &mParameterManager;
 }
-RT_GUIStateManager *RT_ProcessorBase::getGUIStateManager()
+RT_StateManager *RT_ProcessorBase::getGUIStateManager()
 {
   return &mGUIStateManager;
 }

@@ -93,20 +93,10 @@
                 file="Source/Managers/DSPStateManagers/RT_ParameterManager.cpp"/>
           <FILE id="TRBpat" name="RT_ParameterManager.h" compile="0" resource="0"
                 file="Source/Managers/DSPStateManagers/RT_ParameterManager.h"/>
-          <FILE id="u0HMAw" name="RT_PresetManager.cpp" compile="1" resource="0"
-                file="Source/Managers/DSPStateManagers/RT_PresetManager.cpp"/>
-          <FILE id="fxgUck" name="RT_PresetManager.h" compile="0" resource="0"
-                file="Source/Managers/DSPStateManagers/RT_PresetManager.h"/>
           <FILE id="pmoXv9" name="RTSTFT_Manager.cpp" compile="1" resource="0"
                 file="Source/Managers/DSPStateManagers/RTSTFT_Manager.cpp"/>
           <FILE id="OCTN76" name="RTSTFT_Manager.h" compile="0" resource="0"
                 file="Source/Managers/DSPStateManagers/RTSTFT_Manager.h"/>
-        </GROUP>
-        <GROUP id="{75E36CE7-5324-0A96-0FAB-460C253DB8E3}" name="GUIStateManagers">
-          <FILE id="tla6hH" name="RT_GUIStateManager.cpp" compile="1" resource="0"
-                file="Source/Managers/GUIStateManagers/RT_GUIStateManager.cpp"/>
-          <FILE id="aM1wDQ" name="RT_GUIStateManager.h" compile="0" resource="0"
-                file="Source/Managers/GUIStateManagers/RT_GUIStateManager.h"/>
         </GROUP>
         <GROUP id="{2B24316A-AEF2-555D-48BE-0495AD46AFF8}" name="Interface">
           <FILE id="EQm0Mk" name="RT_ProcessorInterface.h" compile="0" resource="0"
@@ -125,6 +115,16 @@
                 file="Source/Managers/OSManagers/RT_FileManager.cpp"/>
           <FILE id="ZQFsOo" name="RT_FileManager.h" compile="0" resource="0"
                 file="Source/Managers/OSManagers/RT_FileManager.h"/>
+        </GROUP>
+        <GROUP id="{979F03AA-C7B6-4EFB-667C-3E78920DBFF7}" name="StateManagers">
+          <FILE id="HRtmuv" name="RT_PresetManager.cpp" compile="1" resource="0"
+                file="Source/Managers/StateManagers/RT_PresetManager.cpp"/>
+          <FILE id="JgPyPe" name="RT_PresetManager.h" compile="0" resource="0"
+                file="Source/Managers/StateManagers/RT_PresetManager.h"/>
+          <FILE id="hKBywp" name="RT_StateManager.cpp" compile="1" resource="0"
+                file="Source/Managers/StateManagers/RT_StateManager.cpp"/>
+          <FILE id="pCyUCu" name="RT_StateManager.h" compile="0" resource="0"
+                file="Source/Managers/StateManagers/RT_StateManager.h"/>
         </GROUP>
       </GROUP>
       <GROUP id="{5A4EBC78-0DD3-53D4-E95C-D71D1FE29F42}" name="Utilities">

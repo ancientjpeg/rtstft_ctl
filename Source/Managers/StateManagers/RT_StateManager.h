@@ -1,7 +1,7 @@
 /*
   ==============================================================================
 
-    RT_GUIStateManager.h
+    RT_StateManager.h
     Created: 9 Apr 2022 12:03:40pm
     Author:  Jackson Kaplan
 
@@ -15,7 +15,7 @@
 
 static const juce::StringArray RT_MANIP_GUI_IDS = {"Gain", "Gate", "Limit"};
 
-class RT_GUIStateManager {
+class RT_StateManager {
   RT_ProcessorInterface            *mInterface;
 
   std::list<juce::String>           mCommandHistory;
@@ -25,10 +25,10 @@ class RT_GUIStateManager {
   RT_SelectorMenu::SelectorData     mManipSelectorData;
 
 public:
-  RT_GUIStateManager(RT_ProcessorInterface              *inInterface,
-                     std::initializer_list<juce::String> inManipSelectorFields,
-                     int inCommandHistoryMaxSize = 5);
-  ~RT_GUIStateManager();
+  RT_StateManager(RT_ProcessorInterface              *inInterface,
+                  std::initializer_list<juce::String> inManipSelectorFields,
+                  int inCommandHistoryMaxSize = 5);
+  ~RT_StateManager();
 
   juce::String                   getNextStringInHistory(bool reverse);
   void                           pushNewHistoryCommand(juce::String &s);
