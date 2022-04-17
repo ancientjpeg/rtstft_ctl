@@ -20,22 +20,23 @@ RT_GUIControlsContainer::RT_GUIControlsContainer(
     : mInterface(inInterface), mFrameSizeSelector("FrameSizeSelector"),
       mOverlapSelector("OverlapSelector")
 {
-  auto p = mInterface->getRTSTFTManager()->getParamsStruct();
+  auto p        = mInterface->getRTSTFTManager()->getParamsStruct();
+  auto prop_man = mInterface->getPropertyManager();
   for (int i = RT_FFT_MIN_POW; i <= RT_FFT_MAX_POW; i++) {
-    mFrameSizeSelector.addItem(juce::String(1 << i), i - RT_FFT_MIN_POW + 1);
+    mFrameSizeSelector.addItem(juce::String(1 << i), 1 << i);
   }
-  mFrameSizeSelector.setSelectedItemIndex(
-      rt_log2_floor(p->frame_size) - RT_FFT_MIN_POW + 1 - 1,
-      juce::NotificationType::dontSendNotification);
-  mFrameSizeSelector.addListener(mInterface->getPropertyManager());
+  mFrameSizeSelector.setSelectedId(
+      p->frame_size, juce::NotificationType::dontSendNotification);
+  prop_man->addComboBoxAttachment(
+      RT_FFT_MODIFIER_IDS[RT_FFT_MODIFIER_FRAME_SIZE], &mFrameSizeSelector);
   addAndMakeVisible(mFrameSizeSelector);
-  for (int i = 1; i <= 3; i++) {
-    mOverlapSelector.addItem(juce::String(1 << i), i);
+  for (int i = 1; i <= 4; i++) {
+    mOverlapSelector.addItem(juce::String(1 << i), 1 << i);
   }
-  mOverlapSelector.setSelectedItemIndex(
-      rt_log2_floor(p->overlap_factor) - 1,
-      juce::NotificationType::dontSendNotification);
-  mOverlapSelector.addListener(mInterface->getPropertyManager());
+  mOverlapSelector.setSelectedId(p->overlap_factor,
+                                 juce::NotificationType::dontSendNotification);
+  prop_man->addComboBoxAttachment(
+      RT_FFT_MODIFIER_IDS[RT_FFT_MODIFIER_OVERLAP_FACTOR], &mOverlapSelector);
   addAndMakeVisible(mOverlapSelector);
   for (int i = 0; i < RT_PARAM_FLAVOR_COUNT; i++) {
     mKnobs.add(std::make_unique<RT_Sliders::LabelledRotaryKnob>(

@@ -15,27 +15,22 @@ RT_PropertyManager::RT_PropertyManager(
     RT_ProcessorInterface              *inInterface,
     std::initializer_list<juce::String> inManipSelectorFields,
     int                                 inCommandHistoryMaxSize)
-    : mInterface(inInterface), mValueTree("rtstft_ctl_properties"),
-      mCommandHistoryMax(inCommandHistoryMaxSize),
+    : mInterface(inInterface), mCommandHistoryMax(inCommandHistoryMaxSize),
       mManipSelectorData(inManipSelectorFields)
 {
   const rt_params p = mInterface->getRTSTFTManager()->getParamsStruct();
 
-  mValueTree.appendChild(
-      juce::ValueTree("rt_params",
-                      {
-                          {RT_FFT_MODIFIER_IDS[RT_FFT_MODIFIER_FRAME_SIZE],
-                           (int)p->fft_size},
-                          {RT_FFT_MODIFIER_IDS[RT_FFT_MODIFIER_OVERLAP_FACTOR],
-                           (int)p->overlap_factor},
-                          {RT_FFT_MODIFIER_IDS[RT_FFT_MODIFIER_PAD_FACTOR],
-                           (int)p->pad_factor},
-                          {"manip_multichannel", p->manip_multichannel},
-                      },
-                      {juce::ValueTree("rt_chans", {}, {})
+  mValueTree        = juce::ValueTree(
+             "rtstft_ctl_properties",
+             {
+                 {RT_FFT_MODIFIER_IDS[RT_FFT_MODIFIER_FRAME_SIZE], (int)p->fft_size},
+                 {RT_FFT_MODIFIER_IDS[RT_FFT_MODIFIER_OVERLAP_FACTOR],
+                  (int)p->overlap_factor},
+                 {RT_FFT_MODIFIER_IDS[RT_FFT_MODIFIER_PAD_FACTOR], (int)p->pad_factor},
+                 {"manip_multichannel", p->manip_multichannel},
+      },
+             {juce::ValueTree("rt_chans", {}, {})});
 
-                      }),
-      nullptr);
   mHistoryIterator = mCommandHistory.begin();
   mValueTree.addListener(mInterface->getRTSTFTManager());
 }
@@ -86,36 +81,15 @@ RT_SelectorMenu::SelectorData *RT_PropertyManager::getSelectorData()
   return &mManipSelectorData;
 }
 
-void RT_PropertyManager::comboBoxChanged(juce::ComboBox *inChangedComboBox)
-{
-  auto rt_man = mInterface->getRTSTFTManager();
-  auto p      = rt_man->getParamsStruct();
-  auto text   = inChangedComboBox->getText();
-  if (inChangedComboBox->getName() == "FrameSizeSelector") {
-    mValueTree.setProperty(RT_FFT_MODIFIER_IDS[RT_FFT_MODIFIER_FRAME_SIZE],
-                           text.getIntValue(), nullptr);
-    // rt_man->changeFFTSize(text.getIntValue(), p->overlap_factor);
-  }
-  if (inChangedComboBox->getName() == "OverlapSelector") {
-    mValueTree.setProperty(RT_FFT_MODIFIER_IDS[RT_FFT_MODIFIER_OVERLAP_FACTOR],
-                           text.getIntValue(), nullptr);
-    // rt_man->changeFFTSize(p->frame_size, text.getIntValue());
-  }
+juce::ValueTree &RT_PropertyManager::getValueTreeRef() {
+  return mValueTree;
 }
 
-juce::ValueTree &getValueTreeRef();
 void             RT_PropertyManager::replaceState(juce::ValueTree &inNewState)
 {
+  setAllAttachmentsIgnoreCallbacks(true);
   mValueTree.copyPropertiesAndChildrenFrom(inNewState, nullptr);
-  auto rt_props = mValueTree.getChildWithName("rt_params");
-
-  int  frame_size
-      = rt_props.getProperty(RT_FFT_MODIFIER_IDS[RT_FFT_MODIFIER_FRAME_SIZE]);
-  int overlap = rt_props.getProperty(
-      RT_FFT_MODIFIER_IDS[RT_FFT_MODIFIER_OVERLAP_FACTOR]);
-  int pad
-      = rt_props.getProperty(RT_FFT_MODIFIER_IDS[RT_FFT_MODIFIER_PAD_FACTOR]);
-  mInterface->getRTSTFTManager()->changeFFTSize(frame_size, overlap, pad);
+  setAllAttachmentsIgnoreCallbacks(false);
 }
 
 std::unique_ptr<juce::XmlElement>
@@ -152,4 +126,58 @@ bool RT_PropertyManager::assertValueTreesHaveCompatibleLayout(
     }
   }
   return true;
+}
+
+void RT_PropertyManager::addComboBoxAttachment(juce::Identifier inTargetValueID,
+                                               juce::ComboBox *inTargetComboBox)
+{
+  mComboBoxAttachments.add(std::make_unique<ComboBoxAttachment>(
+      this, inTargetValueID, inTargetComboBox));
+}
+
+void RT_PropertyManager::setAllAttachmentsIgnoreCallbacks(
+    bool inIgnoreCallbacks)
+{
+  for (auto a : mComboBoxAttachments) {
+    a->mIgnoreCallbacks = inIgnoreCallbacks;
+  }
+}
+
+RT_PropertyManager::ComboBoxAttachment::ComboBoxAttachment(
+    RT_PropertyManager *inPropertyManager, juce::Identifier inValueIDToAttach,
+    juce::ComboBox *inComboBoxToAttach)
+    : mPropertyManager(inPropertyManager), mAttachedValueID(inValueIDToAttach),
+      mAttachedValue(mPropertyManager->mValueTree.getPropertyAsValue(
+          mAttachedValueID, nullptr)),
+      mAttachedComboBox(inComboBoxToAttach)
+{
+  mAttachedComboBox->addListener(this);
+  selectNewID((int)mAttachedValue.getValue());
+}
+
+void RT_PropertyManager::ComboBoxAttachment::comboBoxChanged(
+    juce::ComboBox *inChangedComboBox)
+{
+  if (mIgnoreCallbacks) {
+    return;
+  }
+  auto rt_man   = mPropertyManager->mInterface->getRTSTFTManager();
+  auto prop_man = mPropertyManager->mInterface->getPropertyManager();
+  auto p        = rt_man->getParamsStruct();
+  auto text     = inChangedComboBox->getText();
+  mAttachedValue.setValue(text.getIntValue());
+  //  mPropertyManager->mValueTree.setProperty(mAttachedValueID, text.getIntValue(),
+//                                           nullptr);
+}
+
+void RT_PropertyManager::ComboBoxAttachment::selectNewID(int newID)
+{
+  const juce::ScopedValueSetter<bool> svs(mIgnoreCallbacks, true);
+  mAttachedComboBox->setSelectedId(newID, juce::sendNotificationSync);
+}
+
+void RT_PropertyManager::ComboBoxAttachment::selectNewIDWithoutNotification(
+    int newID)
+{
+  mAttachedComboBox->setSelectedId(newID, juce::dontSendNotification);
 }

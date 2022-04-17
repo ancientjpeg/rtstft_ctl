@@ -24,7 +24,7 @@ class RTSTFT_Manager : public juce::AudioProcessorValueTreeState::Listener,
 public:
   RTSTFT_Manager(RT_ProcessorInterface *inInterface);
   ~RTSTFT_Manager();
-  void resetParamsStruct(int inFFTSize = 2048, int inOverlapFactor = 8);
+  void resetParamsStruct(int inFFTSize = 1024, int inOverlapFactor = 8);
   const rt_params getParamsStruct();
   void            prepareToPlay(double inSampleRate, int inSamplesPerBlock);
   void            processBlock(juce::AudioBuffer<float> &buffer);
@@ -68,7 +68,6 @@ public:
     ~FFTSetterThread() = default;
     void run() override
     {
-      DBG("THREAD RUN");
       mInterface->getRTSTFTManager()->changeFFTSizeInternal();
     }
   };

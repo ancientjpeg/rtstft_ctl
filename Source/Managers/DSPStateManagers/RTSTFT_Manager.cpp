@@ -88,7 +88,6 @@ void RTSTFT_Manager::valueTreePropertyChanged(
     juce::ValueTree        &treeWhosePropertyHasChanged,
     const juce::Identifier &property)
 {
-  DBG("VALUETREECHANGE REGISTERED BY RTSTFT");
   juce::var val = treeWhosePropertyHasChanged[property];
 
   // this is so so so dumb
