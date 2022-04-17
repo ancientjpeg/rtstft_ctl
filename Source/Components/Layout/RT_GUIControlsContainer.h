@@ -20,13 +20,14 @@
 class RT_GUIControlsContainer : public juce::Component {
 public:
   RT_GUIControlsContainer(RT_ProcessorInterface *inInterface);
-  ~RT_GUIControlsContainer() override;
+  ~RT_GUIControlsContainer() = default;
 
   void paint(juce::Graphics &) override;
   void resized() override;
 
 private:
-  RT_ProcessorInterface                           *mInterface;
+  RT_ProcessorInterface *mInterface;
+  juce::ComboBox         mFrameSizeSelector, mOverlapSelector;
   juce::OwnedArray<RT_Sliders::LabelledRotaryKnob> mKnobs;
   juce::OwnedArray<juce::AudioProcessorValueTreeState::SliderAttachment>
       mKnobAttachments;

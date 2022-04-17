@@ -14,7 +14,7 @@
 #include "../DSPStateManagers/RT_ParameterDefines.h"
 #include "../Interface/RT_ProcessorInterface.h"
 
-class RT_PropertyManager {
+class RT_PropertyManager : public juce::ComboBox::Listener {
   RT_ProcessorInterface            *mInterface;
 
   juce::ValueTree                   mValueTree;
@@ -36,4 +36,5 @@ public:
   bool                           commandHistoryIsEmpty();
   void                           resetCommandHistoryPos();
   RT_SelectorMenu::SelectorData *getSelectorData();
+  void comboBoxChanged(juce::ComboBox *inChangedComboBox) override;
 };

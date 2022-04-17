@@ -15,7 +15,7 @@ RT_PropertyManager::RT_PropertyManager(
     RT_ProcessorInterface              *inInterface,
     std::initializer_list<juce::String> inManipSelectorFields,
     int                                 inCommandHistoryMaxSize)
-    : mInterface(inInterface), mValueTree("rt_properties"),
+    : mInterface(inInterface), mValueTree("rtstft_ctl_properties"),
       mCommandHistoryMax(inCommandHistoryMaxSize),
       mManipSelectorData(inManipSelectorFields)
 {
@@ -84,4 +84,18 @@ void RT_PropertyManager::pushNewHistoryCommand(juce::String &s)
 RT_SelectorMenu::SelectorData *RT_PropertyManager::getSelectorData()
 {
   return &mManipSelectorData;
+}
+
+void RT_PropertyManager::comboBoxChanged(juce::ComboBox *inChangedComboBox)
+{
+  DBG("Got ComboBox Notif");
+  auto rt_man = mInterface->getRTSTFTManager();
+  auto p      = rt_man->getParamsStruct();
+  auto text   = inChangedComboBox->getText();
+  if (inChangedComboBox->getName() == "FrameSizeSelector") {
+    rt_man->changeFFTSize(text.getIntValue(), p->overlap_factor);
+  }
+  if (inChangedComboBox->getName() == "OverlapSelector") {
+    rt_man->changeFFTSize(p->frame_size, text.getIntValue());
+  }
 }

@@ -163,7 +163,6 @@ void RT_ProcessorBase::getStateInformation(juce::MemoryBlock &destData)
 
 void RT_ProcessorBase::setStateInformation(const void *data, int sizeInBytes)
 {
-  DBG("SET STATE IS HERE !");
   mStateInformation    = juce::MemoryBlock(data, sizeInBytes);
   mAwaitingStateUpdate = true;
   // mRTSTFTManager.deserializeParamsStruct(state->getChildByName("rt_params"));

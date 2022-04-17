@@ -87,7 +87,7 @@ void RTSTFT_Manager::valueTreePropertyChanged(
     juce::ValueTree        &treeWhosePropertyHasChanged,
     const juce::Identifier &property)
 {
-  juce::var val = treeWhosePropertyHasChanged.getProperty(property);
+  juce::var val = treeWhosePropertyHasChanged[property];
 
   // this is so so so dumb
   if (property
@@ -154,13 +154,14 @@ void RTSTFT_Manager::writeManipsToFile(juce::MemoryOutputStream &stream)
   }
 }
 
-void RTSTFT_Manager::changeFFTSize(int inNewFFTSize, int inNewOverlapFactor,
+void RTSTFT_Manager::changeFFTSize(int inNewFrameSize, int inNewOverlapFactor,
                                    int inNewPadFactor, bool threaded)
 {
-  assert(mInitialized);
-  mThreadFFTSize       = inNewFFTSize;
-  mThreadOverlapFactor = inNewOverlapFactor;
-  mThreadPadFactor     = inNewPadFactor;
+  assert(juce::isPowerOfTwo(inNewFrameSize)
+         && inNewFrameSize * (1 << inNewPadFactor) < p->fft_max
+         && mInitialized);
+
+  rt_set_fft_size(p, inNewFrameSize, inNewOverlapFactor, inNewPadFactor);
   if (threaded) {
     mFFTSetterThread.run();
   }
@@ -172,12 +173,6 @@ void RTSTFT_Manager::changeFFTSize(int inNewFFTSize, int inNewOverlapFactor,
 void RTSTFT_Manager::changeFFTSizeInternal()
 {
   mInterface->getProcessor()->suspendProcessing(true);
-  if (!juce::isPowerOfTwo(mThreadFFTSize) || mThreadFFTSize > p->fft_max
-      || !mInitialized) {
-    mInterface->getProcessor()->suspendProcessing(false);
-    return;
-  }
-  rt_set_fft_size(p, mThreadFFTSize, mThreadOverlapFactor, mThreadPadFactor);
   rt_update_fft_size(p);
   mInterface->getProcessor()->suspendProcessing(false);
 }
