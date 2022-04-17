@@ -38,10 +38,10 @@ static const float
 static const juce::StringArray RT_MANIP_GUI_IDS = {"Gain", "Gate", "Limit"};
 
 enum RT_FFT_MODIFIERS {
-  RT_FFT_MODIFIER_FFT_SIZE,
+  RT_FFT_MODIFIER_FRAME_SIZE,
   RT_FFT_MODIFIER_OVERLAP_FACTOR,
   RT_FFT_MODIFIER_PAD_FACTOR,
   RT_FFT_MODIFIERS_COUNT,
 };
 static const juce::StringArray RT_FFT_MODIFIER_IDS
-= {"fft_size", "overlap_factor", "pad_factor"};
+    = {"frame_size", "overlap_factor", "pad_factor"};

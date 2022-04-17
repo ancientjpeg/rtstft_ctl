@@ -38,10 +38,12 @@ public:
 
   RT_SelectorMenu::SelectorData *getSelectorData();
 
-  void comboBoxChanged(juce::ComboBox *inChangedComboBox) override;
+  void             comboBoxChanged(juce::ComboBox *inChangedComboBox) override;
 
+  juce::ValueTree &getValueTreeRef();
   std::unique_ptr<juce::XmlElement> getXMLSerializedProperties();
   void                              replaceState(juce::ValueTree &inNewState);
+  bool assertTreeCanValidlyReplace(juce::ValueTree &inComparisonTree);
   static bool
   assertValueTreesHaveCompatibleLayout(juce::ValueTree &inTemplateTree,
                                        juce::ValueTree &inComparisonTree);

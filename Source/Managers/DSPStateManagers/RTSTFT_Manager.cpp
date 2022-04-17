@@ -93,18 +93,18 @@ void RTSTFT_Manager::valueTreePropertyChanged(
 
   // this is so so so dumb
   if (property
-      == (juce::Identifier)RT_FFT_MODIFIER_IDS[RT_FFT_MODIFIER_FFT_SIZE]) {
-    rt_set_fft_size(p, (int)val, p->overlap_factor, p->pad_factor);
+      == (juce::Identifier)RT_FFT_MODIFIER_IDS[RT_FFT_MODIFIER_FRAME_SIZE]) {
+    changeFFTSize((int)val, p->overlap_factor, p->pad_factor);
   }
   else if (property
            == (juce::Identifier)
                RT_FFT_MODIFIER_IDS[RT_FFT_MODIFIER_OVERLAP_FACTOR]) {
-    rt_set_fft_size(p, p->frame_size, (int)val, p->pad_factor);
+    changeFFTSize(p->frame_size, (int)val, p->pad_factor);
   }
   else if (property
            == (juce::Identifier)
                RT_FFT_MODIFIER_IDS[RT_FFT_MODIFIER_PAD_FACTOR]) {
-    rt_set_fft_size(p, p->frame_size, p->overlap_factor, (int)val);
+    changeFFTSize(p->frame_size, p->overlap_factor, (int)val);
   }
 }
 

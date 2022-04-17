@@ -22,19 +22,19 @@ RT_PropertyManager::RT_PropertyManager(
   const rt_params p = mInterface->getRTSTFTManager()->getParamsStruct();
 
   mValueTree.appendChild(
-      juce::ValueTree(
-          "rt_params",
-          {
-              {RT_FFT_MODIFIER_IDS[RT_FFT_MODIFIER_FFT_SIZE], (int)p->fft_size},
-              {RT_FFT_MODIFIER_IDS[RT_FFT_MODIFIER_OVERLAP_FACTOR],
-               (int)p->overlap_factor},
-              {RT_FFT_MODIFIER_IDS[RT_FFT_MODIFIER_PAD_FACTOR],
-               (int)p->pad_factor},
-              {"manip_multichannel", p->manip_multichannel},
-          },
-          {juce::ValueTree("rt_chans", {}, {})
+      juce::ValueTree("rt_params",
+                      {
+                          {RT_FFT_MODIFIER_IDS[RT_FFT_MODIFIER_FRAME_SIZE],
+                           (int)p->fft_size},
+                          {RT_FFT_MODIFIER_IDS[RT_FFT_MODIFIER_OVERLAP_FACTOR],
+                           (int)p->overlap_factor},
+                          {RT_FFT_MODIFIER_IDS[RT_FFT_MODIFIER_PAD_FACTOR],
+                           (int)p->pad_factor},
+                          {"manip_multichannel", p->manip_multichannel},
+                      },
+                      {juce::ValueTree("rt_chans", {}, {})
 
-          }),
+                      }),
       nullptr);
   mHistoryIterator = mCommandHistory.begin();
   mValueTree.addListener(mInterface->getRTSTFTManager());
@@ -88,21 +88,34 @@ RT_SelectorMenu::SelectorData *RT_PropertyManager::getSelectorData()
 
 void RT_PropertyManager::comboBoxChanged(juce::ComboBox *inChangedComboBox)
 {
-  DBG("Got ComboBox Notif");
   auto rt_man = mInterface->getRTSTFTManager();
   auto p      = rt_man->getParamsStruct();
   auto text   = inChangedComboBox->getText();
   if (inChangedComboBox->getName() == "FrameSizeSelector") {
-    rt_man->changeFFTSize(text.getIntValue(), p->overlap_factor);
+    mValueTree.setProperty(RT_FFT_MODIFIER_IDS[RT_FFT_MODIFIER_FRAME_SIZE],
+                           text.getIntValue(), nullptr);
+    // rt_man->changeFFTSize(text.getIntValue(), p->overlap_factor);
   }
   if (inChangedComboBox->getName() == "OverlapSelector") {
-    rt_man->changeFFTSize(p->frame_size, text.getIntValue());
+    mValueTree.setProperty(RT_FFT_MODIFIER_IDS[RT_FFT_MODIFIER_OVERLAP_FACTOR],
+                           text.getIntValue(), nullptr);
+    // rt_man->changeFFTSize(p->frame_size, text.getIntValue());
   }
 }
 
-void RT_PropertyManager::replaceState(juce::ValueTree &inNewState)
+juce::ValueTree &getValueTreeRef();
+void             RT_PropertyManager::replaceState(juce::ValueTree &inNewState)
 {
-  // assertValueTreeHasCompatibleLayout();
+  mValueTree.copyPropertiesAndChildrenFrom(inNewState, nullptr);
+  auto rt_props = mValueTree.getChildWithName("rt_params");
+
+  int  frame_size
+      = rt_props.getProperty(RT_FFT_MODIFIER_IDS[RT_FFT_MODIFIER_FRAME_SIZE]);
+  int overlap = rt_props.getProperty(
+      RT_FFT_MODIFIER_IDS[RT_FFT_MODIFIER_OVERLAP_FACTOR]);
+  int pad
+      = rt_props.getProperty(RT_FFT_MODIFIER_IDS[RT_FFT_MODIFIER_PAD_FACTOR]);
+  mInterface->getRTSTFTManager()->changeFFTSize(frame_size, overlap, pad);
 }
 
 std::unique_ptr<juce::XmlElement>
@@ -112,8 +125,31 @@ RT_PropertyManager::getXMLSerializedProperties()
   return el;
 }
 
+bool RT_PropertyManager::assertTreeCanValidlyReplace(
+    juce::ValueTree &inComparisonTree)
+{
+  return assertValueTreesHaveCompatibleLayout(mValueTree, inComparisonTree);
+}
+
 bool RT_PropertyManager::assertValueTreesHaveCompatibleLayout(
     juce::ValueTree &inTemplateTree, juce::ValueTree &inComparisonTree)
 {
-  return false;
+  for (int i = 0; i < inTemplateTree.getNumProperties(); i++) {
+    if (!inComparisonTree.hasProperty(inTemplateTree.getPropertyName(i))) {
+      return false;
+    }
+  }
+  for (auto it = inTemplateTree.begin(); it != inTemplateTree.end(); ++it) {
+    auto templateSubTree = (*it);
+    auto comparisonSubTree
+        = inComparisonTree.getChildWithName(templateSubTree.getType());
+    if (!comparisonSubTree.isValid()) {
+      return false;
+    }
+    if (!assertValueTreesHaveCompatibleLayout(templateSubTree,
+                                              comparisonSubTree)) {
+      return false;
+    }
+  }
+  return true;
 }

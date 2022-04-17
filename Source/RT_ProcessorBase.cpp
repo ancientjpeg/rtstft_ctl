@@ -27,7 +27,7 @@ RT_ProcessorBase::RT_ProcessorBase()
     :
 #endif
       mRTSTFTManager(this), mParameterManager(this),
-      mGUIStateManager(this,
+      mPropertyManager(this,
                        {
                            RT_MANIP_GUI_IDS[RT_MANIP_GAIN],
                            RT_MANIP_GUI_IDS[RT_MANIP_GATE],
@@ -54,7 +54,7 @@ RT_ParameterManager *RT_ProcessorBase::getParameterManager()
 }
 RT_PropertyManager *RT_ProcessorBase::getPropertyManager()
 {
-  return &mGUIStateManager;
+  return &mPropertyManager;
 }
 
 RT_FileManager *RT_ProcessorBase::getFileManager() { return &mFileManager; }
@@ -150,9 +150,11 @@ void RT_ProcessorBase::getStateInformation(juce::MemoryBlock &destData)
 {
   auto paramState
       = mParameterManager.getValueTreeState()->copyState().createXml();
+  auto propertyState = mPropertyManager.getXMLSerializedProperties();
   auto state = std::make_unique<juce::XmlElement>("rtstft_ctl_state");
 
   state->addChildElement(paramState.release());
+  state->addChildElement(propertyState.release());
 
   copyXmlToBinary(*state, destData);
   auto size          = ((uint32_t *)destData.getData())[1];
@@ -179,6 +181,19 @@ void RT_ProcessorBase::verifyStateIsUpToDate()
   auto state = getXmlFromBinary(data, mStateInformation.getSize());
   mParameterManager.getValueTreeState()->replaceState(
       juce::ValueTree::fromXml(*state->getChildByName("PARAMETER_TREE")));
+
+  auto propertiesXml = state->getChildByName("rtstft_ctl_properties");
+  if (!propertiesXml) {
+    mAwaitingStateUpdate = false;
+    return;
+  }
+  auto propertyTree = juce::ValueTree::fromXml(*propertiesXml);
+
+  if (!mPropertyManager.assertTreeCanValidlyReplace(propertyTree)) {
+    mAwaitingStateUpdate = false;
+    return; // keep params, but don't overwrite manips or FFT size
+  }
+  mPropertyManager.replaceState(propertyTree);
 
   mXMLOffset = ((uint32_t *)data)[1] + 9; // includes magic number, size int,
                                           // and trailing nullterm in XML binary

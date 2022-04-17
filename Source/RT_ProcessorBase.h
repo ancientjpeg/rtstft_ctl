@@ -25,7 +25,7 @@ protected:
   RT_LookAndFeel::Manager mLookAndFeelManager;
   RTSTFT_Manager          mRTSTFTManager;
   RT_ParameterManager     mParameterManager;
-  RT_PropertyManager      mGUIStateManager;
+  RT_PropertyManager      mPropertyManager;
   RT_FileManager          mFileManager;
 
   juce::MemoryBlock       mStateInformation;
