@@ -99,3 +99,21 @@ void RT_PropertyManager::comboBoxChanged(juce::ComboBox *inChangedComboBox)
     rt_man->changeFFTSize(p->frame_size, text.getIntValue());
   }
 }
+
+void RT_PropertyManager::replaceState(juce::ValueTree &inNewState)
+{
+  // assertValueTreeHasCompatibleLayout();
+}
+
+std::unique_ptr<juce::XmlElement>
+RT_PropertyManager::getXMLSerializedProperties()
+{
+  auto el = mValueTree.createXml();
+  return el;
+}
+
+bool RT_PropertyManager::assertValueTreesHaveCompatibleLayout(
+    juce::ValueTree &inTemplateTree, juce::ValueTree &inComparisonTree)
+{
+  return false;
+}

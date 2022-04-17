@@ -11,6 +11,7 @@
 #include "RTSTFT_Manager.h"
 #include "../../RT_AudioProcessor.h"
 #include "../../Utilities/RT_MathUtilities.h"
+#include "../StateManagers/RT_PropertyManager.h"
 #include "RT_ParameterDefines.h"
 #include "RT_ParameterManager.h"
 
@@ -87,6 +88,7 @@ void RTSTFT_Manager::valueTreePropertyChanged(
     juce::ValueTree        &treeWhosePropertyHasChanged,
     const juce::Identifier &property)
 {
+  DBG("VALUETREECHANGE REGISTERED BY RTSTFT");
   juce::var val = treeWhosePropertyHasChanged[property];
 
   // this is so so so dumb
@@ -125,23 +127,16 @@ void         RTSTFT_Manager::readManipsFromBinary(bool inThreadedFFTUpdate)
   if (magicNumber != ManipsBinaryMagicNumber) {
     return;
   }
-  void *ptr              = (char *)manipsBinaryPtr + 4;
+  void *ptr = (char *)manipsBinaryPtr + 4;
 
-  int   newFFTSize       = 2048; // TEST
-  int   newPadFactor     = 0;
-  int   newOverlapFactor = 8;
-  // to prevent bad reads from older builds
-  if (newFFTSize > p->fft_max) {
-    return;
-  }
-  if (newFFTSize != p->fft_size) {
-    changeFFTSize(newFFTSize, newOverlapFactor, newPadFactor);
-  }
   rt_manip_overwrite_manips(p, p->chans[0], (rt_real *)ptr,
                             rt_manip_block_len(p));
-  // for (int i = 0; i < p->num_chans; i++) {
-  //   rt_manip_overwrite_manips(p, p->chans[i], );
-  // }
+  int to_chan   = p->manip_multichannel ? p->num_chans : 1;
+  int block_len = rt_manip_block_len(p);
+  for (int i = 0; i < to_chan; i++) {
+    rt_manip_overwrite_manips(p, p->chans[0], (rt_real *)ptr + block_len * i,
+                              block_len);
+  }
 }
 
 void RTSTFT_Manager::writeManipsToFile(juce::MemoryOutputStream &stream)

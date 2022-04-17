@@ -75,3 +75,5 @@ void RT_GUIControlsContainer::resized()
     mKnobs[i]->setBounds(thisBound);
   }
 }
+
+std::unique_ptr<juce::XmlElement> getXMLSerializedProperties();

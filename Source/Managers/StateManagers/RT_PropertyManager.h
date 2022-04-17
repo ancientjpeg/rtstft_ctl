@@ -35,6 +35,14 @@ public:
   void                           pushNewHistoryCommand(juce::String &s);
   bool                           commandHistoryIsEmpty();
   void                           resetCommandHistoryPos();
+
   RT_SelectorMenu::SelectorData *getSelectorData();
+
   void comboBoxChanged(juce::ComboBox *inChangedComboBox) override;
+
+  std::unique_ptr<juce::XmlElement> getXMLSerializedProperties();
+  void                              replaceState(juce::ValueTree &inNewState);
+  static bool
+  assertValueTreesHaveCompatibleLayout(juce::ValueTree &inTemplateTree,
+                                       juce::ValueTree &inComparisonTree);
 };
