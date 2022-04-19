@@ -23,12 +23,13 @@ RT_FFTDisplay::RT_FFTDisplay(RT_ProcessorInterface *inInterface)
 
   auto            blocklen = rt_manip_block_len(p);
   mLocalManipCopies = std::make_unique<rt_real[]>(blocklen * p->num_chans);
-  for (int i = 0; i < RT_MANIP_FLAVOR_COUNT; i++) {
-    copyManips((rt_manip_flavor_t)i);
-  }
+  //  for (int i = 0; i < RT_MANIP_FLAVOR_COUNT; i++) {
+  //    copyManips((rt_manip_flavor_t)i);
+  //  }
 
   //  mInterface->getRTSTFTManager()->addListener(this);
 
+  mDbMaxAsAmp = rt_dbtoa(mDbMax);
   startTimer(1000 / 15);
 }
 
@@ -50,8 +51,9 @@ void RT_FFTDisplay::paint(juce::Graphics &g)
     int   i_incr       = numAmpsInFFT <= maxBars ? 1 : numAmpsInFFT / maxBars;
 
     for (int i = 0; i < barsInWindow; i++) {
-      float height = p->hold->amp_holder[i * i_incr] * getHeight();
-      float x      = (float)i / barsInWindow * getWidth();
+      float ampCurr = p->hold->amp_holder[i * i_incr];
+      float height  = scaleAmpToYPosNormDbScale(ampCurr);
+      float x       = (float)i / barsInWindow * getWidth();
       g.setColour(cs.getUIColour(highlightedFill));
       g.fillRect(x, (float)(getHeight() - height), width, height);
       x += width * 0.25;
@@ -72,7 +74,7 @@ void RT_FFTDisplay::paint(juce::Graphics &g)
         default:
           break;
         }
-        height   = val * getHeight();
+        height   = scaleManipAmpToYPosNorm(val, p, (rt_manip_flavor_t)m);
         auto col = cs.getUIColour(defaultFill);
         if (manip_state->activeField == m) {
           col = juce::Colours::goldenrod;
@@ -96,13 +98,6 @@ float RT_FFTDisplay::manipsIndexToXPos(int inIndex)
   return (float)getWidth()
          / rt_manip_len(mInterface->getRTSTFTManager()->getParamsStruct())
          * inIndex;
-}
-
-float RT_FFTDisplay::yPosToRTReal(float yPos, rt_params p,
-                                  rt_manip_flavor_t activeManip)
-{
-  float value0 = yPos / getHeight() + rt_get_manip_val(p, activeManip);
-  return std::clamp<float>(1.f - value0, 0.f, 1.f);
 }
 
 void RT_FFTDisplay::resized()
@@ -139,8 +134,9 @@ void RT_FFTDisplay::mouseDrag(const juce::MouseEvent &event)
   int               indexDiff     = finalPosIndex - lastPosIndex;
   int               indexDiffSign = indexDiff >= 0 ? 1 : -1;
 
-  rt_manip_set_bin_single(p, p->chans[0], activeManip, lastPosIndex,
-                          yPosToRTReal(mLastDragPos.y, p, activeManip));
+  float             manipVal
+      = scaleYPosNormToManipAmp(yPosNorm(mLastDragPos.y), p, activeManip);
+  rt_manip_set_bin_single(p, p->chans[0], activeManip, lastPosIndex, manipVal);
   if (indexDiff != 0) {
     float nextIndexXPos = manipsIndexToXPos(lastPosIndex + indexDiffSign);
     float nextIndexYPos
@@ -154,7 +150,50 @@ void RT_FFTDisplay::mouseDrag(const juce::MouseEvent &event)
   }
 }
 
-void RT_FFTDisplay::copyManips(rt_manip_flavor_t inTargetManipFlavor)
+float RT_FFTDisplay::yPosNorm(float YPos) { return 1.f - (YPos / getHeight()); }
+float RT_FFTDisplay::yPosDenorm(float YPosNormalized)
+{
+  return (1.f - YPosNormalized) * getHeight();
+}
+
+float RT_FFTDisplay::scaleAmpToYPosNormDbScale(float inAmp)
+{
+  if (inAmp <= 0.f) {
+    return 0.f;
+  }
+  inAmp = std::clamp<float>(rt_atodb(inAmp), mDbMin, mDbMax) - mDbMin;
+  inAmp = inAmp / mDbRange;
+  return inAmp * getHeight();
+}
+float RT_FFTDisplay::scaleYPosNormToAmpDbScale(float inYPosNormalized)
+{
+
+  float ret = inYPosNormalized;
+  if (ret <= 0.f) {
+    return 0.f;
+  }
+  ret = std::min<float>(ret, mDbMaxAsAmp);
+  ret = rt_dbtoa(ret * getDbRange() + mDbMin);
+  return ret;
+}
+float RT_FFTDisplay::scaleManipAmpToYPosNorm(float inAmp, rt_params p,
+                                             rt_manip_flavor_t activeManip)
+{
+  inAmp += rt_get_manip_val(p, activeManip);
+  return scaleAmpToYPosNormDbScale(inAmp);
+}
+
+float RT_FFTDisplay::scaleYPosNormToManipAmp(float             inYPosNormalized,
+                                             rt_params         p,
+                                             rt_manip_flavor_t activeManip)
+{
+  float ret = scaleYPosNormToAmpDbScale(inYPosNormalized);
+  ret -= rt_get_manip_val(p, activeManip);
+  return ret;
+}
+
+float RT_FFTDisplay::getDbRange() { return mDbMax - mDbMin; }
+void  RT_FFTDisplay::copyManips(rt_manip_flavor_t inTargetManipFlavor)
 {
   if (mInterface->getProcessor()->isSuspended()) {
     return;

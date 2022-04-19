@@ -19,6 +19,7 @@ RT_AudioProcessor::~RT_AudioProcessor() {}
 //==============================================================================
 void RT_AudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
 {
+  DBG(rt_dbtoa(-6));
   mRTSTFTManager.prepareToPlay(sampleRate, samplesPerBlock);
   verifyStateIsUpToDate();
 }

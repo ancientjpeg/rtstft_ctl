@@ -21,26 +21,39 @@
 class RT_FFTDisplay : public RT_Component,
                       public juce::Timer,
                       public RTSTFT_Manager::Listener {
-  std::unique_ptr<rt_real[]> mLocalManipCopies;
-                        juce::Point<float> mLastDragPos;
-                        
+
 public:
   RT_FFTDisplay(RT_ProcessorInterface *inInterface);
   ~RT_FFTDisplay() override;
 
-  void paint(juce::Graphics &) override;
-  void resized() override;
-  void timerCallback() override;
-  void mouseDrag(const juce::MouseEvent &event) override;
-  void mouseDown(const juce::MouseEvent &event) override;
-                        
+  void  paint(juce::Graphics &) override;
+  void  resized() override;
+  void  timerCallback() override;
+  void  mouseDrag(const juce::MouseEvent &event) override;
+  void  mouseDown(const juce::MouseEvent &event) override;
 
-  int  xPosToManipsIndex(float inXPos);
-  float  manipsIndexToXPos(int inIndex);
-                        float yPosToRTReal(float yPos, rt_params p, rt_manip_flavor_t activeManip);
-  void onManipChanged(rt_manip_flavor_t inManipFlavor) override;
+  int   xPosToManipsIndex(float inXPos);
+  float manipsIndexToXPos(int inIndex);
+  void  onManipChanged(rt_manip_flavor_t inManipFlavor) override;
+
+  //==============================================================================
+
+  static constexpr float mDbMin = -60.f, mDbMax = 24.f, mDbRange = mDbMax - mDbMin;
+  float                  yPosNorm(float YPos);
+  float                  yPosDenorm(float YPosNormalized);
+  float                  scaleAmpToYPosNormDbScale(float inAmp);
+  float                  scaleYPosNormToAmpDbScale(float inYPos);
+  float                  scaleManipAmpToYPosNorm(float inAmp, rt_params p,
+                                                 rt_manip_flavor_t activeManip);
+  float scaleYPosNormToManipAmp(float inYPosNormalized, rt_params p,
+                                rt_manip_flavor_t activeManip);
 
 private:
-  void copyManips(rt_manip_flavor_t inTargetManipFlavor);
+  float                      mDbMaxAsAmp;
+  std::unique_ptr<rt_real[]> mLocalManipCopies;
+  juce::Point<float>         mLastDragPos;
+  float                      getDbRange();
+
+  void                       copyManips(rt_manip_flavor_t inTargetManipFlavor);
   JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(RT_FFTDisplay)
 };

@@ -178,7 +178,7 @@ void RT_ProcessorBase::verifyStateIsUpToDate()
   auto data = mStateInformation.getData();
   assert(data != nullptr);
 
-  auto state = getXmlFromBinary(data, mStateInformation.getSize());
+  auto state = getXmlFromBinary(data, (int)mStateInformation.getSize());
   mParameterManager.getValueTreeState()->replaceState(
       juce::ValueTree::fromXml(*state->getChildByName("PARAMETER_TREE")));
 
