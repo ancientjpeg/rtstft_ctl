@@ -38,13 +38,14 @@ public:
 
   //==============================================================================
 
-  static constexpr float mDbMin = -60.f, mDbMax = 24.f, mDbRange = mDbMax - mDbMin;
-  float                  yPosNorm(float YPos);
-  float                  yPosDenorm(float YPosNormalized);
-  float                  scaleAmpToYPosNormDbScale(float inAmp);
-  float                  scaleYPosNormToAmpDbScale(float inYPos);
-  float                  scaleManipAmpToYPosNorm(float inAmp, rt_params p,
-                                                 rt_manip_flavor_t activeManip);
+  static constexpr float mDbMin = -100.f, mDbMax = 12.f,
+                         mDbRange = mDbMax - mDbMin;
+  float yPosNorm(float YPos);
+  float yPosDenorm(float YPosNormalized);
+  float scaleAmpToYPosNormDbScale(float inAmp);
+  float scaleYPosNormToAmpDbScale(float inYPos);
+  float scaleManipAmpToYPosNorm(float inAmp, rt_params p,
+                                rt_manip_flavor_t activeManip);
   float scaleYPosNormToManipAmp(float inYPosNormalized, rt_params p,
                                 rt_manip_flavor_t activeManip);
 

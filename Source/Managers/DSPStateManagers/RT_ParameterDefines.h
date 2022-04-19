@@ -25,9 +25,12 @@ static const juce::Array<juce::NormalisableRange<float>> RT_PARAM_RANGES{
     juce::NormalisableRange<float>(0.f, 2.f, 0.f),
     juce::NormalisableRange<float>(0.f, 2.f, 0.f),
     juce::NormalisableRange<float>(0.f, 1.f, 0.f),
-    juce::NormalisableRange<float>(-1.0f, 1.0f, 0.f),
-    juce::NormalisableRange<float>(-1.0f, 1.0f, 0.f),
-    juce::NormalisableRange<float>(-1.0f, 1.0f, 0.f),
+    juce::NormalisableRange<float>(-0.1f, 0.1f, 0.f),
+    juce::NormalisableRange<float>(-0.1f, 0.1f, 0.f),
+    juce::NormalisableRange<float>(-0.1f, 0.1f, 0.f),
+    //    juce::NormalisableRange<float>(-1.0f, 1.0f, 0.f),
+    //    juce::NormalisableRange<float>(-1.0f, 1.0f, 0.f),
+    //    juce::NormalisableRange<float>(-1.0f, 1.0f, 0.f),
 };
 
 static const float
