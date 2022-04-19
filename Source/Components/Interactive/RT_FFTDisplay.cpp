@@ -150,6 +150,7 @@ void RT_FFTDisplay::mouseDrag(const juce::MouseEvent &event)
   }
 }
 
+float RT_FFTDisplay::getDbValNormalized(float dB) { return (dB - mDbMin) / mDbRange;}
 float RT_FFTDisplay::yPosNorm(float YPos) { return 1.f - (YPos / getHeight()); }
 float RT_FFTDisplay::yPosDenorm(float YPosNormalized)
 {

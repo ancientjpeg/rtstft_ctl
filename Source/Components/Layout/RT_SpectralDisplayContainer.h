@@ -22,7 +22,7 @@ class RT_SpectralDisplayContainer : public RT_BorderedComponent {
 
   RT_FFTDisplay        mFFTDisplay;
   RT_SelectorMenu      mManipSelectorMenu;
-  juce::Rectangle<int> mDisplaySeparation;
+  juce::Rectangle<int> mDisplaySeparation, mDbScaleTicks;
 
 public:
   RT_SpectralDisplayContainer(RT_ProcessorInterface *inInterface,
