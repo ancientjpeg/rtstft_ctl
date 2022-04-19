@@ -167,7 +167,6 @@ float RT_FFTDisplay::scaleAmpToYPosNormDbScale(float inAmp)
 }
 float RT_FFTDisplay::scaleYPosNormToAmpDbScale(float inYPosNormalized)
 {
-
   float ret = inYPosNormalized;
   if (ret <= 0.f) {
     return 0.f;
@@ -179,16 +178,19 @@ float RT_FFTDisplay::scaleYPosNormToAmpDbScale(float inYPosNormalized)
 float RT_FFTDisplay::scaleManipAmpToYPosNorm(float inAmp, rt_params p,
                                              rt_manip_flavor_t activeManip)
 {
-  inAmp += rt_get_manip_val(p, activeManip);
-  return scaleAmpToYPosNormDbScale(inAmp);
+  float ret = inAmp;
+  ret += rt_get_manip_val(p, activeManip);
+  ret = scaleAmpToYPosNormDbScale(inAmp);
+  return ret;
 }
 
 float RT_FFTDisplay::scaleYPosNormToManipAmp(float             inYPosNormalized,
                                              rt_params         p,
                                              rt_manip_flavor_t activeManip)
 {
-  float ret = scaleYPosNormToAmpDbScale(inYPosNormalized);
-  ret -= rt_get_manip_val(p, activeManip);
+  float ret = inYPosNormalized;
+  ret = scaleYPosNormToAmpDbScale(inYPosNormalized);
+  ret = ret -= rt_get_manip_val(p, activeManip);
   return ret;
 }
 
