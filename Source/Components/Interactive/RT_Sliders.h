@@ -21,15 +21,16 @@ class RotaryKnob : public juce::Slider {
 public:
   RotaryKnob(const juce::NormalisableRange<float> *inRangePtr);
   ~RotaryKnob() = default;
-  virtual void paint(juce::Graphics &g) override;
+  void paint(juce::Graphics &g) override;
 };
 
 class LabelledRotaryKnob : public juce::Component, juce::Label::Listener {
 
-  juce::String mLabelString;
-  float        mLabelPortion, mNewKnobValue;
-  juce::Label  mLabel;
-  RotaryKnob   mKnob;
+  juce::String         mLabelString;
+  float                mLabelPortion, mNewKnobValue;
+  juce::Label          mLabel;
+  juce::Rectangle<int> mTitleBounds;
+  RotaryKnob           mKnob;
 
 public:
   LabelledRotaryKnob(const juce::NormalisableRange<float> *inRangePtr,
@@ -39,5 +40,6 @@ public:
   void          labelTextChanged(juce::Label *labelThatHasChanged) override;
   void          editorShown(juce::Label *l, juce::TextEditor &t) override;
   void          editorHidden(juce::Label *l, juce::TextEditor &t) override;
+  void          paint(juce::Graphics &g) override;
 };
 } // namespace RT_Sliders

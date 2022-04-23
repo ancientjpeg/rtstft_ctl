@@ -34,7 +34,7 @@ void RT_LookAndFeel::Default::drawRotarySlider(juce::Graphics &g, int x, int y,
   int   radiusFromCenter
       = std::min(bounds.getHeight(), bounds.getWidth()) / 2 * 0.8f;
   int        radiusFromBounds = (bounds.getHeight() - 2 * radiusFromCenter) / 2;
-  int        lineLength_2     = radiusFromCenter * 0.16f;
+  int        lineLength_2     = radiusFromCenter * 0.1f;
   juce::Path knobPath;
   float      knobSpread = .2;
   knobPath.addCentredArc(center.getX(), center.getY(), radiusFromCenter,

@@ -17,7 +17,7 @@ RT_CommandLineContainer::RT_CommandLineContainer(
     RT_ProcessorInterface *inInterface, int inBorderSize)
     : RT_BorderedComponent(inInterface, inBorderSize),
       mCommandLinePrompt("RT_CMD_PROMPT", "user@rt_cmd$"),
-      mErrorMessageContainer("RT_CMD_ERROR_BOX", "eroors..")
+      mErrorMessageContainer("RT_CMD_ERROR_BOX", "")
 {
 
   mCommandLineEntry.setColour(juce::TextEditor::focusedOutlineColourId,

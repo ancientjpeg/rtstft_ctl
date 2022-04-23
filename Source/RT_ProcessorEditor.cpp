@@ -22,7 +22,7 @@ RT_ProcessorEditor::RT_ProcessorEditor(RT_ProcessorInterface *inInterface)
       ComponentType::PLUGIN_DEFAULT));
   addAndMakeVisible(mAppWindow);
 
-  setSize(800, 600);
+  setSize(950, 750);
 }
 
 RT_ProcessorEditor::~RT_ProcessorEditor() {}

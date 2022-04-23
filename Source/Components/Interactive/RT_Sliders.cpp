@@ -30,6 +30,7 @@ void RT_Sliders::RotaryKnob::paint(juce::Graphics &g)
                        rots.endAngleRadians, *this);
 }
 
+//==============================================================================
 RT_Sliders::LabelledRotaryKnob::LabelledRotaryKnob(
     const juce::NormalisableRange<float> *inRangePtr,
     juce::String inLabelString, float inLabelPortion)
@@ -37,39 +38,60 @@ RT_Sliders::LabelledRotaryKnob::LabelledRotaryKnob(
       mKnob(inRangePtr)
 {
   mLabel.addListener(this);
-  mLabel.setText(inLabelString, juce::NotificationType::dontSendNotification);
   mLabel.setEditable(false, true, true);
-  addAndMakeVisible(mKnob);
+  addAndMakeVisible(mKnob, 0);
   addAndMakeVisible(mLabel);
+  mKnob.onValueChange = [this]() {
+    mLabel.setText(juce::String(mKnob.getValue(), 2),
+                   juce::dontSendNotification);
+  };
+  mLabel.setText(juce::String(mKnob.getValue(), 2), juce::dontSendNotification);
 }
 
-juce::Slider *RT_Sliders::LabelledRotaryKnob::getKnobPointer()
-{
-  return &mKnob;
-}
 void RT_Sliders::LabelledRotaryKnob::resized()
 {
-  auto bounds = getLocalBounds();
-  mLabel.setBounds(bounds.removeFromBottom(mLabelPortion * getHeight()));
+  auto bounds   = getLocalBounds();
+  mTitleBounds  = bounds.removeFromBottom(mLabelPortion * getHeight());
+  int knobBound = std::min(bounds.getWidth(), bounds.getHeight());
+  mKnob.setBounds(bounds.withSizeKeepingCentre(knobBound, knobBound));
+  int h = 14;
+  int w = 32;
+  mLabel.setBounds(bounds.withSizeKeepingCentre(w, h));
   mLabel.setJustificationType(juce::Justification::centred);
-  mKnob.setBounds(bounds);
+  mLabel.setFont(juce::Font(h - 4));
+}
+
+void RT_Sliders::LabelledRotaryKnob::paint(juce::Graphics &g)
+{
+  g.setColour(juce::Colours::black);
+  g.setFont(mTitleBounds.getHeight());
+  g.drawText(mLabelString, mTitleBounds, juce::Justification::centred);
 }
 void RT_Sliders::LabelledRotaryKnob::labelTextChanged(
     juce::Label *labelThatHasChanged)
 {
   mKnob.setValue(mNewKnobValue);
+  labelThatHasChanged->setText(juce::String(mKnob.getValue(), 2),
+                               juce::dontSendNotification);
 }
 void RT_Sliders::LabelledRotaryKnob::editorShown(juce::Label      *l,
                                                  juce::TextEditor &t)
 {
-  t.setText("newValue",
-            juce::NotificationType::dontSendNotification);
-  t.setColour(juce::TextEditor::focusedOutlineColourId, juce::Colours::transparentWhite);
+  t.setColour(juce::TextEditor::focusedOutlineColourId,
+              juce::Colours::transparentWhite);
   t.setJustification(juce::Justification(juce::Justification::centredTop));
 }
 void RT_Sliders::LabelledRotaryKnob::editorHidden(juce::Label      *l,
                                                   juce::TextEditor &t)
 {
   mNewKnobValue = t.getText().getFloatValue();
-  l->setText(mLabelString, juce::NotificationType::sendNotification);
+
+  //  auto s = juce::String(mKnob.getValue(), 2);
+  //  mLabel.setText(s, juce::NotificationType::dontSendNotification);
+  // l->setText(mLabelString, juce::NotificationType::sendNotification);
+}
+
+juce::Slider *RT_Sliders::LabelledRotaryKnob::getKnobPointer()
+{
+  return &mKnob;
 }
