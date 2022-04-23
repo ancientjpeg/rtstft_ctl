@@ -21,7 +21,7 @@ class RotaryKnob : public juce::Slider {
 public:
   RotaryKnob(const juce::NormalisableRange<float> *inRangePtr);
   ~RotaryKnob() = default;
-  void paint(juce::Graphics &g) override;
+  virtual void paint(juce::Graphics &g) override;
 };
 
 class LabelledRotaryKnob : public juce::Component, juce::Label::Listener {

@@ -38,7 +38,7 @@ public:
 
   //==============================================================================
 
-  static constexpr float mDbMin = -90.f, mDbMax = 18.f,
+  static constexpr float mDbMin = -120.f, mDbMax = 18.f,
                          mDbRange = mDbMax - mDbMin;
   float getDbValNormalized(float dB);
   float yPosNorm(float YPos);
