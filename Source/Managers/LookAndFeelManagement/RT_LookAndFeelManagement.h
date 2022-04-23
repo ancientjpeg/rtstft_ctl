@@ -15,6 +15,8 @@
 
 namespace RT_LookAndFeel {
 
+using enum juce::LookAndFeel_V4::ColourScheme::UIColour;
+
 enum ComponentType { PLUGIN_DEFAULT, NUM_COMPONENT_TYPES };
 static const juce::StringArray ComponentNames = {"Default", "Slider", "Button"};
 static const int               mainBorderSize = 10;
@@ -35,6 +37,11 @@ class Manager {
 public:
   Manager();
   juce::LookAndFeel_V4 *getSingleLookAndFeel(ComponentType inComponentTypeID);
+  juce::Colour
+  getUIColour(juce::LookAndFeel_V4::ColourScheme::UIColour inColorToGet)
+  {
+    return DefaultColourScheme.getUIColour(inColorToGet); // change this
+  }
 };
 
 class Default : public juce::LookAndFeel_V4 {
@@ -50,6 +57,10 @@ public:
                                     const juce::Colour &backgroundColour,
                                     bool                shouldDrawButtonAsHighlighted,
                                     bool shouldDrawButtonAsDown) override;
+  virtual void drawComboBox(juce::Graphics &g, int width, int height,
+                            bool isButtonDown, int buttonX, int buttonY,
+                            int buttonW, int buttonH,
+                            juce::ComboBox &cb) override;
 };
 
 } // namespace RT_LookAndFeel

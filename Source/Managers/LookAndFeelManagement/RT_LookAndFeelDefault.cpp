@@ -9,7 +9,6 @@
 */
 
 #include "RT_LookAndFeelManagement.h"
-using enum juce::LookAndFeel_V4::ColourScheme::UIColour;
 
 RT_LookAndFeel::Default::Default(
     juce::LookAndFeel_V4::ColourScheme inColourScheme)
@@ -74,4 +73,16 @@ void RT_LookAndFeel::Default::drawButtonBackground(
   }
   else
     g.fillAll(backgroundColour);
+}
+
+void RT_LookAndFeel::Default::drawComboBox(juce::Graphics &g, int width,
+                                           int height, bool isButtonDown,
+                                           int buttonX, int buttonY,
+                                           int buttonW, int buttonH,
+                                           juce::ComboBox &cb)
+{
+  auto scheme = getCurrentColourScheme();
+  g.setColour(scheme.getUIColour(outline));
+  g.setColour(scheme.getUIColour(windowBackground));
+  g.fillRect(cb.getBounds());
 }
