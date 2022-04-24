@@ -81,6 +81,13 @@ void RTSTFT_Manager::parameterChanged(const juce::String &parameterID,
   if (paramFlavor < 0 || paramFlavor >= RT_PARAM_FLAVOR_COUNT) {
     // error handling here...
   }
+  else if (paramFlavor >= RT_PARAM_GAIN_MOD
+           && paramFlavor <= RT_PARAM_LIMIT_MOD) {
+    newValue = rt_dbtoa(newValue) - 1.f;
+    if (paramFlavor == RT_PARAM_GATE_MOD) {
+      newValue -= 1.f;
+    }
+  }
   rt_set_single_param(p, (rt_param_flavor_t)paramFlavor, newValue);
 }
 

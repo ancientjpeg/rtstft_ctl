@@ -41,6 +41,8 @@ RT_CommandLineContainer::RT_CommandLineContainer(
         mInterface->getRTSTFTManager()->getCMDMessage(),
         juce::NotificationType::dontSendNotification);
   };
+  mCommandLineEntry.setColour(juce::TextEditor::backgroundColourId,
+                              juce::Colours::transparentWhite);
   addAndMakeVisible(mCommandLineEntry);
 
   mCommandLinePrompt.setEditable(false);

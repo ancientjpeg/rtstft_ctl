@@ -11,9 +11,11 @@
 #pragma once
 
 #include "../../Managers/DSPStateManagers/RTSTFT_Manager.h"
+#include "../../Managers/DSPStateManagers/RT_ParameterDefines.h"
 #include "../../Managers/Interface/RT_ProcessorInterface.h"
 #include "../Utility/RT_BorderedComponent.h"
 #include <JuceHeader.h>
+
 
 //==============================================================================
 /*
@@ -38,7 +40,7 @@ public:
 
   //==============================================================================
 
-  static constexpr float mDbMin = -120.f, mDbMax = 18.f,
+  static constexpr float mDbMin = RT_DB_MIN, mDbMax = RT_DB_MAX,
                          mDbRange = mDbMax - mDbMin;
   float getDbValNormalized(float dB);
   float yPosNorm(float YPos);

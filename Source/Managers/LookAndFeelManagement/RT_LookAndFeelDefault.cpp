@@ -14,6 +14,7 @@ RT_LookAndFeel::Default::Default(
     juce::LookAndFeel_V4::ColourScheme inColourScheme)
     : juce::LookAndFeel_V4(inColourScheme)
 {
+  setDefaultLookAndFeel(this);
 }
 
 void RT_LookAndFeel::Default::drawRotarySlider(juce::Graphics &g, int x, int y,
@@ -79,10 +80,59 @@ void RT_LookAndFeel::Default::drawComboBox(juce::Graphics &g, int width,
                                            int height, bool isButtonDown,
                                            int buttonX, int buttonY,
                                            int buttonW, int buttonH,
-                                           juce::ComboBox &cb)
+                                           juce::ComboBox &box)
 {
   auto scheme = getCurrentColourScheme();
-  g.setColour(scheme.getUIColour(outline));
-  g.setColour(scheme.getUIColour(windowBackground));
-  g.fillRect(cb.getBounds());
+  g.setColour(scheme.getUIColour(defaultFill));
+  auto bounds = juce::Rectangle<float>(buttonX, buttonY, buttonW, buttonH);
+  juce::Rectangle<float> triBounds
+      = bounds.removeFromRight(0.9f * bounds.getWidth());
+  int bound = std::min(triBounds.getWidth(), triBounds.getHeight());
+  triBounds = triBounds.withSizeKeepingCentre(bound / 3, bound / 3);
+  juce::Path path;
+  path.startNewSubPath(triBounds.getBottomLeft());
+  path.lineTo(triBounds.getBottomRight());
+  path.lineTo(triBounds.getTopLeft().withX(triBounds.getCentreX()));
+  path.closeSubPath();
+  if (box.isPopupActive()) {
+    path.applyTransform(juce::AffineTransform::rotation(
+        juce::MathConstants<float>::pi, triBounds.getCentreX(),
+        triBounds.getCentreY()));
+  }
+  g.strokePath(path, juce::PathStrokeType(widgetBorderSize));
 }
+
+// void RT_LookAndFeel::Default::drawPopupMenuBackgroundWithOptions(
+//     juce::Graphics &g, int width, int height,
+//     const juce::PopupMenu::Options &opts)
+// {
+//   g.fillAll(getCurrentColourScheme().getUIColour(windowBackground));
+//   g.fillAll(juce::Colours::grey);
+// }
+
+int RT_LookAndFeel::Default::getPopupMenuBorderSize()
+{
+  return widgetBorderSize;
+}
+
+// juce::PopupMenu::Options
+// RT_LookAndFeel::Default::getOptionsForComboBoxPopupMenu(juce::ComboBox &box,
+//                                                         juce::Label &label)
+// {
+//   return juce::PopupMenu::Options()
+//       .withTargetComponent(&box)
+//       .withItemThatMustBeVisible(box.getSelectedId())
+//       .withInitiallySelectedItem(box.getSelectedId())
+//       .withMinimumWidth(box.getWidth())
+//       .withMaximumNumColumns(1)
+//       .withStandardItemHeight(label.getHeight());
+// }
+
+// void RT_LookAndFeel::Default::getIdealPopupMenuItemSizeWithOptions(
+//     const juce::String &text, bool isSeparator, int standardMenuItemHeight,
+//     int &idealWidth, int &idealHeight, const juce::PopupMenu::Options &opts)
+// {
+//   juce::LookAndFeel_V2::getIdealPopupMenuItemSize(
+//       text, isSeparator, standardMenuItemHeight, idealWidth, idealHeight);
+//   idealWidth = opts.getMinimumWidth();
+// }

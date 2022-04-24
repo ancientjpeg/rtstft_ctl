@@ -13,21 +13,35 @@
 #include "../../../RTSTFT/src/rtstft.h"
 #include <JuceHeader.h>
 
+#define RT_DB_MIN (-110.f)
+#define RT_DB_SLIDER_RADIUS (1.f)
+#define RT_DB_MAX (18.f)
 static const juce::StringArray RT_PARAM_IDS{
     "Pitch Ratio", "Retention",  "Phase Mod",  "Phase Chaos",
     "Gain Nudge",  "Gate Nudge", "Limit Nudge"};
 static const juce::StringArray RT_PARAM_NAMES{
     "pitch ratio", "retention",  "phase mod",  "phase chaos",
     "gain nudge",  "gate nudge", "limit nudge"};
-static const juce::Array<juce::NormalisableRange<float>> RT_PARAM_RANGES{
+
+std::function from_0_1_log = [](float start, float end, float val_0_1) {
+  float ret;
+  return ret;
+};
+
+std::function to_0_1_log = [](float start, float end, float val) {
+  float ret;
+  return ret;
+};
+
+static juce::Array<juce::NormalisableRange<float>> RT_PARAM_RANGES{
     juce::NormalisableRange<float>(0.5f, 2.f, 0.f,
                                    std::log(0.5) / std::log(1. / 3.)),
     juce::NormalisableRange<float>(0.f, 2.f, 0.f),
     juce::NormalisableRange<float>(0.f, 2.f, 0.f),
     juce::NormalisableRange<float>(0.f, 1.f, 0.f),
-    juce::NormalisableRange<float>(-1.0f, 1.0f, 0.f),
-    juce::NormalisableRange<float>(-1.0f, 1.0f, 0.f),
-    juce::NormalisableRange<float>(-1.0f, 1.0f, 0.f),
+    juce::NormalisableRange<float>(-1.f, 1.f, from_0_1_log, to_0_1_log, {}),
+    juce::NormalisableRange<float>(-1.f, 1.f, from_0_1_log, to_0_1_log, {}),
+    juce::NormalisableRange<float>(-1.f, 1.f, from_0_1_log, to_0_1_log, {}),
 };
 
 static const float

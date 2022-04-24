@@ -25,7 +25,7 @@ static const float             headerHeightRatio = 0.2f;
 static const float             cmdHeightRatio    = 0.15f;
 
 static const juce::LookAndFeel_V4::ColourScheme DefaultColourScheme(
-    juce::Colours::white, juce::Colours::white, juce::Colours::white,
+    juce::Colours::white, juce::Colours::black, juce::Colours::white,
     juce::Colours::black, juce::Colours::black, juce::Colours::black,
     juce::Colours::white, juce::Colours::black, juce::Colours::black);
 
@@ -53,14 +53,29 @@ public:
                         float sliderPosProportional, float rotaryStartAngle,
                         float rotaryEndAngle, juce::Slider &s) override;
   juce::Label *createSliderTextBox(juce::Slider &s) override;
-  void         drawButtonBackground(juce::Graphics &g, juce::Button &b,
+  virtual void drawButtonBackground(juce::Graphics &g, juce::Button &b,
                                     const juce::Colour &backgroundColour,
-                                    bool                shouldDrawButtonAsHighlighted,
+                                    bool shouldDrawButtonAsHighlighted,
                                     bool shouldDrawButtonAsDown) override;
   virtual void drawComboBox(juce::Graphics &g, int width, int height,
                             bool isButtonDown, int buttonX, int buttonY,
                             int buttonW, int buttonH,
-                            juce::ComboBox &cb) override;
+                            juce::ComboBox &box) override;
+
+  // virtual void
+  // drawPopupMenuBackgroundWithOptions(juce::Graphics &g, int width, int
+  // height,
+  //                                    const juce::PopupMenu::Options &opts);
+  virtual int getPopupMenuBorderSize() override;
+  // virtual juce::PopupMenu::Options
+  //             getOptionsForComboBoxPopupMenu(juce::ComboBox &box,
+  //                                            juce::Label    &label) override;
+  // virtual void getIdealPopupMenuItemSizeWithOptions(
+  //     const juce::String &text, bool isSeparator, int standardMenuItemHeight,
+  //     int &idealWidth, int &idealHeight,
+  //     const juce::PopupMenu::Options &) override;
+
+  virtual int getMenuWindowFlags() override { return 1; }
 };
 
 } // namespace RT_LookAndFeel
