@@ -20,9 +20,10 @@ using enum juce::LookAndFeel_V4::ColourScheme::UIColour;
 enum ComponentType { PLUGIN_DEFAULT, NUM_COMPONENT_TYPES };
 static const juce::StringArray ComponentNames = {"Default", "Slider", "Button"};
 static const int               mainBorderSize = 10;
+static const int mainPadding = 5;
 static const int               widgetBorderSize  = 2;
-static const float             headerHeightRatio = 0.2f;
-static const float             cmdHeightRatio    = 0.15f;
+static const float             headerHeight = 80;
+static const float             cmdHeight    = 50;
 
 static const juce::LookAndFeel_V4::ColourScheme DefaultColourScheme(
     juce::Colours::white, juce::Colours::black, juce::Colours::white,

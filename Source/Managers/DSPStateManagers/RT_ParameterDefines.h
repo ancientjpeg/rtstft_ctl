@@ -14,8 +14,8 @@
 #include <JuceHeader.h>
 
 #define RT_DB_MIN (-110.f)
-#define RT_DB_SLIDER_RADIUS (1.f)
 #define RT_DB_MAX (18.f)
+#define RT_DB_SLIDER_RADIUS (.5f)
 static const juce::StringArray RT_PARAM_IDS{
     "Pitch Ratio", "Retention",  "Phase Mod",  "Phase Chaos",
     "Gain Nudge",  "Gate Nudge", "Limit Nudge"};
@@ -23,14 +23,28 @@ static const juce::StringArray RT_PARAM_NAMES{
     "pitch ratio", "retention",  "phase mod",  "phase chaos",
     "gain nudge",  "gate nudge", "limit nudge"};
 
-std::function from_0_1_log = [](float start, float end, float val_0_1) {
-  float ret;
+static const std::function from_0_1_log
+    = [](float start, float end, float val_0_1) {
+        float ret = val_0_1;
+        ret       = ret * 2.f - 1.f;
+        ret       = ret * RT_DB_SLIDER_RADIUS;
+        return ret;
+      };
+
+static const std::function to_0_1_log = [](float start, float end, float val) {
+  float ret = val / RT_DB_SLIDER_RADIUS;
+  ret       = val * 0.5f + 0.5f;
   return ret;
 };
 
-std::function to_0_1_log = [](float start, float end, float val) {
-  float ret;
-  return ret;
+static const std::function snap_legal = [](float start, float end, float val) {
+  if (val < start) {
+    return start;
+  }
+  if (val > end) {
+    return end;
+  }
+  return val;
 };
 
 static juce::Array<juce::NormalisableRange<float>> RT_PARAM_RANGES{
@@ -39,9 +53,24 @@ static juce::Array<juce::NormalisableRange<float>> RT_PARAM_RANGES{
     juce::NormalisableRange<float>(0.f, 2.f, 0.f),
     juce::NormalisableRange<float>(0.f, 2.f, 0.f),
     juce::NormalisableRange<float>(0.f, 1.f, 0.f),
-    juce::NormalisableRange<float>(-1.f, 1.f, from_0_1_log, to_0_1_log, {}),
-    juce::NormalisableRange<float>(-1.f, 1.f, from_0_1_log, to_0_1_log, {}),
-    juce::NormalisableRange<float>(-1.f, 1.f, from_0_1_log, to_0_1_log, {}),
+    juce::NormalisableRange<float>(-RT_DB_SLIDER_RADIUS, RT_DB_SLIDER_RADIUS,
+                                   0.f),
+    juce::NormalisableRange<float>(-RT_DB_SLIDER_RADIUS, RT_DB_SLIDER_RADIUS,
+                                   0.f),
+    juce::NormalisableRange<float>(-RT_DB_SLIDER_RADIUS, RT_DB_SLIDER_RADIUS,
+                                   0.f),
+    // juce::NormalisableRange<float>(-RT_DB_SLIDER_RADIUS, RT_DB_SLIDER_RADIUS,
+    //                                from_0_1_log, to_0_1_log, snap_legal),
+    // juce::NormalisableRange<float>(-RT_DB_SLIDER_RADIUS, RT_DB_SLIDER_RADIUS,
+    //                                from_0_1_log, to_0_1_log, snap_legal),
+    // juce::NormalisableRange<float>(-RT_DB_SLIDER_RADIUS, RT_DB_SLIDER_RADIUS,
+    //                                from_0_1_log, to_0_1_log, snap_legal),
+    // juce::NormalisableRange<float>(RT_DB_MIN, RT_DB_MAX, from_0_1_log,
+    //                                to_0_1_log, snap_legal),
+    // juce::NormalisableRange<float>(RT_DB_MIN, RT_DB_MAX, from_0_1_log,
+    //                                to_0_1_log, snap_legal),
+    // juce::NormalisableRange<float>(RT_DB_MIN, RT_DB_MAX, from_0_1_log,
+    //                                to_0_1_log, snap_legal),
 };
 
 static const float

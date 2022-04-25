@@ -12,9 +12,6 @@
 #include "../../Managers/Interface/RT_ProcessorInterface.h"
 #include <JuceHeader.h>
 
-#define RT_MAIN_BORDER_SIZE 10
-#define RT_MAIN_PADDING 5
-#define RT_COMPONENT_BORDER_SIZE 2
 
 using enum juce::LookAndFeel_V4::ColourScheme::UIColour;
 

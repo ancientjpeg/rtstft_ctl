@@ -22,6 +22,7 @@ RT_GUIControlsContainer::RT_GUIControlsContainer(
 {
   auto p        = mInterface->getRTSTFTManager()->getParamsStruct();
   auto prop_man = mInterface->getPropertyManager();
+
   for (int i = RT_FFT_MIN_POW; i <= RT_FFT_MAX_POW; i++) {
     mFrameSizeSelector.addItem(juce::String(1 << i), 1 << i);
   }
@@ -30,6 +31,7 @@ RT_GUIControlsContainer::RT_GUIControlsContainer(
   prop_man->addComboBoxAttachment(
       RT_FFT_MODIFIER_IDS[RT_FFT_MODIFIER_FRAME_SIZE], &mFrameSizeSelector);
   addAndMakeVisible(mFrameSizeSelector);
+
   for (int i = 1; i <= 4; i++) {
     mOverlapSelector.addItem(juce::String(1 << i), 1 << i);
   }
@@ -38,10 +40,16 @@ RT_GUIControlsContainer::RT_GUIControlsContainer(
   prop_man->addComboBoxAttachment(
       RT_FFT_MODIFIER_IDS[RT_FFT_MODIFIER_OVERLAP_FACTOR], &mOverlapSelector);
   addAndMakeVisible(mOverlapSelector);
+
   for (int i = 0; i < RT_PARAM_FLAVOR_COUNT; i++) {
     mKnobs.add(std::make_unique<RT_Sliders::LabelledRotaryKnob>(
         RT_PARAM_RANGES.getRawDataPointer() + i, RT_PARAM_IDS[i].toLowerCase(),
         0.2f));
+    // if (i <= RT_PARAM_GAIN_MOD && i >= RT_PARAM_LIMIT_MOD) {
+    auto *k_ptr = mKnobs[i]->getKnobPointer();
+    k_ptr->setVelocityBasedMode(true);
+    k_ptr->setVelocityModeParameters(5, 2);
+    // }
     mKnobAttachments.add(
         std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(
             *mInterface->getParameterManager()->getValueTreeState(),

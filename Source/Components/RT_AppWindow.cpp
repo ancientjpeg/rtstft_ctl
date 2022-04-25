@@ -14,7 +14,7 @@
 
 RT_AppWindow::RT_AppWindow(RT_ProcessorInterface *inInterface, int inBorderSize)
     : RT_BorderedComponent(inInterface, inBorderSize),
-      mHeader(inInterface, RT_COMPONENT_BORDER_SIZE), mMainDisplay(inInterface)
+      mHeader(inInterface, RT_LookAndFeel::widgetBorderSize), mMainDisplay(inInterface)
 
 {
   addAndMakeVisible(mHeader);
@@ -25,7 +25,7 @@ void RT_AppWindow::paintInBorder(juce::Graphics &g) {}
 void RT_AppWindow::resized()
 {
   auto bounds       = getBoundsAdj();
-  auto headerBounds = bounds.removeFromTop(RT_LookAndFeel::headerHeightRatio * getHeightAdj());
-  mHeader.setBounds(headerBounds.reduced(RT_MAIN_PADDING));
+  auto headerBounds = bounds.removeFromTop(RT_LookAndFeel::headerHeight);
+  mHeader.setBounds(headerBounds.reduced(RT_LookAndFeel::mainPadding));
   mMainDisplay.setBounds(bounds);
 }

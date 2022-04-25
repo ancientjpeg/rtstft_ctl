@@ -32,11 +32,11 @@ void RT_MainDisplay::resized()
 {
   using namespace RT_LookAndFeel;
   auto bounds    = getLocalBounds();
-  int  cmdHeight = cmdHeightRatio * getHeight();
+  int  cmdHeight = RT_LookAndFeel::cmdHeight;
   auto cmdBounds = bounds.removeFromBottom(cmdHeight);
-  mCommandLineContainer.setBounds(cmdBounds.reduced(RT_MAIN_PADDING));
+  mCommandLineContainer.setBounds(cmdBounds.reduced(RT_LookAndFeel::mainPadding));
   auto controlsBounds = bounds.removeFromLeft(0.3 * getWidth());
   mGUIControlsContainer.setBounds(controlsBounds);
-  bounds.removeFromRight(RT_MAIN_PADDING);
+  bounds.removeFromRight(RT_LookAndFeel::mainPadding);
   mSpectralDisplayContainer.setBounds(bounds);
 }
