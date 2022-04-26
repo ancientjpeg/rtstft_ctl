@@ -83,18 +83,16 @@ RT_SelectorMenu::SelectorData *RT_PropertyManager::getSelectorData()
 
 juce::ValueTree &RT_PropertyManager::getValueTreeRef() { return mValueTree; }
 
-void             RT_PropertyManager::replaceState(juce::ValueTree &inNewState)
-{
-  setAllAttachmentsIgnoreCallbacks(true);
-  mValueTree.copyPropertiesAndChildrenFrom(inNewState, nullptr);
-  setAllAttachmentsIgnoreCallbacks(false);
-}
-
 std::unique_ptr<juce::XmlElement>
 RT_PropertyManager::getXMLSerializedProperties()
 {
   auto el = mValueTree.createXml();
   return el;
+}
+
+void RT_PropertyManager::replaceState(juce::ValueTree &inNewState)
+{
+  mValueTree.copyPropertiesAndChildrenFrom(inNewState, nullptr);
 }
 
 bool RT_PropertyManager::assertTreeCanValidlyReplace(
@@ -125,54 +123,3 @@ bool RT_PropertyManager::assertValueTreesHaveCompatibleLayout(
   }
   return true;
 }
-
-void RT_PropertyManager::addComboBoxAttachment(juce::Identifier inTargetValueID,
-                                               juce::ComboBox *inTargetComboBox)
-{
-  mComboBoxAttachments.add(std::make_unique<RT_InplaceComboBox<int>>(
-      this, inTargetValueID, inTargetComboBox));
-}
-
-void RT_PropertyManager::setAllAttachmentsIgnoreCallbacks(
-    bool inIgnoreCallbacks)
-{
-  for (auto a : mComboBoxAttachments) {
-    a->mIgnoreCallbacks = inIgnoreCallbacks;
-  }
-}
-
-RT_PropertyManager::ComboBoxAttachment::ComboBoxAttachment(
-    RT_PropertyManager *inPropertyManager, juce::Identifier inValueIDToAttach,
-    juce::ComboBox *inComboBoxToAttach)
-    : mPropertyManager(inPropertyManager), mAttachedValueID(inValueIDToAttach),
-      mAttachedValue(mPropertyManager->mValueTree.getPropertyAsValue(
-          mAttachedValueID, nullptr)),
-      mAttachedComboBox(inComboBoxToAttach)
-{
-  mAttachedComboBox->addListener(this);
-  selectNewID((int)mAttachedValue.getValue());
-}
-
-void RT_PropertyManager::ComboBoxAttachment::comboBoxChanged(
-    juce::ComboBox *inChangedComboBox)
-{
-  if (mIgnoreCallbacks) {
-    return;
-  }
-  auto rt_man = mPropertyManager->mInterface->getRTSTFTManager();
-  auto p      = rt_man->getParamsStruct();
-  auto text   = inChangedComboBox->getText();
-  mAttachedValue.setValue(text.getIntValue());
-}
-
-void RT_PropertyManager::ComboBoxAttachment::selectNewID(int newID)
-{
-  const juce::ScopedValueSetter<bool> svs(mIgnoreCallbacks, true);
-  mAttachedComboBox->setSelectedId(newID, juce::sendNotificationSync);
-}
-
-// void RT_PropertyManager::ComboBoxAttachment::selectNewIDWithoutNotification(
-//     int newID)
-// {
-//   mAttachedComboBox->setSelectedId(newID, juce::dontSendNotification);
-// }

@@ -12,6 +12,7 @@
 
 #include "../../Managers/DSPStateManagers/RT_ParameterDefines.h"
 #include "../../Managers/Interface/RT_ProcessorInterface.h"
+#include "../Interactive/RT_InplaceComboBox.h"
 #include "../Interactive/RT_Sliders.h"
 #include <JuceHeader.h>
 
@@ -26,8 +27,8 @@ public:
   void resized() override;
 
 private:
-  RT_ProcessorInterface *mInterface;
-  juce::ComboBox         mFrameSizeSelector, mOverlapSelector;
+  RT_ProcessorInterface  *mInterface;
+  RT_InplaceComboBox<int> mFrameSizeSelector, mOverlapSelector;
   juce::OwnedArray<RT_Sliders::LabelledRotaryKnob> mKnobs;
   juce::OwnedArray<juce::AudioProcessorValueTreeState::SliderAttachment>
       mKnobAttachments;

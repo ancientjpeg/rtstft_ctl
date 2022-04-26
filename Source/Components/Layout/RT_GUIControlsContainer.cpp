@@ -17,29 +17,15 @@
 //==============================================================================
 RT_GUIControlsContainer::RT_GUIControlsContainer(
     RT_ProcessorInterface *inInterface)
-    : mInterface(inInterface), mFrameSizeSelector("FrameSizeSelector"),
-      mOverlapSelector("OverlapSelector")
+    : mInterface(inInterface),
+      mFrameSizeSelector(
+          mInterface, RT_FFT_MODIFIER_IDS[RT_FFT_MODIFIER_FRAME_SIZE],
+          {32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768, 65536},
+          RT_LookAndFeel::menuItemDefaultHeight),
+      mOverlapSelector(mInterface,
+                       RT_FFT_MODIFIER_IDS[RT_FFT_MODIFIER_OVERLAP_FACTOR],
+                       {2, 4, 8, 16}, RT_LookAndFeel::menuItemDefaultHeight)
 {
-  auto p        = mInterface->getRTSTFTManager()->getParamsStruct();
-  auto prop_man = mInterface->getPropertyManager();
-
-  for (int i = RT_FFT_MIN_POW; i <= RT_FFT_MAX_POW; i++) {
-    mFrameSizeSelector.addItem(juce::String(1 << i), 1 << i);
-  }
-  mFrameSizeSelector.setSelectedId(
-      p->frame_size, juce::NotificationType::dontSendNotification);
-  prop_man->addComboBoxAttachment(
-      RT_FFT_MODIFIER_IDS[RT_FFT_MODIFIER_FRAME_SIZE], &mFrameSizeSelector);
-  addAndMakeVisible(mFrameSizeSelector);
-
-  for (int i = 1; i <= 4; i++) {
-    mOverlapSelector.addItem(juce::String(1 << i), 1 << i);
-  }
-  mOverlapSelector.setSelectedId(p->overlap_factor,
-                                 juce::NotificationType::dontSendNotification);
-  prop_man->addComboBoxAttachment(
-      RT_FFT_MODIFIER_IDS[RT_FFT_MODIFIER_OVERLAP_FACTOR], &mOverlapSelector);
-  addAndMakeVisible(mOverlapSelector);
 
   for (int i = 0; i < RT_PARAM_FLAVOR_COUNT; i++) {
     mKnobs.add(std::make_unique<RT_Sliders::LabelledRotaryKnob>(
@@ -55,6 +41,9 @@ RT_GUIControlsContainer::RT_GUIControlsContainer(
             RT_PARAM_IDS[i], *mKnobs[i]->getKnobPointer()));
     addAndMakeVisible(*mKnobs[i]);
   }
+
+  mFrameSizeSelector.addAndMakeVisibleWithParent(this);
+  mOverlapSelector.addAndMakeVisibleWithParent(this);
 }
 
 void RT_GUIControlsContainer::paint(juce::Graphics &g)
@@ -67,11 +56,18 @@ void RT_GUIControlsContainer::resized()
 {
   // This method is where you should set the bounds of any child
   // components that your component contains..
-  auto bounds         = getLocalBounds();
-  auto dropdownBounds = bounds.removeFromTop(40);
-  mFrameSizeSelector.setBounds(
-      dropdownBounds.removeFromRight(dropdownBounds.getWidth() / 2));
-  mOverlapSelector.setBounds(dropdownBounds);
+  auto bounds               = getLocalBounds();
+  auto comboBoxLabelsBounds = bounds.removeFromTop(40);
+  auto comboBoxMenusBounds  = bounds;
+
+  mFrameSizeSelector.getLabel()->setBounds(comboBoxLabelsBounds.removeFromRight(
+      comboBoxLabelsBounds.getWidth() / 2));
+  mFrameSizeSelector.getMenuSection()->setBounds(
+      comboBoxMenusBounds.removeFromRight(comboBoxMenusBounds.getWidth() / 2));
+
+  mOverlapSelector.getLabel()->setBounds(comboBoxLabelsBounds);
+  mOverlapSelector.getMenuSection()->setBounds(comboBoxMenusBounds);
+
   int knobAreaVertical = bounds.getHeight() / mKnobs.size();
   for (int i = 0; i < RT_PARAM_FLAVOR_COUNT; i++) {
     auto thisBound = bounds.removeFromTop(knobAreaVertical);

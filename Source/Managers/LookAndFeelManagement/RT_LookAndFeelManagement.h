@@ -20,15 +20,16 @@ using enum juce::LookAndFeel_V4::ColourScheme::UIColour;
 enum ComponentType { PLUGIN_DEFAULT, NUM_COMPONENT_TYPES };
 static const juce::StringArray ComponentNames = {"Default", "Slider", "Button"};
 static const int               mainBorderSize = 10;
-static const int mainPadding = 5;
-static const int               widgetBorderSize  = 2;
-static const float             headerHeight = 80;
-static const float             cmdHeight    = 50;
+static const int               mainPadding    = 5;
+static const int               widgetBorderSize      = 2;
+static const float             headerHeight          = 80;
+static const float             cmdHeight             = 50;
+static const int               menuItemDefaultHeight = 40;
 
 static const juce::LookAndFeel_V4::ColourScheme DefaultColourScheme(
     juce::Colours::white, juce::Colours::black, juce::Colours::white,
     juce::Colours::black, juce::Colours::black, juce::Colours::black,
-    juce::Colours::white, juce::Colours::black, juce::Colours::black);
+    juce::Colours::white, juce::Colours::grey, juce::Colours::black);
 
 class Manager {
   std::vector<std::unique_ptr<juce::LookAndFeel_V4::ColourScheme>> mSkins;

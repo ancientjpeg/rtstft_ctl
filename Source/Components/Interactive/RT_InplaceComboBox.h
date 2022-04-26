@@ -13,56 +13,47 @@
 #define RT_INPLACE_COMBO_BOX_H
 
 #include "../../Managers/Interface/RT_ProcessorInterface.h"
+#include "../../Managers/LookAndFeelManagement/RT_LookAndFeelManagement.h"
 #include "../../Managers/StateManagers/RT_PropertyManager.h"
 #include "../Utility/RT_Component.h"
 
 template <typename T>
-class RT_InplaceComboBox : public juce::MouseListener {
+class RT_InplaceComboBox : public juce::MouseListener,
+                           public juce::Value::Listener {
 public:
   RT_InplaceComboBox(RT_ProcessorInterface *inInterface,
-                     juce::Value inTargetValue, const T inValuesRange[],
-                     int inNumOptions, int inIdealMenuItemHeight);
-  ~RT_InplaceComboBox();
+                     juce::Identifier       inTargetValueID,
+                     juce::Array<juce::var> inOptions,
+                     int                    inIdealMenuItemHeight);
+  ~RT_InplaceComboBox() = default;
 
-  void selectNewID(int newID);
   void addAndMakeVisibleWithParent(juce::Component *parent);
+  // void setSelectedValue(juce::var inNewValue);
 
-  class Listener {
-  public:
-    virtual void inplaceComboBoxChanged(RT_InplaceComboBox *inChangedComboBox)
-        = 0;
-  };
-  class MenuSection : juce::Component {
+  class MenuSection : public juce::Component {
   public:
     MenuSection(RT_InplaceComboBox *parent) : mParent(parent) {}
-    void paint(juce::Graphics &g) override {}
-    void resized() override
-    {
-      int  menuItemHeight = std::min<int>(mParent->mIdealMenuItemHeight,
-                                         getHeight() / mParent->mNumOptions);
-      auto bounds         = getBounds().withHeight(menuItemHeight);
-      for (juce::Label &l : mMenuLabels) {
-        l.setBounds(bounds);
-        bounds.translate(0, menuItemHeight);
-      }
-    }
+    void paint(juce::Graphics &g) override { g.fillAll(juce::Colours::black); }
+    void resized() override;
 
   private:
     RT_InplaceComboBox *mParent;
   };
 
-  juce::Component *getMenu();
-  juce::Label     *getLabel();
-  void             setListener(Listener *l) { mPropertyManagerAsListener = l }
+  juce::Component *getMenuSection() { return (juce::Component *)&mMenuSection; }
+  juce::Label     *getLabel() { return &mMainLabel; }
+
+  void             valueChanged(juce::Value &v) override;
+  void             mouseDown(const juce::MouseEvent &event) override;
 
 private:
-  juce::Label                   mMainLabel;
-  juce::Component               mMenuSection;
-  juce::OwnedArray<juce::Label> mMenuLabels;
-  juce::Value                   mTargetValue;
-  T                            *mValuesRange;
-  Listener                     *mPropertyManagerAsListener;
+  RT_ProcessorInterface        *mInterface;
   int                           mNumOptions, mIdealMenuItemHeight;
+  juce::Label                   mMainLabel, *mCurrentMenuSelection = nullptr;
+  juce::OwnedArray<juce::Label> mMenuLabels;
+  MenuSection                   mMenuSection;
+  juce::Value                   mTargetValue;
+  bool                          mIgnoreValueCallbacks = false;
 
   void                          onSelectionChange();
 
@@ -71,41 +62,101 @@ private:
 
 template <typename T>
 RT_InplaceComboBox<T>::RT_InplaceComboBox(RT_ProcessorInterface *inInterface,
-                                          juce::Value            inTargetValue,
-                                          const T inValuesRange[],
-                                          int     inNumOptions,
-                                          int     inIdealMenuItemHeight)
-    : RT_Component(inInterface),
-      mPropertyManagerAsListener(mInterface->getPropertyManager()),
-      mTargetValue(inTargetValue), mNumOptions(inNumOptions),
-      mIdealMenuItemHeight(inIdealMenuItemHeight)
+                                          juce::Identifier inTargetValueID,
+                                          juce::Array<juce::var> inOptions,
+                                          int inIdealMenuItemHeight)
+    : mInterface(inInterface), mNumOptions(0),
+      mIdealMenuItemHeight(inIdealMenuItemHeight), mMenuSection(this)
 {
-  mValuesRange = new T[mNumOptions];
-  std::memcpy(mValuesRange, inValuesRange, mNumOptions * sizeof(T));
+  mTargetValue
+      = inInterface->getPropertyManager()->getValueTreeRef().getPropertyAsValue(
+          inTargetValueID, nullptr);
+  mTargetValue.addListener(this);
+  juce::var currentVal = mTargetValue.getValue();
+  auto      lafm       = mInterface->getLookAndFeelManager();
+  for (auto option : inOptions) {
+    auto label_ptr = std::make_unique<juce::Label>(juce::String(),
+                                                   juce::String((T)option));
+    label_ptr->addMouseListener(this, false);
+    label_ptr->setText(juce::String((T)option), juce::dontSendNotification);
+    label_ptr->setColour(juce::Label::backgroundColourId,
+                         lafm->getUIColour(windowBackground));
+    mMenuSection.addAndMakeVisible(label_ptr.get());
+    mMenuLabels.add(label_ptr.release());
+    mNumOptions++;
+  }
+
+  assert(inOptions.contains(currentVal));
+
+  mMainLabel.setText(juce::String((T)currentVal), juce::dontSendNotification);
+  mMainLabel.setColour(juce::Label::backgroundColourId,
+                       lafm->getUIColour(windowBackground));
+  mMainLabel.addMouseListener(this, false);
+  valueChanged(mTargetValue);
 }
 
-template <typename T>
-RT_InplaceComboBox<T>::~RT_InplaceComboBox()
-{
-  delete[] mValuesRange;
-}
-template <typename T>
-void RT_InplaceComboBox<T>::selectNewID(T newID)
-{
-}
-
-template <typename T>
-void RT_InplaceComboBox<T>::onSelectionChange()
-{
-  mMainLabel.setText(juce::String((T)mTrackedValue.getValue()),
-                     juce::dontSendNotification);
-  mPropertyManagerAsListener->comboBoxChanged(this);
-}
 template <typename T>
 void RT_InplaceComboBox<T>::addAndMakeVisibleWithParent(juce::Component *parent)
 {
   parent->addAndMakeVisible(mMainLabel);
   parent->addAndMakeVisible(mMenuSection);
+  mMenuSection.setVisible(false);
+}
+
+// template <typename T>
+// void RT_InplaceComboBox<T>::setSelectedValue(juce::var inNewValue)
+// {
+//   mInterface juce::ScopedValueSetter<bool> svs(mIgnoreValueCallbacks, true);
+// }
+
+template <typename T>
+void RT_InplaceComboBox<T>::valueChanged(juce::Value &v)
+{
+  if (mIgnoreValueCallbacks) {
+    return;
+  }
+  auto lafm = mInterface->getLookAndFeelManager();
+  auto str  = juce::String((T)mTargetValue.getValue());
+  mMainLabel.setText(str, juce::dontSendNotification);
+  if (mCurrentMenuSelection) {
+    mCurrentMenuSelection->setColour(juce::Label::backgroundColourId,
+                                     lafm->getUIColour(windowBackground));
+  }
+  for (auto l : mMenuLabels) {
+    if (l->getText() == str) {
+      mCurrentMenuSelection = l;
+      mCurrentMenuSelection->setColour(juce::Label::backgroundColourId,
+                                       lafm->getUIColour(highlightedFill));
+      break;
+    }
+  }
+}
+
+template <typename T>
+void RT_InplaceComboBox<T>::MenuSection::resized()
+{
+  int  menuItemHeight = std::min<int>(mParent->mIdealMenuItemHeight,
+                                     getHeight() / mParent->mNumOptions);
+  auto bounds         = getLocalBounds().withHeight(menuItemHeight);
+  for (juce::Label *l : mParent->mMenuLabels) {
+    l->setBounds(bounds);
+    bounds.translate(0, menuItemHeight);
+  }
+}
+
+template <typename T>
+void RT_InplaceComboBox<T>::mouseDown(const juce::MouseEvent &event)
+{
+  if (event.eventComponent == &mMainLabel) {
+    mMenuSection.setVisible(!mMenuSection.isVisible());
+    return;
+  }
+  for (juce::Label *l : mMenuLabels) {
+    if (event.eventComponent == l) {
+      mTargetValue.setValue(juce::var(l->getText().getIntValue()));
+      return;
+    }
+  }
 }
 
 #endif

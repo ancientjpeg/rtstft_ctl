@@ -77,6 +77,8 @@
           <FILE id="jcUbo6" name="RT_FFTDisplay.cpp" compile="1" resource="0"
                 file="Source/Components/Interactive/RT_FFTDisplay.cpp"/>
           <FILE id="k4DoDH" name="RT_FFTDisplay.h" compile="0" resource="0" file="Source/Components/Interactive/RT_FFTDisplay.h"/>
+          <FILE id="JnDZ25" name="RT_InplaceComboBox.h" compile="0" resource="0"
+                file="Source/Components/Interactive/RT_InplaceComboBox.h"/>
           <FILE id="u9CuUr" name="RT_SelectorMenu.cpp" compile="1" resource="0"
                 file="Source/Components/Interactive/RT_SelectorMenu.cpp"/>
           <FILE id="jTRtXo" name="RT_SelectorMenu.h" compile="0" resource="0"
@@ -148,7 +150,7 @@
   <JUCEOPTIONS JUCE_STRICT_REFCOUNTEDPOINTER="1" JUCE_VST3_CAN_REPLACE_VST2="0"/>
   <EXPORTFORMATS>
     <XCODE_MAC targetFolder="Builds/MacOSX" hardenedRuntime="1" keepCustomXcodeSchemes="1"
-               microphonePermissionNeeded="1">
+               microphonePermissionNeeded="0">
       <CONFIGURATIONS>
         <CONFIGURATION isDebug="1" name="Debug" targetName="rtstft_ctl"/>
         <CONFIGURATION isDebug="0" name="Release" targetName="rtstft_ctl"/>
