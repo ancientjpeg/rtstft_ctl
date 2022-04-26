@@ -47,8 +47,7 @@ RT_GUIControlsContainer::RT_GUIControlsContainer(
         0.2f));
     // if (i <= RT_PARAM_GAIN_MOD && i >= RT_PARAM_LIMIT_MOD) {
     auto *k_ptr = mKnobs[i]->getKnobPointer();
-    k_ptr->setVelocityBasedMode(true);
-    k_ptr->setVelocityModeParameters(5, 2);
+    k_ptr->setVelocityModeParameters(5, 1);
     // }
     mKnobAttachments.add(
         std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(

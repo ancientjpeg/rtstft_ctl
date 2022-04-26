@@ -26,6 +26,11 @@ public:
 
   void processBlock(juce::AudioBuffer<float> &, juce::MidiBuffer &) override;
 
+  juce::AudioBuffer<float>
+       readBufferToMidSide(juce::AudioBuffer<float> &buffer);
+  void writeMidSideToBuffer(juce::AudioBuffer<float> &buffer,
+                            juce::AudioBuffer<float> &midsideBuf);
+
 private:
   //==============================================================================
   JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(RT_AudioProcessor)
