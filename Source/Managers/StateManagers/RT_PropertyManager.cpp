@@ -81,9 +81,7 @@ RT_SelectorMenu::SelectorData *RT_PropertyManager::getSelectorData()
   return &mManipSelectorData;
 }
 
-juce::ValueTree &RT_PropertyManager::getValueTreeRef() {
-  return mValueTree;
-}
+juce::ValueTree &RT_PropertyManager::getValueTreeRef() { return mValueTree; }
 
 void             RT_PropertyManager::replaceState(juce::ValueTree &inNewState)
 {
@@ -131,7 +129,7 @@ bool RT_PropertyManager::assertValueTreesHaveCompatibleLayout(
 void RT_PropertyManager::addComboBoxAttachment(juce::Identifier inTargetValueID,
                                                juce::ComboBox *inTargetComboBox)
 {
-  mComboBoxAttachments.add(std::make_unique<ComboBoxAttachment>(
+  mComboBoxAttachments.add(std::make_unique<RT_InplaceComboBox<int>>(
       this, inTargetValueID, inTargetComboBox));
 }
 
@@ -161,13 +159,10 @@ void RT_PropertyManager::ComboBoxAttachment::comboBoxChanged(
   if (mIgnoreCallbacks) {
     return;
   }
-  auto rt_man   = mPropertyManager->mInterface->getRTSTFTManager();
-  auto prop_man = mPropertyManager->mInterface->getPropertyManager();
-  auto p        = rt_man->getParamsStruct();
-  auto text     = inChangedComboBox->getText();
+  auto rt_man = mPropertyManager->mInterface->getRTSTFTManager();
+  auto p      = rt_man->getParamsStruct();
+  auto text   = inChangedComboBox->getText();
   mAttachedValue.setValue(text.getIntValue());
-  //  mPropertyManager->mValueTree.setProperty(mAttachedValueID, text.getIntValue(),
-//                                           nullptr);
 }
 
 void RT_PropertyManager::ComboBoxAttachment::selectNewID(int newID)
@@ -176,8 +171,8 @@ void RT_PropertyManager::ComboBoxAttachment::selectNewID(int newID)
   mAttachedComboBox->setSelectedId(newID, juce::sendNotificationSync);
 }
 
-void RT_PropertyManager::ComboBoxAttachment::selectNewIDWithoutNotification(
-    int newID)
-{
-  mAttachedComboBox->setSelectedId(newID, juce::dontSendNotification);
-}
+// void RT_PropertyManager::ComboBoxAttachment::selectNewIDWithoutNotification(
+//     int newID)
+// {
+//   mAttachedComboBox->setSelectedId(newID, juce::dontSendNotification);
+// }
