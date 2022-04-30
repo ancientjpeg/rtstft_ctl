@@ -102,37 +102,8 @@ void RT_LookAndFeel::Default::drawComboBox(juce::Graphics &g, int width,
   g.strokePath(path, juce::PathStrokeType(widgetBorderSize));
 }
 
-// void RT_LookAndFeel::Default::drawPopupMenuBackgroundWithOptions(
-//     juce::Graphics &g, int width, int height,
-//     const juce::PopupMenu::Options &opts)
-// {
-//   g.fillAll(getCurrentColourScheme().getUIColour(windowBackground));
-//   g.fillAll(juce::Colours::grey);
-// }
-
 int RT_LookAndFeel::Default::getPopupMenuBorderSize()
 {
   return widgetBorderSize;
 }
-
-// juce::PopupMenu::Options
-// RT_LookAndFeel::Default::getOptionsForComboBoxPopupMenu(juce::ComboBox &box,
-//                                                         juce::Label &label)
-// {
-//   return juce::PopupMenu::Options()
-//       .withTargetComponent(&box)
-//       .withItemThatMustBeVisible(box.getSelectedId())
-//       .withInitiallySelectedItem(box.getSelectedId())
-//       .withMinimumWidth(box.getWidth())
-//       .withMaximumNumColumns(1)
-//       .withStandardItemHeight(label.getHeight());
-// }
-
-// void RT_LookAndFeel::Default::getIdealPopupMenuItemSizeWithOptions(
-//     const juce::String &text, bool isSeparator, int standardMenuItemHeight,
-//     int &idealWidth, int &idealHeight, const juce::PopupMenu::Options &opts)
-// {
-//   juce::LookAndFeel_V2::getIdealPopupMenuItemSize(
-//       text, isSeparator, standardMenuItemHeight, idealWidth, idealHeight);
-//   idealWidth = opts.getMinimumWidth();
-// }
+int RT_LookAndFeel::Default::getMenuWindowFlags() { return 1; }

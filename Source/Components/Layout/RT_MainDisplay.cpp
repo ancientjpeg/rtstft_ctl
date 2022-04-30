@@ -31,10 +31,7 @@ void RT_MainDisplay::paint(juce::Graphics &g)
 void RT_MainDisplay::resized()
 {
   using namespace RT_LookAndFeel;
-  auto padding   = juce::BorderSize<int>(0, RT_LookAndFeel::mainPadding,
-                                       RT_LookAndFeel::mainPadding,
-                                       RT_LookAndFeel::mainPadding);
-  auto bounds    = padding.subtractedFrom(getLocalBounds());
+  auto bounds    = getLocalBounds();
   int  cmdHeight = RT_LookAndFeel::cmdHeight;
   auto cmdBounds = bounds.removeFromBottom(cmdHeight);
   mCommandLineContainer.setBounds(

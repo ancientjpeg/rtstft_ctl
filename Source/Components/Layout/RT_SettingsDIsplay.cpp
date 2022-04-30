@@ -13,23 +13,13 @@
 
 //==============================================================================
 RT_SettingsDisplay::RT_SettingsDisplay(RT_ProcessorInterface *inInterface)
-    : RT_Component(mInterface)
+    : RT_BorderedComponent(mInterface)
 {
 }
 
 RT_SettingsDisplay::~RT_SettingsDisplay() {}
 
-void RT_SettingsDisplay::paint(juce::Graphics &g)
-{
-  g.fillAll(
-      getLookAndFeel().findColour(juce::ResizableWindow::backgroundColourId));
-  g.setColour(juce::Colours::grey);
-  g.drawRect(getLocalBounds(), 1);
-  g.setColour(juce::Colours::white);
-  g.setFont(14.0f);
-  g.drawText("RT_SettingsDisplay", getLocalBounds(),
-             juce::Justification::centred, true);
-}
+void RT_SettingsDisplay::paintInBorder(juce::Graphics &g) {}
 
 void RT_SettingsDisplay::resized()
 {

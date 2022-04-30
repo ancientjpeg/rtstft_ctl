@@ -40,10 +40,7 @@ public:
   Manager();
   juce::LookAndFeel_V4 *getSingleLookAndFeel(ComponentType inComponentTypeID);
   juce::Colour
-  getUIColour(juce::LookAndFeel_V4::ColourScheme::UIColour inColorToGet)
-  {
-    return DefaultColourScheme.getUIColour(inColorToGet); // change this
-  }
+  getUIColour(juce::LookAndFeel_V4::ColourScheme::UIColour inColorToGet);
 };
 
 class Default : public juce::LookAndFeel_V4 {
@@ -63,21 +60,8 @@ public:
                             bool isButtonDown, int buttonX, int buttonY,
                             int buttonW, int buttonH,
                             juce::ComboBox &box) override;
-
-  // virtual void
-  // drawPopupMenuBackgroundWithOptions(juce::Graphics &g, int width, int
-  // height,
-  //                                    const juce::PopupMenu::Options &opts);
-  virtual int getPopupMenuBorderSize() override;
-  // virtual juce::PopupMenu::Options
-  //             getOptionsForComboBoxPopupMenu(juce::ComboBox &box,
-  //                                            juce::Label    &label) override;
-  // virtual void getIdealPopupMenuItemSizeWithOptions(
-  //     const juce::String &text, bool isSeparator, int standardMenuItemHeight,
-  //     int &idealWidth, int &idealHeight,
-  //     const juce::PopupMenu::Options &) override;
-
-  virtual int getMenuWindowFlags() override { return 1; }
+  virtual int  getPopupMenuBorderSize() override;
+  virtual int  getMenuWindowFlags() override;
 };
 
 } // namespace RT_LookAndFeel

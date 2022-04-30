@@ -21,3 +21,9 @@ RT_LookAndFeel::Manager::getSingleLookAndFeel(ComponentType inComponentTypeID)
 {
   return mLookAndFeelCollection[inComponentTypeID].get();
 }
+
+juce::Colour RT_LookAndFeel::Manager::getUIColour(
+    juce::LookAndFeel_V4::ColourScheme::UIColour inColorToGet)
+{
+  return DefaultColourScheme.getUIColour(inColorToGet); // change this
+}
