@@ -17,11 +17,11 @@
 #define RT_DB_MAX (18.f)
 #define RT_DB_SLIDER_RADIUS (.5f)
 static const juce::StringArray RT_PARAM_IDS{
-    "Pitch Ratio", "Retention",  "Phase Mod",  "Phase Chaos",
-    "Gain Nudge",  "Gate Nudge", "Limit Nudge"};
+    "Pitch Ratio", "Retention",  "Phase Mod",   "Phase Chaos",
+    "Gain Nudge",  "Gate Nudge", "Limit Nudge", "Dry/Wet"};
 static const juce::StringArray RT_PARAM_NAMES{
-    "pitch ratio", "retention",  "phase mod",  "phase chaos",
-    "gain nudge",  "gate nudge", "limit nudge"};
+    "pitch ratio", "retention",  "phase mod",   "phase chaos",
+    "gain nudge",  "gate nudge", "limit nudge", "dry/wet"};
 
 static const std::function from_0_1_log
     = [](float start, float end, float val_0_1) {
@@ -71,11 +71,12 @@ static juce::Array<juce::NormalisableRange<float>> RT_PARAM_RANGES{
     //                                to_0_1_log, snap_legal),
     // juce::NormalisableRange<float>(RT_DB_MIN, RT_DB_MAX, from_0_1_log,
     //                                to_0_1_log, snap_legal),
+    juce::NormalisableRange<float>(0.f, 1.f, 0.f),
 };
 
 static const float
     RT_PARAM_DEFAULTS[RT_PARAM_FLAVOR_COUNT] // should be RT_PARAM_FLAVOR_COUNT
-    = {1.f, 1.f, 1.f, 0.f, 0.f, 0.f, 0.f};
+    = {1.f, 1.f, 1.f, 0.f, 0.f, 0.f, 0.f, 1.f};
 
 /* property defines */
 static const juce::StringArray RT_MANIP_GUI_IDS = {"Gain", "Gate", "Limit"};
