@@ -17,7 +17,8 @@
 
 class RT_SelectorMenu : public RT_Component {
 public:
-  RT_SelectorMenu(RT_ProcessorInterface *inInterface);
+  RT_SelectorMenu(RT_ProcessorInterface *inInterface,
+                  bool                   inIsVertical = false);
   ~RT_SelectorMenu() = default;
   void paint(juce::Graphics &g) override;
   void resized() override;
@@ -42,7 +43,16 @@ public:
   std::function<void(void)> onNewSelection = []() {};
 
   void                      mouseDown(const juce::MouseEvent &event) override;
+  void                      mouseEnter(const juce::MouseEvent &event) override;
+  void                      mouseMove(const juce::MouseEvent &event) override;
+  void                      mouseExit(const juce::MouseEvent &event) override;
 
 private:
-  SelectorData *mSelectorData;
+  SelectorData                       *mSelectorData;
+  bool                                mVertical;
+  juce::Point<float>                  mLastInternalMousePos;
+  std::vector<juce::Rectangle<float>> mSelectionsBounds;
+  const juce::Rectangle<float>       *mSelectionWithHover = nullptr;
+
+  bool checkHover(const juce::Rectangle<float> *comp);
 };

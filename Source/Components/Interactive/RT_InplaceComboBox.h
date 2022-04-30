@@ -41,9 +41,9 @@ public:
 
   class Label : public juce::Label {
   public:
-    Label(RT_ProcessorInterface *inInterface, bool isTitle = false,
+    Label(RT_InplaceComboBox *inParent, bool isTitle = false,
           juce::String inID = {}, juce::String inText = {})
-        : juce::Label(inID, inText), mInterface(inInterface), mIsTitle(isTitle)
+        : juce::Label(inID, inText), mParent(inParent), mIsTitle(isTitle)
     {
     }
     void setSelected(bool isSelected);
@@ -52,9 +52,9 @@ public:
     void paint(juce::Graphics &g) override;
 
   private:
-    RT_ProcessorInterface *mInterface;
-    bool                   mSelected = false, mHovered = false;
-    bool                   mIsTitle;
+    RT_InplaceComboBox *mParent;
+    bool                mSelected = false, mHovered = false;
+    bool                mIsTitle;
   };
 
   juce::Component *getMenuSection() { return (juce::Component *)&mMenuSection; }
@@ -71,9 +71,9 @@ private:
   juce::OwnedArray<Label> mMenuLabels;
   MenuSection             mMenuSection;
   juce::Value             mTargetValue;
-  bool                    mIgnoreValueCallbacks = false;
+  bool mIgnoreValueCallbacks = false, mMenuSectionVisible = false;
 
-  void                    onSelectionChange();
+  void onSelectionChange();
 
   JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(RT_InplaceComboBox);
 };
@@ -84,7 +84,7 @@ RT_InplaceComboBox<T>::RT_InplaceComboBox(RT_ProcessorInterface *inInterface,
                                           juce::Array<juce::var> inOptions,
                                           int inIdealMenuItemHeight)
     : mInterface(inInterface), mNumOptions(0),
-      mIdealMenuItemHeight(inIdealMenuItemHeight), mMainLabel(mInterface, true),
+      mIdealMenuItemHeight(inIdealMenuItemHeight), mMainLabel(this, true),
       mMenuSection(this)
 {
   mTargetValue
@@ -94,7 +94,7 @@ RT_InplaceComboBox<T>::RT_InplaceComboBox(RT_ProcessorInterface *inInterface,
   juce::var currentVal = mTargetValue.getValue();
   auto      lafm       = mInterface->getLookAndFeelManager();
   for (auto option : inOptions) {
-    auto label_ptr = std::make_unique<Label>(mInterface, false, juce::String(),
+    auto label_ptr = std::make_unique<Label>(this, false, juce::String(),
                                              juce::String((T)option));
     label_ptr->addMouseListener(this, false);
     label_ptr->setText(juce::String((T)option), juce::dontSendNotification);
@@ -169,7 +169,9 @@ template <typename T>
 void RT_InplaceComboBox<T>::mouseDown(const juce::MouseEvent &event)
 {
   if (event.eventComponent == &mMainLabel) {
-    mMenuSection.setVisible(!mMenuSection.isVisible());
+    mMenuSectionVisible = !mMenuSectionVisible;
+    mMenuSection.setVisible(mMenuSectionVisible);
+    mMainLabel.repaint();
     return;
   }
   for (juce::Label *l : mMenuLabels) {
@@ -202,7 +204,7 @@ void RT_InplaceComboBox<T>::Label::mouseExit(const juce::MouseEvent &e)
 template <typename T>
 void RT_InplaceComboBox<T>::Label::paint(juce::Graphics &g)
 {
-  auto lafm = mInterface->getLookAndFeelManager();
+  auto lafm = mParent->mInterface->getLookAndFeelManager();
   g.setFont(getFont());
 
   auto border_col_enum = defaultFill;
@@ -223,5 +225,26 @@ void RT_InplaceComboBox<T>::Label::paint(juce::Graphics &g)
   g.setColour(lafm->getUIColour(text_col_enum));
   g.drawText(getText(), innerBounds.withLeft(innerBounds.getX() + 10),
              juce::Justification::centredLeft);
+
+  if (mIsTitle) {
+
+    auto triBounds
+        = innerBounds.withWidth(innerBounds.getHeight())
+              .translated(innerBounds.getWidth() - innerBounds.getHeight(), 0)
+              .toFloat();
+    triBounds = triBounds.withSizeKeepingCentre(8, 8);
+    juce::Path triPath;
+    triPath.startNewSubPath(triBounds.getCentreX(), triBounds.getY());
+    triPath.lineTo(triBounds.getBottomLeft());
+    triPath.lineTo(triBounds.getBottomRight());
+    triPath.closeSubPath();
+    if (mParent->mMenuSectionVisible) {
+      triPath.applyTransform(juce::AffineTransform::rotation(
+          juce::MathConstants<float>::pi, triBounds.getCentreX(),
+          triBounds.getCentreY()));
+    }
+    g.setColour(lafm->getUIColour(defaultFill));
+    g.fillPath(triPath);
+  }
 }
 #endif

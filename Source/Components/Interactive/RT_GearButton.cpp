@@ -17,33 +17,33 @@ RT_GearButton::RT_GearButton(RT_ProcessorInterface *inInterface)
 }
 void RT_GearButton::paint(juce::Graphics &g)
 {
-  float      gearToothThickness = 0.2f;
-  float      gearToothWidth     = getWidth() * gearToothThickness;
-  int        numTeeth           = 8;
-  float      gtw_2              = gearToothWidth / 2.f;
-  auto b = getLocalBounds();
-  juce::Rectangle<float>       bounds             = juce::Rectangle<float>(b.getX(), b.getY(), b.getWidth(), b.getHeight());
+  float                  gearToothThickness = 0.23f;
+  float                  gearToothWidth     = getWidth() * gearToothThickness;
+  int                    numTeeth           = 8;
+  float                  gtw_2              = gearToothWidth / 2.f;
+  auto                   b                  = getLocalBounds();
+  juce::Rectangle<float> bounds
+      = juce::Rectangle<float>(b.getX(), b.getY(), b.getWidth(), b.getHeight());
   juce::Path gearPath;
   auto       baseRect = juce::Rectangle<float>(bounds.getCentreX() - gtw_2, 0,
-                                       gearToothWidth, getHeight());
-  juce::Point<float>       centre   = bounds.getCentre();
-  float angle = juce::MathConstants<float>::twoPi / numTeeth;
+                                         gearToothWidth, getHeight());
+  juce::Point<float> centre = bounds.getCentre();
+  float              angle  = juce::MathConstants<float>::twoPi / numTeeth;
   for (int i = 0; i < numTeeth / 2; i++) {
     juce::Path temp;
     temp.addRectangle(baseRect);
     gearPath.addRectangle(baseRect);
-    gearPath.applyTransform(juce::AffineTransform::rotation(angle, centre.x, centre.y));
+    gearPath.applyTransform(
+        juce::AffineTransform::rotation(angle, centre.x, centre.y));
   }
 
   juce::Path internalHolePath;
   auto       holeBounds
       = bounds.withSizeKeepingCentre(gearToothWidth, gearToothWidth);
-  internalHolePath.addRectangle(holeBounds);
-  
+  internalHolePath.addEllipse(holeBounds);
+
   if (mActive) {
-    auto rot = juce::AffineTransform::rotation(
-                                             angle * 0.5, centre.x,
-                                               centre.y);
+    auto rot = juce::AffineTransform::rotation(angle * 0.5, centre.x, centre.y);
     gearPath.applyTransform(rot);
     internalHolePath.applyTransform(rot);
   }
