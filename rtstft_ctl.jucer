@@ -68,6 +68,10 @@
                 file="Source/Components/Layout/RT_MainDisplay.cpp"/>
           <FILE id="f4MJT5" name="RT_MainDisplay.h" compile="0" resource="0"
                 file="Source/Components/Layout/RT_MainDisplay.h"/>
+          <FILE id="hQdCRj" name="RT_SettingsDisplay.cpp" compile="1" resource="0"
+                file="Source/Components/Layout/RT_SettingsDisplay.cpp"/>
+          <FILE id="UFHH2K" name="RT_SettingsDisplay.h" compile="0" resource="0"
+                file="Source/Components/Layout/RT_SettingsDisplay.h"/>
           <FILE id="dKLekp" name="RT_SpectralDisplayContainer.cpp" compile="1"
                 resource="0" file="Source/Components/Layout/RT_SpectralDisplayContainer.cpp"/>
           <FILE id="hkOhND" name="RT_SpectralDisplayContainer.h" compile="0"
@@ -77,6 +81,9 @@
           <FILE id="jcUbo6" name="RT_FFTDisplay.cpp" compile="1" resource="0"
                 file="Source/Components/Interactive/RT_FFTDisplay.cpp"/>
           <FILE id="k4DoDH" name="RT_FFTDisplay.h" compile="0" resource="0" file="Source/Components/Interactive/RT_FFTDisplay.h"/>
+          <FILE id="fsbTxj" name="RT_GearButton.cpp" compile="1" resource="0"
+                file="Source/Components/Interactive/RT_GearButton.cpp"/>
+          <FILE id="gai88l" name="RT_GearButton.h" compile="0" resource="0" file="Source/Components/Interactive/RT_GearButton.h"/>
           <FILE id="JnDZ25" name="RT_InplaceComboBox.h" compile="0" resource="0"
                 file="Source/Components/Interactive/RT_InplaceComboBox.h"/>
           <FILE id="u9CuUr" name="RT_SelectorMenu.cpp" compile="1" resource="0"

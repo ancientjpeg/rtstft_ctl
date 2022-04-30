@@ -1,51 +1,38 @@
 /*
   ==============================================================================
 
-    RT_SettingsDIsplay.cpp
+    RT_SettingsDisplay.cpp
     Created: 29 Apr 2022 7:18:08pm
     Author:  Jackson Kaplan
 
   ==============================================================================
 */
 
+#include "RT_SettingsDisplay.h"
 #include <JuceHeader.h>
-#include "RT_SettingsDIsplay.h"
 
 //==============================================================================
-RT_SettingsDIsplay::RT_SettingsDIsplay()
-{
-    // In your constructor, you should add any child components, and
-    // initialise any special settings that your component needs.
-
-}
-
-RT_SettingsDIsplay::~RT_SettingsDIsplay()
+RT_SettingsDisplay::RT_SettingsDisplay(RT_ProcessorInterface *inInterface)
+    : RT_Component(mInterface)
 {
 }
 
-void RT_SettingsDIsplay::paint (juce::Graphics& g)
+RT_SettingsDisplay::~RT_SettingsDisplay() {}
+
+void RT_SettingsDisplay::paint(juce::Graphics &g)
 {
-    /* This demo code just fills the component's background and
-       draws some placeholder text to get you started.
-
-       You should replace everything in this method with your own
-       drawing code..
-    */
-
-    g.fillAll (getLookAndFeel().findColour (juce::ResizableWindow::backgroundColourId));   // clear the background
-
-    g.setColour (juce::Colours::grey);
-    g.drawRect (getLocalBounds(), 1);   // draw an outline around the component
-
-    g.setColour (juce::Colours::white);
-    g.setFont (14.0f);
-    g.drawText ("RT_SettingsDIsplay", getLocalBounds(),
-                juce::Justification::centred, true);   // draw some placeholder text
+  g.fillAll(
+      getLookAndFeel().findColour(juce::ResizableWindow::backgroundColourId));
+  g.setColour(juce::Colours::grey);
+  g.drawRect(getLocalBounds(), 1);
+  g.setColour(juce::Colours::white);
+  g.setFont(14.0f);
+  g.drawText("RT_SettingsDisplay", getLocalBounds(),
+             juce::Justification::centred, true);
 }
 
-void RT_SettingsDIsplay::resized()
+void RT_SettingsDisplay::resized()
 {
-    // This method is where you should set the bounds of any child
-    // components that your component contains..
-
+  // This method is where you should set the bounds of any child
+  // components that your component contains..
 }

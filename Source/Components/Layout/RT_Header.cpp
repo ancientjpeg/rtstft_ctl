@@ -13,7 +13,8 @@
 
 //==============================================================================
 RT_Header::RT_Header(RT_ProcessorInterface *inInterface, int inBorderSize)
-    : RT_BorderedComponent(inInterface, inBorderSize)
+    : RT_BorderedComponent(inInterface, inBorderSize),
+      mSettingsMenuButton(mInterface)
 {
   // In your constructor, you should add any child components, and
   // initialise any special settings that your component needs.
@@ -52,7 +53,10 @@ void RT_Header::resized()
   auto bounds = getBoundsAdj();
   mPluginTitle.setBounds(bounds.removeFromLeft(0.2 * getWidthAdj()));
   mPluginSubtitle.setBounds(bounds.removeFromLeft(0.7 * getWidthAdj()));
-  mSettingsMenuButton.setBounds(bounds);
-  // This method is where you should set the bounds of any child
-  // components that your component contains..
+  mSettingsMenuButton.setBounds(bounds.withSizeKeepingCentre(20, 20));
+}
+
+void RT_Header::addSettingsMenuButtonListener(RT_GearButton::Listener *l)
+{
+  mSettingsMenuButton.addListener(l);
 }

@@ -10,6 +10,7 @@
 
 #pragma once
 
+#include "../Interactive/RT_GearButton.h"
 #include "../Utility/RT_BorderedComponent.h"
 #include <JuceHeader.h>
 
@@ -24,8 +25,10 @@ public:
   void paintInBorder(juce::Graphics &) override;
   void resized() override;
 
+  void addSettingsMenuButtonListener(RT_GearButton::Listener *l);
+
 private:
-  juce::Label        mPluginTitle, mPluginSubtitle;
-  juce::ToggleButton mSettingsMenuButton;
+  juce::Label   mPluginTitle, mPluginSubtitle;
+  RT_GearButton mSettingsMenuButton;
   JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(RT_Header)
 };
