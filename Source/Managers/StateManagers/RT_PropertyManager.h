@@ -22,14 +22,17 @@ public:
                      int inCommandHistoryMaxSize = 5);
   ~RT_PropertyManager();
 
+  juce::ValueTree                  &getValueTreeRef();
+  juce::ValueTree                   getChansTree();
+  juce::ValueTree                   getGUIStateTree();
+
+  int                               getActiveManipFlavor();
+
   juce::String                      getNextStringInHistory(bool reverse);
   void                              pushNewHistoryCommand(juce::String &s);
   bool                              commandHistoryIsEmpty();
   void                              resetCommandHistoryPos();
 
-  RT_SelectorMenu::SelectorData    *getSelectorData();
-
-  juce::ValueTree                  &getValueTreeRef();
   std::unique_ptr<juce::XmlElement> getXMLSerializedProperties();
   void                              replaceState(juce::ValueTree &inNewState);
   bool assertTreeCanValidlyReplace(juce::ValueTree &inComparisonTree);
@@ -45,6 +48,4 @@ private:
   std::list<juce::String>           mCommandHistory;
   std::list<juce::String>::iterator mHistoryIterator;
   int                               mCommandHistoryMax;
-
-  RT_SelectorMenu::SelectorData     mManipSelectorData;
 };

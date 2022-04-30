@@ -15,44 +15,40 @@
 #include "../Utility/RT_Component.h"
 #include <JuceHeader.h>
 
-class RT_SelectorMenu : public RT_Component {
+class RT_SelectorMenu : public RT_Component, public juce::Value::Listener {
 public:
-  RT_SelectorMenu(RT_ProcessorInterface *inInterface,
-                  bool                   inIsVertical = false);
-  ~RT_SelectorMenu() = default;
-  void paint(juce::Graphics &g) override;
-  void resized() override;
+  RT_SelectorMenu(RT_ProcessorInterface              *inInterface,
+                  const juce::Value                  &inValueToLink,
+                  std::initializer_list<juce::String> inPossibleSelections,
+                  bool inUseNullSelection = true, bool inIsVertical = false);
+  RT_SelectorMenu(RT_ProcessorInterface  *inInterface,
+                  const juce::Value      &inValueToLink,
+                  const juce::StringArray inPossibleSelections,
+                  bool inUseNullSelection = true, bool inIsVertical = false);
 
-  struct SelectorData {
-    struct Datum {
-      bool         active;
-      juce::String selectionID;
-    };
-    std::vector<Datum> fields;
-    int                activeField = -1;
-
-    SelectorData(std::initializer_list<juce::String> inFields)
-    {
-      auto it = inFields.begin();
-      while (it != inFields.end()) {
-        fields.push_back((Datum){false, *(it++)});
-      }
-    }
-  };
+  ~RT_SelectorMenu()                       = default;
 
   std::function<void(void)> onNewSelection = []() {};
+  juce::String              getActiveSelection();
+  int                       getActiveSelectionIndex();
+  void                      setNullSelection(juce::String inNewNull);
 
+  void                      paint(juce::Graphics &g) override;
+  void                      resized() override;
   void                      mouseDown(const juce::MouseEvent &event) override;
-  void                      mouseEnter(const juce::MouseEvent &event) override;
   void                      mouseMove(const juce::MouseEvent &event) override;
   void                      mouseExit(const juce::MouseEvent &event) override;
 
+  void                      valueChanged(juce::Value &value) override;
+
 private:
-  SelectorData                       *mSelectorData;
-  bool                                mVertical;
   juce::Point<float>                  mLastInternalMousePos;
+  const juce::StringArray             mPossibleSelections;
   std::vector<juce::Rectangle<float>> mSelectionsBounds;
   const juce::Rectangle<float>       *mSelectionWithHover = nullptr;
+  juce::Value                         mLinkedValue;
+  bool                                mUseNullSelection;
+  bool                                mVertical;
 
   bool checkHover(const juce::Rectangle<float> *comp);
 };

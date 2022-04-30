@@ -38,9 +38,10 @@ RT_FFTDisplay::~RT_FFTDisplay() {}
 void RT_FFTDisplay::paint(juce::Graphics &g)
 {
 
-  auto cs          = getLookAndFeel_V4().getCurrentColourScheme();
-  auto manip_state = mInterface->getPropertyManager()->getSelectorData();
+  auto cs = getLookAndFeel_V4().getCurrentColourScheme();
   g.fillAll(cs.getUIColour(windowBackground));
+  int activeManipIndex
+      = mInterface->getPropertyManager()->getActiveManipFlavor();
 
   const rt_params p = mInterface->getRTSTFTManager()->getParamsStruct();
   if (p != NULL && p->initialized) {
@@ -56,7 +57,7 @@ void RT_FFTDisplay::paint(juce::Graphics &g)
       float x       = (float)i / barsInWindow * getWidth();
       g.setColour(cs.getUIColour(highlightedFill));
       g.fillRect(x, (float)(getHeight() - height), width, height);
-      x += width * 0.25;
+      x += width * 0.125;
       float manip_width = width * 0.75;
       for (int m = 0; m <= RT_MANIP_LIMIT; m++) {
         int   manip_index = rt_manip_index(p, (rt_manip_flavor_t)m, i * i_incr);
@@ -76,11 +77,13 @@ void RT_FFTDisplay::paint(juce::Graphics &g)
         }
         height   = scaleManipAmpToYPosNorm(val, p, (rt_manip_flavor_t)m);
         auto col = cs.getUIColour(defaultFill);
-        if (manip_state->activeField == m) {
-          col = juce::Colours::goldenrod;
+        if (activeManipIndex == m) {
+          col = juce::Colour(255, 225, 53);
         }
         g.setColour(col);
-        g.fillRect(x, (float)(getHeight() - height), manip_width, 2.f);
+        float manipBarHeight = 2.f;
+        g.fillRect(x, (float)(getHeight() - height) - manipBarHeight * 0.5f,
+                   manip_width, manipBarHeight);
       }
     }
   }
@@ -123,12 +126,12 @@ void RT_FFTDisplay::mouseDrag(const juce::MouseEvent &event)
   // save last pos and account for any positions between last pos and this pos
   // recurse this
   auto p = mInterface->getRTSTFTManager()->getParamsStruct();
-  int  activeField
-      = mInterface->getPropertyManager()->getSelectorData()->activeField;
-  if (activeField == -1) {
+  int  activeManipIndex
+      = mInterface->getPropertyManager()->getActiveManipFlavor();
+  if (activeManipIndex == -1) {
     return;
   }
-  rt_manip_flavor_t activeManip   = (rt_manip_flavor_t)activeField;
+  rt_manip_flavor_t activeManip   = (rt_manip_flavor_t)activeManipIndex;
   int               lastPosIndex  = xPosToManipsIndex(mLastDragPos.x);
   int               finalPosIndex = xPosToManipsIndex(event.position.x);
   int               indexDiff     = finalPosIndex - lastPosIndex;
@@ -150,7 +153,10 @@ void RT_FFTDisplay::mouseDrag(const juce::MouseEvent &event)
   }
 }
 
-float RT_FFTDisplay::getDbValNormalized(float dB) { return (dB - mDbMin) / mDbRange;}
+float RT_FFTDisplay::getDbValNormalized(float dB)
+{
+  return (dB - mDbMin) / mDbRange;
+}
 float RT_FFTDisplay::yPosNorm(float YPos) { return 1.f - (YPos / getHeight()); }
 float RT_FFTDisplay::yPosDenorm(float YPosNormalized)
 {
@@ -190,8 +196,8 @@ float RT_FFTDisplay::scaleYPosNormToManipAmp(float             inYPosNormalized,
                                              rt_manip_flavor_t activeManip)
 {
   float ret = inYPosNormalized;
-  ret = scaleYPosNormToAmpDbScale(inYPosNormalized);
-  ret = ret -= rt_get_manip_val(p, activeManip);
+  ret       = scaleYPosNormToAmpDbScale(inYPosNormalized);
+  ret       = ret -= rt_get_manip_val(p, activeManip);
   return ret;
 }
 

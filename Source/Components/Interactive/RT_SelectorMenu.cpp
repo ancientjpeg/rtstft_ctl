@@ -12,12 +12,34 @@
 #include "../../Managers/LookAndFeelManagement/RT_LookAndFeelManagement.h"
 #include "../../Managers/StateManagers/RT_PropertyManager.h"
 
-RT_SelectorMenu::RT_SelectorMenu(RT_ProcessorInterface *inInterface,
-                                 bool                   inIsVertical)
-    : RT_Component(inInterface),
-      mSelectorData(mInterface->getPropertyManager()->getSelectorData()),
+RT_SelectorMenu::RT_SelectorMenu(
+    RT_ProcessorInterface *inInterface, const juce::Value &inValueToLink,
+    std::initializer_list<juce::String> inPossibleSelections,
+    bool inUseNullSelection, bool inIsVertical)
+    : RT_SelectorMenu(inInterface, inValueToLink,
+                      juce::StringArray(inPossibleSelections),
+                      inUseNullSelection, inIsVertical)
+{
+}
+
+RT_SelectorMenu::RT_SelectorMenu(RT_ProcessorInterface  *inInterface,
+                                 const juce::Value      &inValueToLink,
+                                 const juce::StringArray inPossibleSelections,
+                                 bool inUseNullSelection, bool inIsVertical)
+    : RT_Component(inInterface), mPossibleSelections(inPossibleSelections),
+      mLinkedValue(inValueToLink), mUseNullSelection(inUseNullSelection),
       mVertical(inIsVertical)
 {
+}
+
+juce::String RT_SelectorMenu::getActiveSelection()
+{
+  return (juce::String)mLinkedValue.getValue();
+}
+
+int RT_SelectorMenu::getActiveSelectionIndex()
+{
+  return mPossibleSelections.indexOf(getActiveSelection());
 }
 
 void RT_SelectorMenu::paint(juce::Graphics &g)
@@ -26,27 +48,30 @@ void RT_SelectorMenu::paint(juce::Graphics &g)
   g.setFont(font);
   auto lamf = mInterface->getLookAndFeelManager();
   g.fillAll(lamf->getUIColour(defaultFill));
-  for (int i = 0; i < mSelectorData->fields.size(); i++) {
-    const auto &this_bound = mSelectionsBounds[i];
-    const auto &d          = mSelectorData->fields[i];
-    auto        color_id   = d.active ? defaultFill
-                                      : (checkHover(&this_bound) ? highlightedFill
-                                                                 : windowBackground);
+  for (int i = 0; i < mPossibleSelections.size(); i++) {
+    const auto &boundCurr         = mSelectionsBounds[i];
+    const auto &str               = mPossibleSelections[i];
+    bool        isActiveSelection = str == getActiveSelection();
+    auto        color_id
+        = isActiveSelection
+              ? defaultFill
+              : (checkHover(&boundCurr) ? highlightedFill : windowBackground);
     g.setColour(lamf->getUIColour(color_id));
-    g.fillRect(this_bound);
+    g.fillRect(boundCurr);
 
-    auto text_bounds = this_bound.withSizeKeepingCentre(
-        font.getStringWidth(d.selectionID), 14);
-    color_id = d.active ? highlightedText : defaultText;
+    auto text_bounds
+        = boundCurr.withSizeKeepingCentre(font.getStringWidth(str), 14);
+    color_id = isActiveSelection ? highlightedText : defaultText;
     g.setColour(lamf->getUIColour(color_id));
-    g.drawText(d.selectionID.toLowerCase(), text_bounds, 12);
+    g.drawText(str.toLowerCase(), text_bounds, 12);
   }
 }
+
 void RT_SelectorMenu::resized()
 {
   mSelectionsBounds.clear();
   auto bounds    = getLocalBounds();
-  auto numFields = mSelectorData->fields.size();
+  auto numFields = mPossibleSelections.size();
   // this is ugly and should be generalized...
   if (mVertical) {
     auto fieldHeight = bounds.getHeight() / numFields;
@@ -68,27 +93,23 @@ void RT_SelectorMenu::resized()
 
 void RT_SelectorMenu::mouseDown(const juce::MouseEvent &event)
 {
-  int numFields    = mSelectorData->fields.size();
-  int newSelection = event.getMouseDownX() / (getWidth() / numFields);
-  if (mSelectorData->activeField == newSelection) {
-    mSelectorData->fields[mSelectorData->activeField].active = false;
-    mSelectorData->activeField                               = -1;
+  int numFields = mPossibleSelections.size();
+  // this isn't 100% accurate so beware
+  int  newSelectionIndex = event.getMouseDownX() / (getWidth() / numFields);
+  auto newSelection      = mPossibleSelections[newSelectionIndex];
+  if (getActiveSelection() == newSelection && mUseNullSelection) {
+    mLinkedValue.setValue("");
+  }
+  else if (mPossibleSelections.contains(newSelection)) {
+    mLinkedValue.setValue(newSelection);
   }
   else {
-    if (mSelectorData->activeField != -1) {
-      mSelectorData->fields[mSelectorData->activeField].active = false;
-    }
-    mSelectorData->activeField                               = newSelection;
-    mSelectorData->fields[mSelectorData->activeField].active = true;
+    assert(false);
   }
 
   repaint();
 }
 
-void RT_SelectorMenu::mouseEnter(const juce::MouseEvent &event)
-{
-  mLastInternalMousePos = event.position;
-}
 void RT_SelectorMenu::mouseMove(const juce::MouseEvent &event)
 {
   for (auto const &r : mSelectionsBounds) {
@@ -108,4 +129,10 @@ void RT_SelectorMenu::mouseExit(const juce::MouseEvent &event)
 bool RT_SelectorMenu::checkHover(const juce::Rectangle<float> *comp)
 {
   return comp == mSelectionWithHover;
+}
+
+void RT_SelectorMenu::valueChanged(juce::Value &value)
+{
+  assert(value.refersToSameSourceAs(mLinkedValue));
+  repaint();
 }

@@ -15,8 +15,7 @@ RT_PropertyManager::RT_PropertyManager(
     RT_ProcessorInterface              *inInterface,
     std::initializer_list<juce::String> inManipSelectorFields,
     int                                 inCommandHistoryMaxSize)
-    : mInterface(inInterface), mCommandHistoryMax(inCommandHistoryMaxSize),
-      mManipSelectorData(inManipSelectorFields)
+    : mInterface(inInterface), mCommandHistoryMax(inCommandHistoryMaxSize)
 {
   const rt_params p = mInterface->getRTSTFTManager()->getParamsStruct();
 
@@ -27,15 +26,32 @@ RT_PropertyManager::RT_PropertyManager(
                  {RT_FFT_MODIFIER_IDS[RT_FFT_MODIFIER_OVERLAP_FACTOR],
                   (int)p->overlap_factor},
                  {RT_FFT_MODIFIER_IDS[RT_FFT_MODIFIER_PAD_FACTOR], (int)p->pad_factor},
-                 {"manip_multichannel", p->manip_multichannel},
+                 {"manip_multichannel",
+           p->manip_multichannel ? "multichannel" : "mono"},
       },
-             {juce::ValueTree("rt_chans", {}, {})});
+             {juce::ValueTree("rt_chans", {}, {}),
+              juce::ValueTree("rt_gui_state", {{"active_manip", ""}}, {})});
 
   mHistoryIterator = mCommandHistory.begin();
   mValueTree.addListener(mInterface->getRTSTFTManager());
 }
 
 RT_PropertyManager::~RT_PropertyManager() {}
+
+juce::ValueTree &RT_PropertyManager::getValueTreeRef() { return mValueTree; }
+juce::ValueTree  RT_PropertyManager::getChansTree()
+{
+  return mValueTree.getChild(0);
+}
+juce::ValueTree RT_PropertyManager::getGUIStateTree()
+{
+  return mValueTree.getChild(1);
+}
+int RT_PropertyManager::getActiveManipFlavor()
+{
+  auto active = (juce::String)getGUIStateTree().getProperty("active_manip");
+  return RT_MANIP_GUI_IDS.indexOf(active);
+}
 
 juce::String RT_PropertyManager::getNextStringInHistory(bool reverse)
 {
@@ -75,13 +91,6 @@ void RT_PropertyManager::pushNewHistoryCommand(juce::String &s)
     mCommandHistory.pop_back();
   }
 }
-
-RT_SelectorMenu::SelectorData *RT_PropertyManager::getSelectorData()
-{
-  return &mManipSelectorData;
-}
-
-juce::ValueTree &RT_PropertyManager::getValueTreeRef() { return mValueTree; }
 
 std::unique_ptr<juce::XmlElement>
 RT_PropertyManager::getXMLSerializedProperties()
