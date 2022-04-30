@@ -151,7 +151,7 @@ void RT_ProcessorBase::getStateInformation(juce::MemoryBlock &destData)
   auto paramState
       = mParameterManager.getValueTreeState()->copyState().createXml();
   auto propertyState = mPropertyManager.getXMLSerializedProperties();
-  auto state = std::make_unique<juce::XmlElement>("rtstft_ctl_state");
+  auto state         = std::make_unique<juce::XmlElement>("rtstft_ctl_state");
 
   state->addChildElement(paramState.release());
   state->addChildElement(propertyState.release());
@@ -161,6 +161,10 @@ void RT_ProcessorBase::getStateInformation(juce::MemoryBlock &destData)
   auto manips_stream = juce::MemoryOutputStream(destData, true);
   manips_stream.setPosition(size + 9);
   mRTSTFTManager.writeManipsToFile(manips_stream);
+
+  // TEST!!!!
+  juce::MemoryBlock toFile(destData);
+  getFileManager()->savePreset("test", toFile);
 }
 
 void RT_ProcessorBase::setStateInformation(const void *data, int sizeInBytes)

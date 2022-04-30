@@ -12,17 +12,23 @@
 #include "../Interface/RT_ProcessorInterface.h"
 #include <JuceHeader.h>
 
+#if defined(__APPLE__)
+#define RT_SUPPORT_FOLDER "Application Support/sound_ctl/rtstft_ctl"
+#else
+#define RT_SUPPORT_FOLDER "sound_ctl/rtstft_ctl"
+#endif
+
 class RT_FileManager {
 
-  inline static const juce::String sc_AppSupportDirName
-      = juce::String("/Library/Application Support/sound_ctl/rtstft_ctl");
+  inline static const juce::String sc_RTSTFTAppSupportDirName
+      = juce::String(RT_SUPPORT_FOLDER);
   inline static const juce::String sc_PresetSuffix
       = juce::String(".rtstftpreset");
 
   RT_ProcessorInterface *mInterface;
   juce::File             mAppSupportDir, mAppPresetsDir;
 
-  void                   validateSupportDirectory();
+  void                   validateDirectoryStructure();
 
   JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(RT_FileManager);
 
@@ -30,4 +36,8 @@ public:
   RT_FileManager() = delete;
   RT_FileManager(RT_ProcessorInterface *inInterface);
   ~RT_FileManager() = default;
+  void savePreset(juce::String inPresetName);
+  void savePreset(juce::String      inPresetName,
+                  juce::MemoryBlock inPreparedMemoryBlock);
+  void loadPreset(juce::String inPresetName);
 };
