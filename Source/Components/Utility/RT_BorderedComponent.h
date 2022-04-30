@@ -11,6 +11,7 @@
 #pragma once
 
 #include "../../Managers/Interface/RT_ProcessorInterface.h"
+#include "../../Managers/LookAndFeelManagement/RT_LookAndFeelManagement.h"
 #include "RT_Component.h"
 #include <JuceHeader.h>
 
@@ -20,7 +21,8 @@
 class RT_BorderedComponent : public RT_Component {
 
 public:
-  RT_BorderedComponent(RT_ProcessorInterface *inInterface, int inBorderSize,
+  RT_BorderedComponent(RT_ProcessorInterface *inInterface,
+                       int inBorderSize = RT_LookAndFeel::widgetBorderSize,
                        juce::Colour inBorderColour = juce::Colours::black)
       : RT_Component(inInterface), mBorderSize(inBorderSize),
         mBorderColour(inBorderColour)

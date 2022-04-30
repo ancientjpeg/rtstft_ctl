@@ -17,7 +17,7 @@
 //==============================================================================
 RT_GUIControlsContainer::RT_GUIControlsContainer(
     RT_ProcessorInterface *inInterface)
-    : mInterface(inInterface),
+    : RT_BorderedComponent(inInterface),
       mFrameSizeSelector(
           mInterface, RT_FFT_MODIFIER_IDS[RT_FFT_MODIFIER_FRAME_SIZE],
           {32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768, 65536},
@@ -46,38 +46,46 @@ RT_GUIControlsContainer::RT_GUIControlsContainer(
   mOverlapSelector.addAndMakeVisibleWithParent(this);
 }
 
-void RT_GUIControlsContainer::paint(juce::Graphics &g)
+void RT_GUIControlsContainer::paintInBorder(juce::Graphics &g)
 {
-  g.fillAll(getLookAndFeel().findColour(
-      juce::ResizableWindow::backgroundColourId)); // clear the background
+  g.setColour(
+      mInterface->getLookAndFeelManager()->getUIColour(windowBackground));
+  g.fillRect(getBoundsAdj()); // clear the background
 }
 
 void RT_GUIControlsContainer::resized()
 {
   // This method is where you should set the bounds of any child
   // components that your component contains..
-  auto bounds               = getLocalBounds();
-  auto comboBoxLabelsBounds = bounds.removeFromTop(40);
-  auto comboBoxMenusBounds  = bounds;
+  auto bounds = getLocalBounds();
+  auto comboBoxLabelsBounds
+      = bounds.removeFromTop(40 + RT_LookAndFeel::widgetBorderSize);
+  auto comboBoxMenusBounds
+      = bounds.withTop(bounds.getY() - RT_LookAndFeel::widgetBorderSize);
 
   mFrameSizeSelector.getLabel()->setBounds(comboBoxLabelsBounds.removeFromRight(
       comboBoxLabelsBounds.getWidth() / 2));
   mFrameSizeSelector.getMenuSection()->setBounds(
       comboBoxMenusBounds.removeFromRight(comboBoxMenusBounds.getWidth() / 2));
 
-  mOverlapSelector.getLabel()->setBounds(comboBoxLabelsBounds);
-  mOverlapSelector.getMenuSection()->setBounds(comboBoxMenusBounds);
+  mOverlapSelector.getLabel()->setBounds(comboBoxLabelsBounds.withWidth(
+      comboBoxLabelsBounds.getWidth() + RT_LookAndFeel::widgetBorderSize));
+  mOverlapSelector.getMenuSection()->setBounds(comboBoxMenusBounds.withWidth(
+      comboBoxLabelsBounds.getWidth() + RT_LookAndFeel::widgetBorderSize));
 
+  bounds = getLocalBounds()
+               .withTrimmedTop(40 + RT_LookAndFeel::widgetBorderSize
+                               + RT_LookAndFeel::mainPadding * 2)
+               .withTrimmedBottom(RT_LookAndFeel::mainPadding * 3);
   int knobAreaVertical = bounds.getHeight() / mKnobs.size();
   for (int i = 0; i < RT_PARAM_FLAVOR_COUNT; i++) {
-    auto thisBound = bounds.removeFromTop(knobAreaVertical);
-    thisBound.setWidth(thisBound.getHeight() * 2);
+    auto thisBound = bounds.removeFromTop(knobAreaVertical)
+                         .withWidth(bounds.getWidth() / 2);
     if (i & 1) {
-      thisBound.translate(getWidth() - thisBound.getRight(), 0);
+      thisBound.translate(bounds.getWidth() / 2, 0);
     }
-
+    else {
+    }
     mKnobs[i]->setBounds(thisBound);
   }
 }
-
-std::unique_ptr<juce::XmlElement> getXMLSerializedProperties();

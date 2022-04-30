@@ -158,7 +158,7 @@ void RTSTFT_Manager::changeFFTSize(int inNewFrameSize, int inNewOverlapFactor,
                                    int inNewPadFactor, bool threaded)
 {
   assert(juce::isPowerOfTwo(inNewFrameSize)
-         && inNewFrameSize * (1 << inNewPadFactor) < p->fft_max
+         && inNewFrameSize * (1 << inNewPadFactor) <= p->fft_max
          && mInitialized);
 
   rt_set_fft_size(p, inNewFrameSize, inNewOverlapFactor, inNewPadFactor);

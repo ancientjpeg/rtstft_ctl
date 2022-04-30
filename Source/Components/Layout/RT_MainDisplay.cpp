@@ -31,12 +31,16 @@ void RT_MainDisplay::paint(juce::Graphics &g)
 void RT_MainDisplay::resized()
 {
   using namespace RT_LookAndFeel;
-  auto bounds    = getLocalBounds();
+  auto padding   = juce::BorderSize<int>(0, RT_LookAndFeel::mainPadding,
+                                       RT_LookAndFeel::mainPadding,
+                                       RT_LookAndFeel::mainPadding);
+  auto bounds    = padding.subtractedFrom(getLocalBounds());
   int  cmdHeight = RT_LookAndFeel::cmdHeight;
   auto cmdBounds = bounds.removeFromBottom(cmdHeight);
-  mCommandLineContainer.setBounds(cmdBounds.reduced(RT_LookAndFeel::mainPadding));
+  mCommandLineContainer.setBounds(
+      cmdBounds.withTrimmedTop(RT_LookAndFeel::mainPadding));
   auto controlsBounds = bounds.removeFromLeft(0.3 * getWidth());
-  mGUIControlsContainer.setBounds(controlsBounds);
-  bounds.removeFromRight(RT_LookAndFeel::mainPadding);
+  mGUIControlsContainer.setBounds(
+      controlsBounds.withTrimmedRight(RT_LookAndFeel::mainPadding));
   mSpectralDisplayContainer.setBounds(bounds);
 }
