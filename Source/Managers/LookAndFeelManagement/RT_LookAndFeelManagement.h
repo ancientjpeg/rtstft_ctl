@@ -33,7 +33,7 @@ static const int               menuItemDefaultHeight = 40;
 static const juce::LookAndFeel_V4::ColourScheme DefaultColourScheme(
     juce::Colours::white, juce::Colours::black, juce::Colours::white,
     juce::Colours::black, juce::Colours::black, juce::Colours::grey,
-    juce::Colours::white, juce::Colours::darkgrey, juce::Colours::black);
+    juce::Colours::white, juce::Colour(10, 10, 10), juce::Colours::black);
 
 class Manager {
   std::vector<std::unique_ptr<juce::LookAndFeel_V4::ColourScheme>> mSkins;

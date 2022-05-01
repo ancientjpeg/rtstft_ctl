@@ -77,34 +77,44 @@ void RT_FFTDisplay::paintManips(juce::Graphics &g, int inActiveChannelIndex,
                                 int i, int i_incr, float x, float manipWidth)
 {
   const rt_params p = mInterface->getRTSTFTManager()->getParamsStruct();
-  int             activeManipIndex
+  int             activeManipFlavor
       = mInterface->getPropertyManager()->getActiveManipFlavor();
-  for (int m = 0; m <= RT_MANIP_LIMIT; m++) {
-    int   manip_index = rt_manip_index(p, (rt_manip_flavor_t)m, i * i_incr);
-    float val = p->chans[inActiveChannelIndex]->manip->hold_manips[manip_index];
-    switch ((rt_manip_flavor_t)m) {
-    case RT_MANIP_GAIN:
-      val += p->hold->gain_mod;
-      break;
-    case RT_MANIP_GATE:
-      val += p->hold->gate_mod;
-      break;
-    case RT_MANIP_LIMIT:
-      val += p->hold->limit_mod;
-      break;
-    default:
-      break;
+  bool mono = mInterface->getPropertyManager()->getMultichannelMode()
+              == RT_MULTICHANNEL_MONO;
+  auto lamf = mInterface->getLookAndFeelManager();
+  for (int c = 0; c < p->num_chans; c++) {
+    for (int m = 0; m <= RT_MANIP_LIMIT; m++) {
+      if (c != inActiveChannelIndex && (m != activeManipFlavor || mono)) {
+        continue;
+      }
+      int   manip_index = rt_manip_index(p, (rt_manip_flavor_t)m, i * i_incr);
+      float val         = p->chans[c]->manip->hold_manips[manip_index];
+      // TEST
+      // float val = p->chans[c]->manip->manips[manip_index];
+      switch ((rt_manip_flavor_t)m) {
+      case RT_MANIP_GAIN:
+        val += p->hold->gain_mod;
+        break;
+      case RT_MANIP_GATE:
+        val += p->hold->gate_mod;
+        break;
+      case RT_MANIP_LIMIT:
+        val += p->hold->limit_mod;
+        break;
+      default:
+        break;
+      }
+      float height = scaleManipAmpToYPosNorm(val, p, (rt_manip_flavor_t)m);
+      auto  col    = activeManipFlavor == m
+                         ? (c == inActiveChannelIndex
+                                ? juce::Colour(255, 220, 80)
+                                : lamf->getUIColour(highlightedFill))
+                         : lamf->getUIColour(defaultFill);
+      g.setColour(col);
+      float manipBarHeight = 2.f;
+      g.fillRect(x, (float)(getHeight() - height) - manipBarHeight * 0.5f,
+                 manipWidth, manipBarHeight);
     }
-    float height = scaleManipAmpToYPosNorm(val, p, (rt_manip_flavor_t)m);
-    auto  col
-        = activeManipIndex == m
-              ? mInterface->getLookAndFeelManager()->getUIColour(
-                  highlightedFill)
-              : mInterface->getLookAndFeelManager()->getUIColour(defaultFill);
-    g.setColour(col);
-    float manipBarHeight = 2.f;
-    g.fillRect(x, (float)(getHeight() - height) - manipBarHeight * 0.5f,
-               manipWidth, manipBarHeight);
   }
 }
 
@@ -145,12 +155,12 @@ void RT_FFTDisplay::mouseDrag(const juce::MouseEvent &event)
   // save last pos and account for any positions between last pos and this pos
   // recurse this
   auto p = mInterface->getRTSTFTManager()->getParamsStruct();
-  int  activeManipIndex
+  int  activeManipFlavor
       = mInterface->getPropertyManager()->getActiveManipFlavor();
-  if (activeManipIndex == -1) {
+  if (activeManipFlavor == -1) {
     return;
   }
-  rt_manip_flavor_t activeManip   = (rt_manip_flavor_t)activeManipIndex;
+  rt_manip_flavor_t activeManip   = (rt_manip_flavor_t)activeManipFlavor;
   int               lastPosIndex  = xPosToManipsIndex(mLastDragPos.x);
   int               finalPosIndex = xPosToManipsIndex(event.position.x);
   int               indexDiff     = finalPosIndex - lastPosIndex;

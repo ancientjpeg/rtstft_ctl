@@ -37,7 +37,7 @@ void RTSTFT_Manager::prepareToPlay(double inSampleRate, int inSamplesPerBlock)
   auto checkSamplesPerBlock
       = RT_Utilities::getNearestPowerOfTwo(inSamplesPerBlock);
   int numChannels = mInterface->getProcessor()->getChannelCountOfBus(true, 0);
-  if (inSamplesPerBlock < mCurrentSamplesPerBlock) {
+  if (inSamplesPerBlock > mCurrentSamplesPerBlock) {
     mCurrentSamplesPerBlock = inSamplesPerBlock;
     mInitialized            = false;
     resetParamsStruct();
@@ -99,7 +99,7 @@ void         RTSTFT_Manager::readManipsFromBinary(bool inThreadedFFTUpdate)
   int   to_chan   = p->manip_multichannel ? p->num_chans : 1;
   int   block_len = rt_manip_block_len(p);
   for (int i = 0; i < to_chan; i++) {
-    rt_manip_overwrite_manips(p, p->chans[0], (rt_real *)ptr + block_len * i,
+    rt_manip_overwrite_manips(p, p->chans[i], ((rt_real *)ptr) + block_len * i,
                               block_len);
   }
 }

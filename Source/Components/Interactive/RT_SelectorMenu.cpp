@@ -109,7 +109,7 @@ void RT_SelectorMenu::mouseDown(const juce::MouseEvent &event)
     mLinkedValue.setValue(newSelection);
   }
   else {
-    assert(false);
+    return; // border click
   }
 
   repaint();
