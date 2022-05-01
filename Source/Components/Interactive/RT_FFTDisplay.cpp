@@ -111,11 +111,6 @@ void RT_FFTDisplay::resized()
 
 void RT_FFTDisplay::timerCallback() { repaint(); }
 
-void RT_FFTDisplay::onManipChanged(rt_manip_flavor_t inManipFlavor)
-{
-  copyManips(inManipFlavor);
-}
-
 void RT_FFTDisplay::mouseDown(const juce::MouseEvent &event)
 {
   mLastDragPos = event.position;
@@ -202,18 +197,3 @@ float RT_FFTDisplay::scaleYPosNormToManipAmp(float             inYPosNormalized,
 }
 
 float RT_FFTDisplay::getDbRange() { return mDbMax - mDbMin; }
-void  RT_FFTDisplay::copyManips(rt_manip_flavor_t inTargetManipFlavor)
-{
-  if (mInterface->getProcessor()->isSuspended()) {
-    return;
-  }
-  const rt_params p         = mInterface->getRTSTFTManager()->getParamsStruct();
-  auto            manip_len = rt_manip_len(p);
-  auto            blocklen  = rt_manip_block_len(p);
-  auto            num_chans = p->manip_multichannel ? p->num_chans : 1;
-  for (int i = 0; i < num_chans; i++) {
-    std::memcpy(mLocalManipCopies.get() + blocklen * i,
-                rt_manip_read_buffer(p, p->chans[i], (rt_manip_flavor_t)0),
-                manip_len * sizeof(rt_real));
-  }
-}

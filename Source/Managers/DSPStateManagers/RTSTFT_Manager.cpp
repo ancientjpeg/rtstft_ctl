@@ -207,5 +207,3 @@ void RTSTFT_CMDListenerCallback(void                      *RTSTFTManagerPtr,
 {
   ((RTSTFT_Manager *)RTSTFTManagerPtr)->RTSTFT_ManagerCMDCallback(info);
 }
-
-void RTSTFT_Manager::addListener(Listener *l) { mListenerList.add(l); }

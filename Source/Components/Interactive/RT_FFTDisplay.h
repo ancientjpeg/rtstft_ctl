@@ -21,8 +21,7 @@
 /*
  */
 class RT_FFTDisplay : public RT_Component,
-                      public juce::Timer,
-                      public RTSTFT_Manager::Listener {
+                      public juce::Timer {
 
 public:
   RT_FFTDisplay(RT_ProcessorInterface *inInterface);
@@ -36,7 +35,6 @@ public:
 
   int   xPosToManipsIndex(float inXPos);
   float manipsIndexToXPos(int inIndex);
-  void  onManipChanged(rt_manip_flavor_t inManipFlavor) override;
 
   //==============================================================================
 
@@ -57,7 +55,5 @@ private:
   std::unique_ptr<rt_real[]> mLocalManipCopies;
   juce::Point<float>         mLastDragPos;
   float                      getDbRange();
-
-  void                       copyManips(rt_manip_flavor_t inTargetManipFlavor);
   JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(RT_FFTDisplay)
 };
