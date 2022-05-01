@@ -193,7 +193,7 @@ void RTSTFT_Manager::valueTreePropertyChanged(
       rt_set_multichannel(p, 1);
       break;
     case -1:
-      exit(32);
+            rt_set_multichannel(p, 0); // i guess this is the safest bet
     default:
       break;
     }
