@@ -16,76 +16,95 @@
 RT_FFTDisplay::RT_FFTDisplay(RT_ProcessorInterface *inInterface)
     : RT_Component(inInterface)
 {
-  // In your constructor, you should add any child components, and
-  // initialise any special settings that your component needs.
-
   const rt_params p        = mInterface->getRTSTFTManager()->getParamsStruct();
 
   auto            blocklen = rt_manip_block_len(p);
-  mLocalManipCopies = std::make_unique<rt_real[]>(blocklen * p->num_chans);
-  //  for (int i = 0; i < RT_MANIP_FLAVOR_COUNT; i++) {
-  //    copyManips((rt_manip_flavor_t)i);
-  //  }
-
-  //  mInterface->getRTSTFTManager()->addListener(this);
-
-  mDbMaxAsAmp = rt_dbtoa(mDbMax);
-  startTimer(1000 / 15);
+  mDbMaxAsAmp              = rt_dbtoa(mDbMax);
+#if JUCE_DEBUG
+  startTimer(1000 / 8);
+#else
+  startTimer(1000 / 30);
+#endif
 }
 
 RT_FFTDisplay::~RT_FFTDisplay() {}
 
 void RT_FFTDisplay::paint(juce::Graphics &g)
 {
-
-  auto cs = getLookAndFeel_V4().getCurrentColourScheme();
-  g.fillAll(cs.getUIColour(windowBackground));
-  int activeManipIndex
-      = mInterface->getPropertyManager()->getActiveManipFlavor();
-
-  const rt_params p = mInterface->getRTSTFTManager()->getParamsStruct();
-  if (p != NULL && p->initialized) {
-    int   maxBars      = 128;
-    int   numAmpsInFFT = rt_manip_len(p);
-    int   barsInWindow = numAmpsInFFT < maxBars ? numAmpsInFFT : maxBars;
-    float width        = (float)1 / barsInWindow * getWidth();
-    int   i_incr       = numAmpsInFFT <= maxBars ? 1 : numAmpsInFFT / maxBars;
-
-    for (int i = 0; i < barsInWindow; i++) {
-      float ampCurr = p->hold->amp_holder[i * i_incr];
-      float height  = scaleAmpToYPosNormDbScale(ampCurr);
-      float x       = (float)i / barsInWindow * getWidth();
-      g.setColour(cs.getUIColour(highlightedFill));
-      g.fillRect(x, (float)(getHeight() - height), width, height);
-      x += width * 0.125;
-      float manip_width = width * 0.75;
-      for (int m = 0; m <= RT_MANIP_LIMIT; m++) {
-        int   manip_index = rt_manip_index(p, (rt_manip_flavor_t)m, i * i_incr);
-        float val         = p->chans[0]->manip->hold_manips[manip_index];
-        switch ((rt_manip_flavor_t)m) {
-        case RT_MANIP_GAIN:
-          val += p->hold->gain_mod;
-          break;
-        case RT_MANIP_GATE:
-          val += p->hold->gate_mod;
-          break;
-        case RT_MANIP_LIMIT:
-          val += p->hold->limit_mod;
-          break;
-        default:
-          break;
-        }
-        height   = scaleManipAmpToYPosNorm(val, p, (rt_manip_flavor_t)m);
-        auto col = cs.getUIColour(defaultFill);
-        if (activeManipIndex == m) {
-          col = juce::Colour(255, 225, 53);
-        }
-        g.setColour(col);
-        float manipBarHeight = 2.f;
-        g.fillRect(x, (float)(getHeight() - height) - manipBarHeight * 0.5f,
-                   manip_width, manipBarHeight);
-      }
+  g.fillAll(mInterface->getLookAndFeelManager()->getUIColour(windowBackground));
+  auto propMan    = mInterface->getPropertyManager();
+  bool mono       = propMan->getMultichannelMode() == RT_MULTICHANNEL_MONO;
+  int  activeChan = mono ? 0 : propMan->getActiveChannelIndex();
+  if (mono) {
+    for (int i = 0;
+         i < mInterface->getRTSTFTManager()->getParamsStruct()->num_chans;
+         i++) {
+      if (i != activeChan)
+        paintChannel(g, i);
     }
+  }
+  paintChannel(g, activeChan, true);
+}
+void RT_FFTDisplay::paintChannel(juce::Graphics &g, int inChannelIndex,
+                                 bool inIsActiveChannel)
+{
+  const rt_params p = mInterface->getRTSTFTManager()->getParamsStruct();
+  if (p == NULL || !p->initialized) {
+    return;
+  }
+  auto  lamf         = mInterface->getLookAndFeelManager();
+  int   maxBars      = 128;
+  int   numAmpsInFFT = rt_manip_len(p);
+  int   barsInWindow = numAmpsInFFT < maxBars ? numAmpsInFFT : maxBars;
+  float width        = (float)1 / barsInWindow * getWidth();
+  int   i_incr       = numAmpsInFFT <= maxBars ? 1 : numAmpsInFFT / maxBars;
+
+  for (int i = 0; i < barsInWindow; i++) {
+    float ampCurr = p->hold->amp_holder[i * i_incr];
+    float height  = scaleAmpToYPosNormDbScale(ampCurr);
+    float x       = (float)i / barsInWindow * getWidth();
+    g.setColour(lamf->getUIColour(highlightedFill));
+    g.fillRect(x, (float)(getHeight() - height), width, height);
+    x += width * 0.125;
+    if (inIsActiveChannel) {
+      float manipWidth = width * 0.75;
+      paintManips(g, inChannelIndex, i, i_incr, x, manipWidth);
+    }
+  }
+}
+
+void RT_FFTDisplay::paintManips(juce::Graphics &g, int inActiveChannelIndex,
+                                int i, int i_incr, float x, float manipWidth)
+{
+  const rt_params p = mInterface->getRTSTFTManager()->getParamsStruct();
+  int             activeManipIndex
+      = mInterface->getPropertyManager()->getActiveManipFlavor();
+  for (int m = 0; m <= RT_MANIP_LIMIT; m++) {
+    int   manip_index = rt_manip_index(p, (rt_manip_flavor_t)m, i * i_incr);
+    float val = p->chans[inActiveChannelIndex]->manip->hold_manips[manip_index];
+    switch ((rt_manip_flavor_t)m) {
+    case RT_MANIP_GAIN:
+      val += p->hold->gain_mod;
+      break;
+    case RT_MANIP_GATE:
+      val += p->hold->gate_mod;
+      break;
+    case RT_MANIP_LIMIT:
+      val += p->hold->limit_mod;
+      break;
+    default:
+      break;
+    }
+    float height = scaleManipAmpToYPosNorm(val, p, (rt_manip_flavor_t)m);
+    auto  col
+        = activeManipIndex == m
+              ? mInterface->getLookAndFeelManager()->getUIColour(
+                  highlightedFill)
+              : mInterface->getLookAndFeelManager()->getUIColour(defaultFill);
+    g.setColour(col);
+    float manipBarHeight = 2.f;
+    g.fillRect(x, (float)(getHeight() - height) - manipBarHeight * 0.5f,
+               manipWidth, manipBarHeight);
   }
 }
 
@@ -114,6 +133,11 @@ void RT_FFTDisplay::timerCallback() { repaint(); }
 void RT_FFTDisplay::mouseDown(const juce::MouseEvent &event)
 {
   mLastDragPos = event.position;
+  auto propMan = mInterface->getPropertyManager();
+  mActiveChannelIndexForMouseDown
+      = propMan->getMultichannelMode() == RT_MULTICHANNEL_MONO
+            ? 0
+            : mInterface->getPropertyManager()->getActiveChannelIndex();
 }
 
 void RT_FFTDisplay::mouseDrag(const juce::MouseEvent &event)
@@ -134,7 +158,8 @@ void RT_FFTDisplay::mouseDrag(const juce::MouseEvent &event)
 
   float             manipVal
       = scaleYPosNormToManipAmp(yPosNorm(mLastDragPos.y), p, activeManip);
-  rt_manip_set_bin_single(p, p->chans[0], activeManip, lastPosIndex, manipVal);
+  rt_manip_set_bin_single(p, p->chans[mActiveChannelIndexForMouseDown],
+                          activeManip, lastPosIndex, manipVal);
   if (indexDiff != 0) {
     float nextIndexXPos = manipsIndexToXPos(lastPosIndex + indexDiffSign);
     float nextIndexYPos

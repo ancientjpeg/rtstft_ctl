@@ -49,14 +49,14 @@ void RT_SelectorMenu::paint(juce::Graphics &g)
   juce::Font font = juce::Font(12, 0);
   g.setFont(font);
   auto lamf = mInterface->getLookAndFeelManager();
-  g.fillAll(lamf->getUIColour(defaultFill));
+  g.fillAll(lamf->getUIColour(outline));
   for (int i = 0; i < mPossibleSelections.size(); i++) {
     const auto &boundCurr         = mSelectionsBounds[i];
     const auto &str               = mPossibleSelections[i];
     bool        isActiveSelection = str == getActiveSelection();
     auto        color_id
         = isActiveSelection
-              ? defaultFill
+              ? outline
               : (checkHover(&boundCurr) ? highlightedFill : windowBackground);
     g.setColour(lamf->getUIColour(color_id));
     g.fillRect(boundCurr);

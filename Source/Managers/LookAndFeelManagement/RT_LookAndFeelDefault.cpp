@@ -83,7 +83,7 @@ void RT_LookAndFeel::Default::drawComboBox(juce::Graphics &g, int width,
                                            juce::ComboBox &box)
 {
   auto scheme = getCurrentColourScheme();
-  g.setColour(scheme.getUIColour(defaultFill));
+  g.setColour(scheme.getUIColour(outline));
   auto bounds = juce::Rectangle<float>(buttonX, buttonY, buttonW, buttonH);
   juce::Rectangle<float> triBounds
       = bounds.removeFromRight(0.9f * bounds.getWidth());

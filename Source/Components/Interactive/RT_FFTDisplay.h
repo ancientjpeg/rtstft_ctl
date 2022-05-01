@@ -16,18 +16,16 @@
 #include "../Utility/RT_BorderedComponent.h"
 #include <JuceHeader.h>
 
-
 //==============================================================================
 /*
  */
-class RT_FFTDisplay : public RT_Component,
-                      public juce::Timer {
+class RT_FFTDisplay : public RT_Component, public juce::Timer {
 
 public:
   RT_FFTDisplay(RT_ProcessorInterface *inInterface);
   ~RT_FFTDisplay() override;
 
-  void  paint(juce::Graphics &) override;
+  void  paint(juce::Graphics &g) override;
   void  resized() override;
   void  timerCallback() override;
   void  mouseDrag(const juce::MouseEvent &event) override;
@@ -51,9 +49,15 @@ public:
                                 rt_manip_flavor_t activeManip);
 
 private:
-  float                      mDbMaxAsAmp;
-  std::unique_ptr<rt_real[]> mLocalManipCopies;
-  juce::Point<float>         mLastDragPos;
-  float                      getDbRange();
+  float              mDbMaxAsAmp;
+  juce::Point<float> mLastDragPos;
+  float              getDbRange();
+  int                mActiveChannelIndexForMouseDown;
+
+  void               paintChannel(juce::Graphics &g, int inChannelIndex,
+                                  bool inIsActiveChannel = false);
+  void paintManips(juce::Graphics &g, int inActiveChannelIndex, int i,
+                   int i_incr, float x, float manipWidth);
+
   JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(RT_FFTDisplay)
 };

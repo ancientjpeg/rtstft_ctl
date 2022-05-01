@@ -48,7 +48,7 @@ void RT_GearButton::paint(juce::Graphics &g)
     internalHolePath.applyTransform(rot);
   }
   auto *lafm = mInterface->getLookAndFeelManager();
-  g.setColour(lafm->getUIColour(defaultFill));
+  g.setColour(lafm->getUIColour(outline));
   g.fillPath(gearPath);
   g.setColour(lafm->getUIColour(windowBackground));
   g.fillPath(internalHolePath);

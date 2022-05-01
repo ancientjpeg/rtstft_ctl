@@ -146,7 +146,7 @@ template <typename T>
 void RT_InplaceComboBox<T>::MenuSection::paint(juce::Graphics &g)
 {
   auto lafm = mParent->mInterface->getLookAndFeelManager();
-  g.fillAll(lafm->getUIColour(defaultFill));
+  g.fillAll(lafm->getUIColour(outline));
   auto border      = juce::BorderSize<int>(RT_LookAndFeel::widgetBorderSize);
   auto innerBounds = border.subtractedFrom(getLocalBounds());
   g.setColour(lafm->getUIColour(windowBackground));
@@ -207,11 +207,11 @@ void RT_InplaceComboBox<T>::Label::paint(juce::Graphics &g)
   auto lafm = mParent->mInterface->getLookAndFeelManager();
   g.setFont(getFont());
 
-  auto border_col_enum = defaultFill;
+  auto border_col_enum = outline;
   auto bg_col_enum     = windowBackground;
   if (!mIsTitle) {
-    bg_col_enum = mSelected ? defaultFill
-                            : (mHovered ? highlightedFill : windowBackground);
+    bg_col_enum
+        = mSelected ? outline : (mHovered ? highlightedFill : windowBackground);
   }
 
   auto text_col_enum = mSelected ? highlightedText : defaultText;

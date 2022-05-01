@@ -13,7 +13,8 @@ using enum juce::LookAndFeel_V4::ColourScheme::UIColour;
 //==============================================================================
 RT_ProcessorEditor::RT_ProcessorEditor(RT_ProcessorInterface *inInterface)
     : AudioProcessorEditor(inInterface->getProcessor()),
-      mInterface(inInterface), mAppWindow(mInterface, RT_LookAndFeel::mainBorderSize)
+      mInterface(inInterface),
+      mAppWindow(mInterface, RT_LookAndFeel::mainBorderSize)
 {
   // Make sure that before the constructor has finished, you've set the
   // editor's size to whatever you need it to be.
@@ -33,7 +34,7 @@ void RT_ProcessorEditor::paint(juce::Graphics &g)
   juce::LookAndFeel_V4::ColourScheme &colScheme
       = ((static_cast<juce::LookAndFeel_V4 &>(getLookAndFeel()))
              .getCurrentColourScheme());
-  g.fillAll(colScheme.getUIColour(defaultFill));
+  g.fillAll(colScheme.getUIColour(outline));
 }
 
 void RT_ProcessorEditor::resized() { mAppWindow.setBounds(getBounds()); }

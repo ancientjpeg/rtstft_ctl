@@ -25,11 +25,15 @@ static const int               widgetBorderSize      = 2;
 static const float             headerHeight          = 80;
 static const float             cmdHeight             = 50;
 static const int               menuItemDefaultHeight = 40;
+// UIColour :
+//   windowBackground,  widgetBackground, menuBackground,
+//   outline,           defaultText,      defaultFill,
+//   highlightedText,   highlightedFill,  menuText
 
 static const juce::LookAndFeel_V4::ColourScheme DefaultColourScheme(
     juce::Colours::white, juce::Colours::black, juce::Colours::white,
-    juce::Colours::black, juce::Colours::black, juce::Colours::black,
-    juce::Colours::white, juce::Colours::grey, juce::Colours::black);
+    juce::Colours::black, juce::Colours::black, juce::Colours::grey,
+    juce::Colours::white, juce::Colours::darkgrey, juce::Colours::black);
 
 class Manager {
   std::vector<std::unique_ptr<juce::LookAndFeel_V4::ColourScheme>> mSkins;
