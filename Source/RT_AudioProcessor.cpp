@@ -21,6 +21,8 @@ void RT_AudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
 {
   mRTSTFTManager.prepareToPlay(sampleRate, samplesPerBlock);
   verifyStateIsUpToDate();
+  mMidSideBuffer.setSize(getNumInputChannels(),
+                         mRTSTFTManager.getParamsStruct()->fft_max);
 }
 
 void RT_AudioProcessor::processBlock(juce::AudioBuffer<float> &buffer,
@@ -29,9 +31,18 @@ void RT_AudioProcessor::processBlock(juce::AudioBuffer<float> &buffer,
   juce::ScopedNoDenormals noDenormals;
   verifyStateIsUpToDate();
   if (!isSuspended()) {
-    auto ms_buf = readBufferToMidSide(buffer);
-    mRTSTFTManager.processBlock(ms_buf);
-    writeMidSideToBuffer(buffer, ms_buf);
+    if (mPropertyManager.getMultichannelMode() == RT_MULTICHANNEL_MS
+        && mRTSTFTManager.getParamsStruct()->manip_multichannel) {
+      // the double check is necessary because of how param updates work
+      mMidSideBuffer.setSize(buffer.getNumChannels(), buffer.getNumSamples(),
+                             false, false, true);
+      mMidSideBuffer = readBufferToMidSide(buffer);
+      mRTSTFTManager.processBlock(mMidSideBuffer);
+      writeMidSideToBuffer(buffer, mMidSideBuffer);
+    }
+    else {
+      mRTSTFTManager.processBlock(buffer);
+    }
   }
 }
 

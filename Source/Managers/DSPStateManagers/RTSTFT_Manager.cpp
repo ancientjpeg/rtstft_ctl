@@ -74,46 +74,7 @@ void RTSTFT_Manager::resetParamsStruct(int inFFTSize, int inOverlapFactor)
 
 const rt_params RTSTFT_Manager::getParamsStruct() { return p; }
 
-void RTSTFT_Manager::parameterChanged(const juce::String &parameterID,
-                                      float               newValue)
-{
-  int paramFlavor = RT_PARAM_IDS.indexOf(parameterID);
-  if (paramFlavor < 0 || paramFlavor >= RT_PARAM_FLAVOR_COUNT) {
-    // error handling here...
-  }
-  // else if (paramFlavor >= RT_PARAM_GAIN_MOD
-  //          && paramFlavor <= RT_PARAM_LIMIT_MOD) {
-  //   if (paramFlavor == RT_PARAM_GATE_MOD) {
-  //     newValue -= 1.f;
-  //   }
-  // }
-  rt_set_single_param(p, (rt_param_flavor_t)paramFlavor, newValue);
-}
-
-void RTSTFT_Manager::valueTreePropertyChanged(
-    juce::ValueTree        &treeWhosePropertyHasChanged,
-    const juce::Identifier &property)
-{
-  juce::var val = treeWhosePropertyHasChanged[property];
-
-  // this is so so so dumb
-  if (property
-      == (juce::Identifier)RT_FFT_MODIFIER_IDS[RT_FFT_MODIFIER_FRAME_SIZE]) {
-    changeFFTSize((int)val, p->overlap_factor, p->pad_factor);
-  }
-  else if (property
-           == (juce::Identifier)
-               RT_FFT_MODIFIER_IDS[RT_FFT_MODIFIER_OVERLAP_FACTOR]) {
-    changeFFTSize(p->frame_size, (int)val, p->pad_factor);
-  }
-  else if (property
-           == (juce::Identifier)
-               RT_FFT_MODIFIER_IDS[RT_FFT_MODIFIER_PAD_FACTOR]) {
-    changeFFTSize(p->frame_size, p->overlap_factor, (int)val);
-  }
-}
-
-void RTSTFT_Manager::executeCMDCommand(juce::String inCMDString)
+void            RTSTFT_Manager::executeCMDCommand(juce::String inCMDString)
 {
   mCMDErrorState = rt_parse_and_execute(p, inCMDString.toRawUTF8());
   mCMDMessage    = juce::String(p->parser.error_msg_buffer);
@@ -181,6 +142,63 @@ void RTSTFT_Manager::awaitFFTSizeChange()
 {
   // just crash  out on an unexpectedly long wait time
   assert(mFFTSetterThread.waitForThreadToExit(5000));
+}
+
+void RTSTFT_Manager::changeMultichannelMode(RT_MULTICHANNEL_MODES inNewMode) {}
+
+void RTSTFT_Manager::parameterChanged(const juce::String &parameterID,
+                                      float               newValue)
+{
+  int paramFlavor = RT_PARAM_IDS.indexOf(parameterID);
+  if (paramFlavor < 0 || paramFlavor >= RT_PARAM_FLAVOR_COUNT) {
+    // error handling here...
+  }
+  // else if (paramFlavor >= RT_PARAM_GAIN_MOD
+  //          && paramFlavor <= RT_PARAM_LIMIT_MOD) {
+  //   if (paramFlavor == RT_PARAM_GATE_MOD) {
+  //     newValue -= 1.f;
+  //   }
+  // }
+  rt_set_single_param(p, (rt_param_flavor_t)paramFlavor, newValue);
+}
+
+void RTSTFT_Manager::valueTreePropertyChanged(
+    juce::ValueTree        &treeWhosePropertyHasChanged,
+    const juce::Identifier &property)
+{
+  juce::var val = treeWhosePropertyHasChanged[property];
+
+  // this is so so so dumb
+  if (property
+      == (juce::Identifier)RT_FFT_MODIFIER_IDS[RT_FFT_MODIFIER_FRAME_SIZE]) {
+    changeFFTSize((int)val, p->overlap_factor, p->pad_factor);
+  }
+  else if (property
+           == (juce::Identifier)
+               RT_FFT_MODIFIER_IDS[RT_FFT_MODIFIER_OVERLAP_FACTOR]) {
+    changeFFTSize(p->frame_size, (int)val, p->pad_factor);
+  }
+  else if (property
+           == (juce::Identifier)
+               RT_FFT_MODIFIER_IDS[RT_FFT_MODIFIER_PAD_FACTOR]) {
+    changeFFTSize(p->frame_size, p->overlap_factor, (int)val);
+  }
+  else if (property == (juce::Identifier) "manip_multichannel") {
+    switch (RT_MULTICHANNEL_MODE_IDS.indexOf(
+        treeWhosePropertyHasChanged.getProperty(property).toString())) {
+    case RT_MULTICHANNEL_MONO:
+      rt_set_multichannel(p, 0);
+      break;
+    case RT_MULTICHANNEL_LR:
+    case RT_MULTICHANNEL_MS:
+      rt_set_multichannel(p, 1);
+      break;
+    case -1:
+      exit(32);
+    default:
+      break;
+    }
+  }
 }
 
 //=============================================================================

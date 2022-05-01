@@ -27,6 +27,7 @@ public:
   juce::ValueTree                   getGUIStateTree();
 
   int                               getActiveManipFlavor();
+  int                               getMultichannelMode();
 
   juce::String                      getNextStringInHistory(bool reverse);
   void                              pushNewHistoryCommand(juce::String &s);

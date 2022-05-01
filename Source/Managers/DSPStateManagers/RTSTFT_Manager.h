@@ -11,6 +11,7 @@
 #pragma once
 #include "../../../RTSTFT/src/rtstft.h"
 #include "../Interface/RT_ProcessorInterface.h"
+#include "RT_ParameterDefines.h"
 #include <JuceHeader.h>
 
 /* weird stuff with C struct typedefs idk */
@@ -73,6 +74,7 @@ private:
   juce::String           mCMDMessage    = "";
   int                    mCMDErrorState = 0;
   void                   changeFFTSizeInternal();
+  void changeMultichannelMode(RT_MULTICHANNEL_MODES inNewMode);
 };
 
 extern "C" void RTSTFT_CMDListenerCallback(void *RTSTFTManagerPtr,

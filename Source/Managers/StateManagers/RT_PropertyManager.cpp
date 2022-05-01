@@ -52,6 +52,11 @@ int RT_PropertyManager::getActiveManipFlavor()
   auto active = (juce::String)getGUIStateTree().getProperty("active_manip");
   return RT_MANIP_GUI_IDS.indexOf(active);
 }
+int RT_PropertyManager::getMultichannelMode()
+{
+  auto active = (juce::String)mValueTree.getProperty("manip_multichannel");
+  return RT_MULTICHANNEL_MODE_IDS.indexOf(active);
+}
 
 juce::String RT_PropertyManager::getNextStringInHistory(bool reverse)
 {

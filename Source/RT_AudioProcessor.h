@@ -32,6 +32,7 @@ public:
                             juce::AudioBuffer<float> &midsideBuf);
 
 private:
+  juce::AudioBuffer<float> mMidSideBuffer;
   //==============================================================================
   JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(RT_AudioProcessor)
 };

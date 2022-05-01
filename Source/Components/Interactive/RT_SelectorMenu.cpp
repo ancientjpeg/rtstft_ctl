@@ -95,12 +95,13 @@ void RT_SelectorMenu::resized()
 
 void RT_SelectorMenu::mouseDown(const juce::MouseEvent &event)
 {
-  int numFields = mPossibleSelections.size();
-  // this isn't 100% accurate so beware
-  int newSelectionIndex = (mVertical ? (float)event.getMouseDownY() / getHeight()
-                                     : event.getMouseDownX() / getWidth())
-                          * numFields;
-  auto newSelection = mPossibleSelections[newSelectionIndex];
+  juce::String newSelection("");
+  for (int i = 0; i < mSelectionsBounds.size(); i++) {
+    if (mSelectionsBounds[i].contains(event.position)) {
+      newSelection = mPossibleSelections[i];
+      break;
+    }
+  }
   if (getActiveSelection() == newSelection && mUseNullSelection) {
     mLinkedValue.setValue("");
   }
