@@ -89,3 +89,13 @@ enum RT_FFT_MODIFIERS {
 };
 static const juce::StringArray RT_FFT_MODIFIER_IDS
     = {"frame_size", "overlap_factor", "pad_factor"};
+
+enum RT_MULTICHANNEL_MODES {
+  RT_MULTICHANNEL_MONO,
+  RT_MULTICHANNEL_LR,
+  RT_MULTICHANNEL_MS,
+  RT_MULTICHANNEL_MODE_COUNT,
+};
+
+static const juce::StringArray RT_MULTICHANNEL_MODE_IDS
+    = {"mono", "left/right", "mid/side"};

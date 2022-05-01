@@ -27,7 +27,7 @@ RT_PropertyManager::RT_PropertyManager(
                   (int)p->overlap_factor},
                  {RT_FFT_MODIFIER_IDS[RT_FFT_MODIFIER_PAD_FACTOR], (int)p->pad_factor},
                  {"manip_multichannel",
-           p->manip_multichannel ? "multichannel" : "mono"},
+                  RT_MULTICHANNEL_MODE_IDS[RT_MULTICHANNEL_MONO]},
       },
              {juce::ValueTree("rt_chans", {}, {}),
               juce::ValueTree("rt_gui_state", {{"active_manip", ""}}, {})});

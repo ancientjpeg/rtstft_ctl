@@ -22,14 +22,17 @@ RT_SpectralDisplayContainer::RT_SpectralDisplayContainer(
                          ->getGUIStateTree()
                          .getPropertyAsValue("active_manip", nullptr),
                      RT_MANIP_GUI_IDS),
-      mChannelSelector(mInterface,
-                       mInterface->getPropertyManager()
-                           ->getValueTreeRef()
-                           .getPropertyAsValue("manip_multichannel", nullptr),
-                       {"multichannel", "mono"}, false, true)
+      mChannelModeSelector(
+          mInterface,
+          mInterface->getPropertyManager()
+              ->getValueTreeRef()
+              .getPropertyAsValue("manip_multichannel", nullptr),
+          RT_MULTICHANNEL_MODE_IDS, false, true)
 {
   addAndMakeVisible(mFFTDisplay);
   addAndMakeVisible(mManipSelector);
+  addAndMakeVisible(mChannelModeSelector);
+  // addAndMakeVisible
 }
 
 RT_SpectralDisplayContainer::~RT_SpectralDisplayContainer() {}
@@ -65,7 +68,7 @@ void RT_SpectralDisplayContainer::resized()
   int  border            = RT_LookAndFeel::widgetBorderSize;
   auto bounds            = getBoundsAdj();
   auto topBounds         = bounds.removeFromTop(40);
-  mChannelSelector.setBounds(topBounds.removeFromRight(rightSectionWidth));
+  mChannelModeSelector.setBounds(topBounds.removeFromRight(rightSectionWidth));
   topBounds.removeFromRight(border);
   mManipSelector.setBounds(topBounds);
   mHorizontalSeparator = bounds.removeFromTop(border);
@@ -73,5 +76,6 @@ void RT_SpectralDisplayContainer::resized()
   bounds.removeFromRight(border);
   mFFTDisplay.setBounds(bounds);
 
-  mVerticalSeparator = getBoundsAdj().withX(mDbScaleTicks.getX() - border).withWidth(border);
+  mVerticalSeparator
+      = getBoundsAdj().withX(mDbScaleTicks.getX() - border).withWidth(border);
 }

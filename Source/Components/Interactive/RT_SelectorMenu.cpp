@@ -30,6 +30,8 @@ RT_SelectorMenu::RT_SelectorMenu(RT_ProcessorInterface  *inInterface,
       mLinkedValue(inValueToLink), mUseNullSelection(inUseNullSelection),
       mVertical(inIsVertical)
 {
+  mLinkedValue.addListener(this);
+  valueChanged(mLinkedValue);
 }
 
 juce::String RT_SelectorMenu::getActiveSelection()
@@ -95,8 +97,10 @@ void RT_SelectorMenu::mouseDown(const juce::MouseEvent &event)
 {
   int numFields = mPossibleSelections.size();
   // this isn't 100% accurate so beware
-  int  newSelectionIndex = event.getMouseDownX() / (getWidth() / numFields);
-  auto newSelection      = mPossibleSelections[newSelectionIndex];
+  int newSelectionIndex = (mVertical ? (float)event.getMouseDownY() / getHeight()
+                                     : event.getMouseDownX() / getWidth())
+                          * numFields;
+  auto newSelection = mPossibleSelections[newSelectionIndex];
   if (getActiveSelection() == newSelection && mUseNullSelection) {
     mLinkedValue.setValue("");
   }
