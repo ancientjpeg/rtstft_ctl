@@ -27,12 +27,17 @@ RT_SpectralDisplayContainer::RT_SpectralDisplayContainer(
           mInterface->getPropertyManager()
               ->getValueTreeRef()
               .getPropertyAsValue("manip_multichannel", nullptr),
-          RT_MULTICHANNEL_MODE_IDS, false, true)
+          RT_MULTICHANNEL_MODE_IDS, false, true),
+      mChannelSelector(mInterface,
+                       mInterface->getPropertyManager()
+                           ->getGUIStateTree()
+                           .getPropertyAsValue("active_chan", nullptr),
+                       {"0", "1"}, false, true)
 {
   addAndMakeVisible(mFFTDisplay);
   addAndMakeVisible(mManipSelector);
   addAndMakeVisible(mChannelModeSelector);
-  // addAndMakeVisible
+  addAndMakeVisible(mChannelSelector);
 }
 
 RT_SpectralDisplayContainer::~RT_SpectralDisplayContainer() {}
@@ -41,14 +46,16 @@ void RT_SpectralDisplayContainer::paintInBorder(juce::Graphics &g)
 {
   auto lafm = mInterface->getLookAndFeelManager();
   g.setColour(lafm->getUIColour(defaultFill));
-  g.fillRect(mHorizontalSeparator);
-  g.fillRect(mVerticalSeparator);
+  g.fillAll();
   auto  dbBounds       = mDbScaleTicks;
   float dbRange        = RT_DB_MAX - RT_DB_MIN;
   int   tickSeparation = 12;
   g.setFont(juce::Font(10));
   // can use any multiple of tickSeparation for first value - just to be sure we
   // get 0dB
+  g.setColour(lafm->getUIColour(windowBackground));
+  g.fillRect(dbBounds);
+  g.setColour(lafm->getUIColour(defaultFill));
   for (int i = tickSeparation; i > mFFTDisplay.mDbMin; i -= tickSeparation) {
     juce::String s(i);
     float yPos = (1.f - ((i - RT_DB_MIN) / dbRange)) * dbBounds.getHeight()
@@ -68,14 +75,16 @@ void RT_SpectralDisplayContainer::resized()
   int  border            = RT_LookAndFeel::widgetBorderSize;
   auto bounds            = getBoundsAdj();
   auto topBounds         = bounds.removeFromTop(40);
-  mChannelModeSelector.setBounds(topBounds.removeFromRight(rightSectionWidth));
+  mManipSelector.setBounds(
+      topBounds.removeFromLeft(topBounds.getWidth() * 0.75f));
+  topBounds.removeFromLeft(border);
+  mChannelSelector.setBounds(topBounds.removeFromRight(rightSectionWidth));
   topBounds.removeFromRight(border);
-  mManipSelector.setBounds(topBounds);
-  mHorizontalSeparator = bounds.removeFromTop(border);
-  mDbScaleTicks        = bounds.removeFromRight(rightSectionWidth);
+  mChannelModeSelector.setBounds(topBounds);
+
+  bounds.removeFromTop(border);
+
+  mDbScaleTicks = bounds.removeFromRight(rightSectionWidth);
   bounds.removeFromRight(border);
   mFFTDisplay.setBounds(bounds);
-
-  mVerticalSeparator
-      = getBoundsAdj().withX(mDbScaleTicks.getX() - border).withWidth(border);
 }

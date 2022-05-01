@@ -70,6 +70,7 @@ void RTSTFT_Manager::resetParamsStruct(int inFFTSize, int inOverlapFactor)
   }
   p->listener  = {(void *)this, &RTSTFT_CMDListenerCallback};
   mInitialized = true;
+  // implement a re-update here
 }
 
 const rt_params RTSTFT_Manager::getParamsStruct() { return p; }
@@ -93,19 +94,17 @@ void         RTSTFT_Manager::readManipsFromBinary(bool inThreadedFFTUpdate)
   if (magicNumber != ManipsBinaryMagicNumber) {
     return;
   }
-  void *ptr = (char *)manipsBinaryPtr + 4;
+  void *ptr       = (char *)manipsBinaryPtr + 4;
 
-  rt_manip_overwrite_manips(p, p->chans[0], (rt_real *)ptr,
-                            rt_manip_block_len(p));
-  int to_chan   = p->manip_multichannel ? p->num_chans : 1;
-  int block_len = rt_manip_block_len(p);
+  int   to_chan   = p->manip_multichannel ? p->num_chans : 1;
+  int   block_len = rt_manip_block_len(p);
   for (int i = 0; i < to_chan; i++) {
     rt_manip_overwrite_manips(p, p->chans[0], (rt_real *)ptr + block_len * i,
                               block_len);
   }
 }
 
-void RTSTFT_Manager::writeManipsToFile(juce::MemoryOutputStream &stream)
+void RTSTFT_Manager::writeManipsToBinary(juce::MemoryOutputStream &stream)
 {
   stream.writeInt(ManipsBinaryMagicNumber);
   rt_uint i;

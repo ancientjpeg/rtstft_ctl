@@ -28,6 +28,7 @@ public:
 
   int                               getActiveManipFlavor();
   int                               getMultichannelMode();
+  int                               getActiveChannelIndex();
 
   juce::String                      getNextStringInHistory(bool reverse);
   void                              pushNewHistoryCommand(juce::String &s);

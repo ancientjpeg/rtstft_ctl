@@ -30,7 +30,8 @@ RT_PropertyManager::RT_PropertyManager(
                   RT_MULTICHANNEL_MODE_IDS[RT_MULTICHANNEL_MONO]},
       },
              {juce::ValueTree("rt_chans", {}, {}),
-              juce::ValueTree("rt_gui_state", {{"active_manip", ""}}, {})});
+              juce::ValueTree("rt_gui_state",
+                              {{"active_manip", ""}, {"active_chan", "0"}}, {})});
 
   mHistoryIterator = mCommandHistory.begin();
   mValueTree.addListener(mInterface->getRTSTFTManager());
@@ -47,6 +48,7 @@ juce::ValueTree RT_PropertyManager::getGUIStateTree()
 {
   return mValueTree.getChild(1);
 }
+
 int RT_PropertyManager::getActiveManipFlavor()
 {
   auto active = (juce::String)getGUIStateTree().getProperty("active_manip");
@@ -56,6 +58,10 @@ int RT_PropertyManager::getMultichannelMode()
 {
   auto active = (juce::String)mValueTree.getProperty("manip_multichannel");
   return RT_MULTICHANNEL_MODE_IDS.indexOf(active);
+}
+int RT_PropertyManager::getActiveChannelIndex()
+{
+  return getGUIStateTree().getProperty("active_chan").toString().getIntValue();
 }
 
 juce::String RT_PropertyManager::getNextStringInHistory(bool reverse)
@@ -100,13 +106,18 @@ void RT_PropertyManager::pushNewHistoryCommand(juce::String &s)
 std::unique_ptr<juce::XmlElement>
 RT_PropertyManager::getXMLSerializedProperties()
 {
-  auto el = mValueTree.createXml();
+  auto tree = mValueTree.createCopy();
+  tree.removeChild(tree.getChildWithName("rt_gui_state"), nullptr);
+  auto el = tree.createXml();
   return el;
 }
 
 void RT_PropertyManager::replaceState(juce::ValueTree &inNewState)
 {
+  auto guiState = mValueTree.getChildWithName("rt_gui_state");
+  mValueTree.removeChild(guiState, nullptr);
   mValueTree.copyPropertiesAndChildrenFrom(inNewState, nullptr);
+  mValueTree.addChild(guiState, 1, nullptr);
 }
 
 bool RT_PropertyManager::assertTreeCanValidlyReplace(
@@ -128,6 +139,8 @@ bool RT_PropertyManager::assertValueTreesHaveCompatibleLayout(
     auto comparisonSubTree
         = inComparisonTree.getChildWithName(templateSubTree.getType());
     if (!comparisonSubTree.isValid()) {
+      if (templateSubTree.getType().toString() == "rt_gui_state")
+        continue;
       return false;
     }
     if (!assertValueTreesHaveCompatibleLayout(templateSubTree,

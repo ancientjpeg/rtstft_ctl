@@ -21,8 +21,8 @@
 class RT_SpectralDisplayContainer : public RT_BorderedComponent {
 
   RT_FFTDisplay        mFFTDisplay;
-  RT_SelectorMenu      mManipSelector, mChannelModeSelector;
-  juce::Rectangle<int> mHorizontalSeparator, mVerticalSeparator, mDbScaleTicks;
+  RT_SelectorMenu      mManipSelector, mChannelModeSelector, mChannelSelector;
+  juce::Rectangle<int> mDbScaleTicks;
 
 public:
   RT_SpectralDisplayContainer(RT_ProcessorInterface *inInterface,

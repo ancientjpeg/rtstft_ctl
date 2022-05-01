@@ -160,7 +160,7 @@ void RT_ProcessorBase::getStateInformation(juce::MemoryBlock &destData)
   auto size          = ((uint32_t *)destData.getData())[1];
   auto manips_stream = juce::MemoryOutputStream(destData, true);
   manips_stream.setPosition(size + 9);
-  mRTSTFTManager.writeManipsToFile(manips_stream);
+  mRTSTFTManager.writeManipsToBinary(manips_stream);
 
   // TEST!!!!
   juce::MemoryBlock toFile(destData);
@@ -171,7 +171,6 @@ void RT_ProcessorBase::setStateInformation(const void *data, int sizeInBytes)
 {
   mStateInformation    = juce::MemoryBlock(data, sizeInBytes);
   mAwaitingStateUpdate = true;
-  // mRTSTFTManager.deserializeParamsStruct(state->getChildByName("rt_params"));
 }
 
 void RT_ProcessorBase::verifyStateIsUpToDate()
@@ -201,7 +200,7 @@ void RT_ProcessorBase::verifyStateIsUpToDate()
 
   mXMLOffset = ((uint32_t *)data)[1] + 9; // includes magic number, size int,
                                           // and trailing nullterm in XML binary
-  mRTSTFTManager.readManipsFromBinary(true);
+  mRTSTFTManager.readManipsFromBinary(false);
   mAwaitingStateUpdate = false;
 }
 

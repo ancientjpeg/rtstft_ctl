@@ -41,7 +41,7 @@ public:
   int  getCMDErrorState();
   juce::String     getCMDMessage();
 
-  void             writeManipsToFile(juce::MemoryOutputStream &stream);
+  void             writeManipsToBinary(juce::MemoryOutputStream &stream);
   void             readManipsFromBinary(bool inThreadedFFTUpdate = false);
   static const int ManipsBinaryMagicNumber = 0xBEEFED05;
 
