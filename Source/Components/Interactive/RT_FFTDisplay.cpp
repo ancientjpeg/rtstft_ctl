@@ -35,13 +35,11 @@ void RT_FFTDisplay::paint(juce::Graphics &g)
   auto propMan    = mInterface->getPropertyManager();
   bool mono       = propMan->getMultichannelMode() == RT_MULTICHANNEL_MONO;
   int  activeChan = mono ? 0 : propMan->getActiveChannelIndex();
-  if (mono) {
-    for (int i = 0;
-         i < mInterface->getRTSTFTManager()->getParamsStruct()->num_chans;
-         i++) {
-      if (i != activeChan)
-        paintChannel(g, i);
-    }
+  // paint both even when in mono b/c incoming audio is still stereo
+  for (int i = 0;
+       i < mInterface->getRTSTFTManager()->getParamsStruct()->num_chans; i++) {
+    if (i != activeChan)
+      paintChannel(g, i);
   }
   paintChannel(g, activeChan, true);
 }
@@ -58,15 +56,18 @@ void RT_FFTDisplay::paintChannel(juce::Graphics &g, int inChannelIndex,
   int   barsInWindow = numAmpsInFFT < maxBars ? numAmpsInFFT : maxBars;
   float width        = (float)1 / barsInWindow * getWidth();
   int   i_incr       = numAmpsInFFT <= maxBars ? 1 : numAmpsInFFT / maxBars;
+  bool  mono         = mInterface->getPropertyManager()->getMultichannelMode()
+              == RT_MULTICHANNEL_MONO;
 
   for (int i = 0; i < barsInWindow; i++) {
-    float ampCurr = p->hold->amp_holder[i * i_incr];
+    float ampCurr = p->chans[inChannelIndex]->framebuf->amp_holder[i * i_incr];
     float height  = scaleAmpToYPosNormDbScale(ampCurr);
     float x       = (float)i / barsInWindow * getWidth();
-    g.setColour(lamf->getUIColour(highlightedFill));
+    g.setColour(inIsActiveChannel ? lamf->getUIColour(highlightedFill)
+                                  : lamf->getUIColour(defaultFill));
     g.fillRect(x, (float)(getHeight() - height), width, height);
     x += width * 0.125;
-    if (inIsActiveChannel) {
+    if (mono ? inChannelIndex == 0 : i) {
       float manipWidth = width * 0.75;
       paintManips(g, inChannelIndex, i, i_incr, x, manipWidth);
     }
@@ -123,7 +124,7 @@ int RT_FFTDisplay::xPosToManipsIndex(float inXPos)
   int manip_len
       = rt_manip_len(mInterface->getRTSTFTManager()->getParamsStruct());
   int ret = inXPos * manip_len / getWidth();
-  return std::clamp<int>(ret, 0, manip_len);
+  return std::clamp<int>(ret, 0, manip_len + 1);
 }
 float RT_FFTDisplay::manipsIndexToXPos(int inIndex)
 {
