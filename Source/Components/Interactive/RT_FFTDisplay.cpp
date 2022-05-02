@@ -16,14 +16,11 @@
 RT_FFTDisplay::RT_FFTDisplay(RT_ProcessorInterface *inInterface)
     : RT_Component(inInterface)
 {
-  const rt_params p        = mInterface->getRTSTFTManager()->getParamsStruct();
-
-  auto            blocklen = rt_manip_block_len(p);
-  mDbMaxAsAmp              = rt_dbtoa(mDbMax);
+  mDbMaxAsAmp = rt_dbtoa(mDbMax);
 #if JUCE_DEBUG
   startTimer(1000 / 8);
 #else
-  startTimer(1000 / 30);
+  startTimer(1000 / 15);
 #endif
 }
 
@@ -54,7 +51,7 @@ void RT_FFTDisplay::paintChannel(juce::Graphics &g, int inChannelIndex,
   int   maxBars      = 128;
   int   numAmpsInFFT = rt_manip_len(p);
   int   barsInWindow = numAmpsInFFT < maxBars ? numAmpsInFFT : maxBars;
-  float width        = (float)1 / barsInWindow * getWidth();
+  float width        = 1.f / barsInWindow * getWidth();
   int   i_incr       = numAmpsInFFT <= maxBars ? 1 : numAmpsInFFT / maxBars;
   bool  mono         = mInterface->getPropertyManager()->getMultichannelMode()
               == RT_MULTICHANNEL_MONO;
