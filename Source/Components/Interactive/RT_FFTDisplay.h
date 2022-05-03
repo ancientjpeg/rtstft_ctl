@@ -56,8 +56,6 @@ private:
 
   void               paintChannel(juce::Graphics &g, int inChannelIndex,
                                   bool inIsActiveChannel = false);
-  void paintManips(juce::Graphics &g, int inActiveChannelIndex, int i,
-                   int i_incr, float x, float manipWidth);
 
   JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(RT_FFTDisplay)
 };
