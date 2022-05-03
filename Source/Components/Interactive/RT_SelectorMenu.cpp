@@ -57,7 +57,7 @@ void RT_SelectorMenu::paint(juce::Graphics &g)
     auto        color_id
         = isActiveSelection
               ? outline
-              : (checkHover(&boundCurr) ? highlightedFill : windowBackground);
+              : (checkHover(&boundCurr) ? defaultFill : windowBackground);
     g.setColour(lamf->getUIColour(color_id));
     g.fillRect(boundCurr);
 

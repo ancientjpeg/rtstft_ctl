@@ -211,7 +211,7 @@ void RT_InplaceComboBox<T>::Label::paint(juce::Graphics &g)
   auto bg_col_enum     = windowBackground;
   if (!mIsTitle) {
     bg_col_enum
-        = mSelected ? outline : (mHovered ? highlightedFill : windowBackground);
+        = mSelected ? outline : (mHovered ? defaultFill : windowBackground);
   }
 
   auto text_col_enum = mSelected ? highlightedText : defaultText;

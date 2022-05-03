@@ -91,7 +91,10 @@ void RT_FFTDisplay::paintChannel(juce::Graphics &g, int inChannelIndex,
           int manip_index = rt_manip_index(p, (rt_manip_flavor_t)m, i * i_incr);
           val             = p->chans[c]->manip->hold_manips[manip_index];
           if (val <= ampCurr) {
-            manipCol = manipCol.contrasting(1.f);
+            float contrast = c == activeChan ? .5f : 1.f;
+            if (!(m == activeManipFlavor && c == activeChan)) {
+              manipCol = lafm->getUIColour(highlightedFill).contrasting(contrast);
+            }
           }
           switch ((rt_manip_flavor_t)m) {
           case RT_MANIP_GAIN:
