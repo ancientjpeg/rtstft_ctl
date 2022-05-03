@@ -30,8 +30,7 @@ void RT_FFTDisplay::paint(juce::Graphics &g)
 {
   g.fillAll(mInterface->getLookAndFeelManager()->getUIColour(windowBackground));
   auto propMan    = mInterface->getPropertyManager();
-  bool mono       = propMan->getMultichannelMode() == RT_MULTICHANNEL_MONO;
-  int  activeChan = mono ? 0 : propMan->getActiveChannelIndex();
+  int  activeChan = propMan->getActiveChannelIndex();
   // paint both even when in mono b/c incoming audio is still stereo
   for (int i = 0;
        i < mInterface->getRTSTFTManager()->getParamsStruct()->num_chans; i++) {
@@ -45,7 +44,7 @@ void RT_FFTDisplay::paintChannel(juce::Graphics &g, int inChannelIndex,
 {
   const rt_params p       = mInterface->getRTSTFTManager()->getParamsStruct();
   auto            propMan = mInterface->getPropertyManager();
-  bool            mono    = propMan->getMultichannelMode() == RT_MULTICHANNEL_MONO;
+  bool            mono = propMan->getMultichannelMode() == RT_MULTICHANNEL_MONO;
   int             activeManipFlavor = propMan->getActiveManipFlavor();
   if (p == NULL || !p->initialized) {
     return;
@@ -90,7 +89,10 @@ void RT_FFTDisplay::paintChannel(juce::Graphics &g, int inChannelIndex,
             continue;
           }
           int manip_index = rt_manip_index(p, (rt_manip_flavor_t)m, i * i_incr);
-           val       = p->chans[c]->manip->hold_manips[manip_index];
+          val             = p->chans[c]->manip->hold_manips[manip_index];
+          if (val <= ampCurr) {
+            manipCol = manipCol.contrasting(1.f);
+          }
           switch ((rt_manip_flavor_t)m) {
           case RT_MANIP_GAIN:
             val += p->hold->gain_mod;
