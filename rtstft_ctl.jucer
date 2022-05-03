@@ -86,6 +86,10 @@
           <FILE id="gai88l" name="RT_GearButton.h" compile="0" resource="0" file="Source/Components/Interactive/RT_GearButton.h"/>
           <FILE id="JnDZ25" name="RT_InplaceComboBox.h" compile="0" resource="0"
                 file="Source/Components/Interactive/RT_InplaceComboBox.h"/>
+          <FILE id="hHXjzc" name="RT_PresetChooser.cpp" compile="1" resource="0"
+                file="Source/Components/Interactive/RT_PresetChooser.cpp"/>
+          <FILE id="MjXqAV" name="RT_PresetChooser.h" compile="0" resource="0"
+                file="Source/Components/Interactive/RT_PresetChooser.h"/>
           <FILE id="u9CuUr" name="RT_SelectorMenu.cpp" compile="1" resource="0"
                 file="Source/Components/Interactive/RT_SelectorMenu.cpp"/>
           <FILE id="jTRtXo" name="RT_SelectorMenu.h" compile="0" resource="0"
