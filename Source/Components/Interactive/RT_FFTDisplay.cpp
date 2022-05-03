@@ -18,7 +18,7 @@ RT_FFTDisplay::RT_FFTDisplay(RT_ProcessorInterface *inInterface)
 {
   mDbMaxAsAmp = rt_dbtoa(mDbMax);
 #if JUCE_DEBUG
-  startTimer(1000 / 8);
+  startTimer(1000 / 15);
 #else
   startTimer(1000 / 15);
 #endif
@@ -44,6 +44,9 @@ void RT_FFTDisplay::paintChannel(juce::Graphics &g, int inChannelIndex,
                                  bool inIsActiveChannel)
 {
   const rt_params p = mInterface->getRTSTFTManager()->getParamsStruct();
+  auto propMan = mInterface->getPropertyManager();
+  bool  mono         = propMan->getMultichannelMode();
+  int  activeChan = mono ? 0 : propMan->getActiveChannelIndex() == RT_MULTICHANNEL_MONO;
   if (p == NULL || !p->initialized) {
     return;
   }
@@ -53,8 +56,7 @@ void RT_FFTDisplay::paintChannel(juce::Graphics &g, int inChannelIndex,
   int   barsInWindow = numAmpsInFFT < maxBars ? numAmpsInFFT : maxBars;
   float width        = 1.f / barsInWindow * getWidth();
   int   i_incr       = numAmpsInFFT <= maxBars ? 1 : numAmpsInFFT / maxBars;
-  bool  mono         = mInterface->getPropertyManager()->getMultichannelMode()
-              == RT_MULTICHANNEL_MONO;
+              
 
   for (int i = 0; i < barsInWindow; i++) {
     float ampCurr = p->chans[inChannelIndex]->framebuf->amp_holder[i * i_incr];
@@ -66,7 +68,7 @@ void RT_FFTDisplay::paintChannel(juce::Graphics &g, int inChannelIndex,
     x += width * 0.125;
     if (mono ? inChannelIndex == 0 : i) {
       float manipWidth = width * 0.75;
-      paintManips(g, inChannelIndex, i, i_incr, x, manipWidth);
+      paintManips(g, activeChan, i, i_incr, x, manipWidth);
     }
   }
 }
@@ -105,7 +107,7 @@ void RT_FFTDisplay::paintManips(juce::Graphics &g, int inActiveChannelIndex,
       float height = scaleManipAmpToYPosNorm(val, p, (rt_manip_flavor_t)m);
       auto  col    = activeManipFlavor == m
                          ? (c == inActiveChannelIndex
-                                ? juce::Colour(255, 220, 80)
+                                ? juce::Colour(255, 220, 60)
                                 : lamf->getUIColour(highlightedFill))
                          : lamf->getUIColour(defaultFill);
       g.setColour(col);
@@ -121,7 +123,7 @@ int RT_FFTDisplay::xPosToManipsIndex(float inXPos)
   int manip_len
       = rt_manip_len(mInterface->getRTSTFTManager()->getParamsStruct());
   int ret = inXPos * manip_len / getWidth();
-  return std::clamp<int>(ret, 0, manip_len + 1);
+  return std::clamp<int>(ret, 0, manip_len);
 }
 float RT_FFTDisplay::manipsIndexToXPos(int inIndex)
 {
