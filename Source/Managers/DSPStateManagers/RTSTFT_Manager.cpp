@@ -167,7 +167,6 @@ void RTSTFT_Manager::valueTreePropertyChanged(
 {
   juce::var val = treeWhosePropertyHasChanged[property];
 
-  // this is so so so dumb
   if (property
       == (juce::Identifier)RT_FFT_MODIFIER_IDS[RT_FFT_MODIFIER_FRAME_SIZE]) {
     changeFFTSize((int)val, p->overlap_factor, p->pad_factor);
@@ -182,7 +181,9 @@ void RTSTFT_Manager::valueTreePropertyChanged(
                RT_FFT_MODIFIER_IDS[RT_FFT_MODIFIER_PAD_FACTOR]) {
     changeFFTSize(p->frame_size, p->overlap_factor, (int)val);
   }
-  else if (property == (juce::Identifier) "manip_multichannel") {
+  else if (property == (juce::Identifier) "manip_multichannel"
+           && treeWhosePropertyHasChanged
+                  == mInterface->getPropertyManager()->getValueTreeRef()) {
     switch (RT_MULTICHANNEL_MODE_IDS.indexOf(
         treeWhosePropertyHasChanged.getProperty(property).toString())) {
     case RT_MULTICHANNEL_MONO:
