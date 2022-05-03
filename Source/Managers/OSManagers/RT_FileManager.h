@@ -20,24 +20,28 @@
 
 class RT_FileManager {
 
+public:
   inline static const juce::String sc_RTSTFTAppSupportDirName
       = juce::String(RT_SUPPORT_FOLDER);
   inline static const juce::String sc_PresetSuffix
       = juce::String(".rtstftpreset");
 
   RT_ProcessorInterface *mInterface;
-  juce::File             mAppSupportDir, mAppPresetsDir;
 
-  void                   validateDirectoryStructure();
-
-  JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(RT_FileManager);
-
-public:
   RT_FileManager() = delete;
   RT_FileManager(RT_ProcessorInterface *inInterface);
   ~RT_FileManager() = default;
-  void savePreset(juce::String inPresetName);
-  void savePreset(juce::String      inPresetName,
-                  juce::MemoryBlock inPreparedMemoryBlock);
-  void loadPreset(juce::String inPresetName);
+  void                    savePreset(juce::String inPresetName);
+  void                    savePreset(juce::String      inPresetName,
+                                     juce::MemoryBlock inPreparedMemoryBlock);
+  void                    loadPreset(juce::String inPresetName);
+  juce::File              getAppSupportDir();
+  juce::File              getPresetsDirectory();
+  juce::Array<juce::File> RT_FileManager::getAllFilesInDir(juce::File inDir);
+
+private:
+  juce::File mAppSupportDir, mAppPresetsDir;
+  void       validateDirectoryStructure();
+
+  JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(RT_FileManager);
 };

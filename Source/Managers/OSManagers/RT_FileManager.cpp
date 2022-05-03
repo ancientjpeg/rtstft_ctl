@@ -29,7 +29,7 @@ void RT_FileManager::validateDirectoryStructure()
     }
     return true;
   };
-  assert(checkDir(mAppSupportDir));
+  assert(checkDir(mAppSupportDir)); // this might be a ticking time bomb lol
   mAppPresetsDir = mAppSupportDir.getChildFile("presets");
   assert(checkDir(mAppPresetsDir));
 }
@@ -49,4 +49,8 @@ void RT_FileManager::savePreset(juce::String      inPresetName,
   jassert(writeStatus);
 }
 
-void RT_FileManager::loadPreset(juce::String inPresetName) {}
+void       RT_FileManager::loadPreset(juce::String inPresetName) {}
+
+juce::File RT_FileManager::getAppSupportDir() { return mAppSupportDir; }
+juce::File RT_FileManager::getPresetsDirectory() { return mAppPresetsDir; }
+juce::Array<juce::File> RT_FileManager::getAllFilesInDir(juce::File inDir) {}
