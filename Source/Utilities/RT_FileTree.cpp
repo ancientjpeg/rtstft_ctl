@@ -27,22 +27,9 @@ RT_FileTree &RT_FileTree::operator=(RT_FileTree &&inFileTreeRvRef)
 juce::File   RT_FileTree::getDirFileObject() { return mCurrentDir; }
 juce::String RT_FileTree::getDirName() { return mCurrentDir.getFileName(); }
 
-const juce::Array<juce::File> &RT_FileTree::getChildFileArray()
+const juce::Array<juce::File> *const RT_FileTree::getChildFileArray()
 {
-  return mFiles;
-}
-
-juce::Array<RT_FileTree::FileDescription>
-RT_FileTree::getFileDescriptions(bool sort)
-{
-  juce::Array<FileDescription> ret;
-  for (juce::File f : mFiles) {
-    ret.add({f.isDirectory(), f.getFileName()});
-  }
-  if (sort) {
-    FileDescriptionComparator sorter;
-    ret.sort(sorter);
-  }
+  return &mFiles;
 }
 
 bool RT_FileTree::traverseUp()
@@ -69,8 +56,7 @@ void RT_FileTree::_constructTree()
   mFiles = mCurrentDir.findChildFiles(4, false, mFilePattern);
 }
 
-int RT_FileTree::FileDescriptionComparator::compareElements(
-    RT_FileTree::FileDescription &f0, RT_FileTree::FileDescription &f1)
+int RT_FileTree::FileComparator::compareElements(juce::File &f0, juce::File &f1)
 {
-  return f0.fileName.compareNatural(f1.fileName);
+  return f0.getFileName().compareNatural(f1.getFileName());
 }

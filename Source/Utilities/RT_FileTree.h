@@ -20,21 +20,16 @@ public:
   RT_FileTree &operator=(const RT_FileTree &inFileTreeRvRef);
   RT_FileTree &operator=(RT_FileTree &&inFileTreeRvRef);
 
-  struct FileDescription {
-    bool         isDir;
-    juce::String fileName;
-  };
-  class FileDescriptionComparator {
+  class FileComparator {
   public:
-    static int compareElements(FileDescription &f0, FileDescription &f1);
+    static int compareElements(juce::File &f0, juce::File &f1);
   };
 
-  juce::File                   getDirFileObject();
-  juce::String                 getDirName();
-  juce::Array<FileDescription> getFileDescriptions(bool sort = true);
-  bool                         traverseUp();
-  bool                         traverseDown(juce::String inTraversalTargetDir);
-  const juce::Array<juce::File> &getChildFileArray();
+  juce::File   getDirFileObject();
+  juce::String getDirName();
+  bool         traverseUp();
+  bool         traverseDown(juce::String inTraversalTargetDir);
+  const juce::Array<juce::File> *const getChildFileArray();
 
 private:
   juce::File              mTreeRoot, mCurrentDir;
