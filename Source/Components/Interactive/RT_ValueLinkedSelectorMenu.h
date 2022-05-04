@@ -1,7 +1,7 @@
 /*
   ==============================================================================
 
-    RT_SelectorMenu.h
+    RT_ValueLinkedSelectorMenu.h
     Created: 9 Apr 2022 11:22:43am
     Author:  Jackson Kaplan
 
@@ -15,18 +15,20 @@
 #include "../Utility/RT_Component.h"
 #include <JuceHeader.h>
 
-class RT_SelectorMenu : public RT_Component, public juce::Value::Listener {
+class RT_ValueLinkedSelectorMenu : public RT_Component,
+                                   public juce::Value::Listener {
 public:
-  RT_SelectorMenu(RT_ProcessorInterface              *inInterface,
-                  const juce::Value                  &inValueToLink,
-                  std::initializer_list<juce::String> inPossibleSelections,
-                  bool inUseNullSelection = true, bool inIsVertical = false);
-  RT_SelectorMenu(RT_ProcessorInterface  *inInterface,
-                  const juce::Value      &inValueToLink,
-                  const juce::StringArray inPossibleSelections,
-                  bool inUseNullSelection = true, bool inIsVertical = false);
+  RT_ValueLinkedSelectorMenu(
+      RT_ProcessorInterface *inInterface, const juce::Value &inValueToLink,
+      std::initializer_list<juce::String> inPossibleSelections,
+      bool inUseNullSelection = true, bool inIsVertical = false);
+  RT_ValueLinkedSelectorMenu(RT_ProcessorInterface  *inInterface,
+                             const juce::Value      &inValueToLink,
+                             const juce::StringArray inPossibleSelections,
+                             bool                    inUseNullSelection = true,
+                             bool                    inIsVertical = false);
 
-  ~RT_SelectorMenu()                       = default;
+  ~RT_ValueLinkedSelectorMenu()            = default;
 
   std::function<void(void)> onNewSelection = []() {};
   juce::String              getActiveSelection();

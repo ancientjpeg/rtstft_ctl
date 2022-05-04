@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include "../../Components/Interactive/RT_SelectorMenu.h"
+#include "../../Components/Interactive/RT_ValueLinkedSelectorMenu.h"
 #include "../DSPStateManagers/RT_ParameterDefines.h"
 #include "../Interface/RT_ProcessorInterface.h"
 

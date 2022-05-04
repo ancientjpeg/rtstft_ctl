@@ -1,31 +1,31 @@
 /*
   ==============================================================================
 
-    RT_SelectorMenu.cpp
+    RT_ValueLinkedSelectorMenu.cpp
     Created: 9 Apr 2022 11:22:43am
     Author:  Jackson Kaplan
 
   ==============================================================================
 */
 
-#include "RT_SelectorMenu.h"
+#include "RT_ValueLinkedSelectorMenu.h"
 #include "../../Managers/LookAndFeelManagement/RT_LookAndFeelManagement.h"
 #include "../../Managers/StateManagers/RT_PropertyManager.h"
 
-RT_SelectorMenu::RT_SelectorMenu(
+RT_ValueLinkedSelectorMenu::RT_ValueLinkedSelectorMenu(
     RT_ProcessorInterface *inInterface, const juce::Value &inValueToLink,
     std::initializer_list<juce::String> inPossibleSelections,
     bool inUseNullSelection, bool inIsVertical)
-    : RT_SelectorMenu(inInterface, inValueToLink,
-                      juce::StringArray(inPossibleSelections),
-                      inUseNullSelection, inIsVertical)
+    : RT_ValueLinkedSelectorMenu(inInterface, inValueToLink,
+                                 juce::StringArray(inPossibleSelections),
+                                 inUseNullSelection, inIsVertical)
 {
 }
 
-RT_SelectorMenu::RT_SelectorMenu(RT_ProcessorInterface  *inInterface,
-                                 const juce::Value      &inValueToLink,
-                                 const juce::StringArray inPossibleSelections,
-                                 bool inUseNullSelection, bool inIsVertical)
+RT_ValueLinkedSelectorMenu::RT_ValueLinkedSelectorMenu(
+    RT_ProcessorInterface *inInterface, const juce::Value &inValueToLink,
+    const juce::StringArray inPossibleSelections, bool inUseNullSelection,
+    bool inIsVertical)
     : RT_Component(inInterface), mPossibleSelections(inPossibleSelections),
       mLinkedValue(inValueToLink), mUseNullSelection(inUseNullSelection),
       mVertical(inIsVertical)
@@ -34,17 +34,17 @@ RT_SelectorMenu::RT_SelectorMenu(RT_ProcessorInterface  *inInterface,
   valueChanged(mLinkedValue);
 }
 
-juce::String RT_SelectorMenu::getActiveSelection()
+juce::String RT_ValueLinkedSelectorMenu::getActiveSelection()
 {
   return (juce::String)mLinkedValue.getValue();
 }
 
-int RT_SelectorMenu::getActiveSelectionIndex()
+int RT_ValueLinkedSelectorMenu::getActiveSelectionIndex()
 {
   return mPossibleSelections.indexOf(getActiveSelection());
 }
 
-void RT_SelectorMenu::paint(juce::Graphics &g)
+void RT_ValueLinkedSelectorMenu::paint(juce::Graphics &g)
 {
   juce::Font font = juce::Font(12, 0);
   g.setFont(font);
@@ -69,7 +69,7 @@ void RT_SelectorMenu::paint(juce::Graphics &g)
   }
 }
 
-void RT_SelectorMenu::resized()
+void RT_ValueLinkedSelectorMenu::resized()
 {
   mSelectionsBounds.clear();
   auto bounds    = getLocalBounds();
@@ -93,7 +93,7 @@ void RT_SelectorMenu::resized()
   }
 }
 
-void RT_SelectorMenu::mouseDown(const juce::MouseEvent &event)
+void RT_ValueLinkedSelectorMenu::mouseDown(const juce::MouseEvent &event)
 {
   juce::String newSelection("");
   for (int i = 0; i < mSelectionsBounds.size(); i++) {
@@ -115,7 +115,7 @@ void RT_SelectorMenu::mouseDown(const juce::MouseEvent &event)
   repaint();
 }
 
-void RT_SelectorMenu::mouseMove(const juce::MouseEvent &event)
+void RT_ValueLinkedSelectorMenu::mouseMove(const juce::MouseEvent &event)
 {
   for (auto const &r : mSelectionsBounds) {
     if (r.contains(event.position) && (&r != mSelectionWithHover)) {
@@ -126,17 +126,17 @@ void RT_SelectorMenu::mouseMove(const juce::MouseEvent &event)
   }
   mSelectionWithHover = nullptr;
 }
-void RT_SelectorMenu::mouseExit(const juce::MouseEvent &event)
+void RT_ValueLinkedSelectorMenu::mouseExit(const juce::MouseEvent &event)
 {
   mSelectionWithHover = nullptr;
   repaint();
 }
-bool RT_SelectorMenu::checkHover(const juce::Rectangle<float> *comp)
+bool RT_ValueLinkedSelectorMenu::checkHover(const juce::Rectangle<float> *comp)
 {
   return comp == mSelectionWithHover;
 }
 
-void RT_SelectorMenu::valueChanged(juce::Value &value)
+void RT_ValueLinkedSelectorMenu::valueChanged(juce::Value &value)
 {
   assert(value.refersToSameSourceAs(mLinkedValue));
   repaint();

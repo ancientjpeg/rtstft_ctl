@@ -78,6 +78,10 @@
                 resource="0" file="Source/Components/Layout/RT_SpectralDisplayContainer.h"/>
         </GROUP>
         <GROUP id="{07A2DC33-AEA2-1F87-D5B1-31130BD8B1C4}" name="Interactive">
+          <FILE id="Cf7LVc" name="RT_SelectorWidget.cpp" compile="1" resource="0"
+                file="Source/Components/Interactive/RT_SelectorWidget.cpp"/>
+          <FILE id="dTFAE1" name="RT_SelectorWidget.h" compile="0" resource="0"
+                file="Source/Components/Interactive/RT_SelectorWidget.h"/>
           <FILE id="jcUbo6" name="RT_FFTDisplay.cpp" compile="1" resource="0"
                 file="Source/Components/Interactive/RT_FFTDisplay.cpp"/>
           <FILE id="k4DoDH" name="RT_FFTDisplay.h" compile="0" resource="0" file="Source/Components/Interactive/RT_FFTDisplay.h"/>
@@ -90,10 +94,10 @@
                 file="Source/Components/Interactive/RT_PresetChooser.cpp"/>
           <FILE id="MjXqAV" name="RT_PresetChooser.h" compile="0" resource="0"
                 file="Source/Components/Interactive/RT_PresetChooser.h"/>
-          <FILE id="u9CuUr" name="RT_SelectorMenu.cpp" compile="1" resource="0"
-                file="Source/Components/Interactive/RT_SelectorMenu.cpp"/>
-          <FILE id="jTRtXo" name="RT_SelectorMenu.h" compile="0" resource="0"
-                file="Source/Components/Interactive/RT_SelectorMenu.h"/>
+          <FILE id="u9CuUr" name="RT_ValueLinkedSelectorMenu.cpp" compile="1"
+                resource="0" file="Source/Components/Interactive/RT_ValueLinkedSelectorMenu.cpp"/>
+          <FILE id="jTRtXo" name="RT_ValueLinkedSelectorMenu.h" compile="0" resource="0"
+                file="Source/Components/Interactive/RT_ValueLinkedSelectorMenu.h"/>
           <FILE id="BMaYER" name="RT_Sliders.cpp" compile="1" resource="0" file="Source/Components/Interactive/RT_Sliders.cpp"/>
           <FILE id="f9YAr0" name="RT_Sliders.h" compile="0" resource="0" file="Source/Components/Interactive/RT_Sliders.h"/>
         </GROUP>

@@ -11,7 +11,7 @@
 #pragma once
 
 #include "../Interactive/RT_FFTDisplay.h"
-#include "../Interactive/RT_SelectorMenu.h"
+#include "../Interactive/RT_ValueLinkedSelectorMenu.h"
 #include "../Utility/RT_BorderedComponent.h"
 #include <JuceHeader.h>
 
@@ -20,8 +20,9 @@
  */
 class RT_SpectralDisplayContainer : public RT_BorderedComponent {
 
-  RT_FFTDisplay        mFFTDisplay;
-  RT_SelectorMenu      mManipSelector, mChannelModeSelector, mChannelSelector;
+  RT_FFTDisplay              mFFTDisplay;
+  RT_ValueLinkedSelectorMenu mManipSelector, mChannelModeSelector,
+      mChannelSelector;
   juce::Rectangle<int> mDbScaleTicks;
 
 public:

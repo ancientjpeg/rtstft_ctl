@@ -9,3 +9,8 @@
 */
 
 #include "RT_PresetManager.h"
+
+RT_PresetManager::RT_PresetManager(RT_ProcessorInterface *inInterface)
+    : mInterface(inInterface)
+{
+}

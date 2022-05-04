@@ -53,7 +53,7 @@ bool RT_FileTree::traverseDown(juce::String inTraversalTargetDir)
 
 void RT_FileTree::_constructTree()
 {
-  mFiles = mCurrentDir.findChildFiles(4, false, mFilePattern);
+  mFiles = mCurrentDir.findChildFiles(3 | 4, false, mFilePattern);
 }
 
 int RT_FileTree::FileComparator::compareElements(juce::File &f0, juce::File &f1)
