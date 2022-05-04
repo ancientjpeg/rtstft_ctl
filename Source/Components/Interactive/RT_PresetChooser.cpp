@@ -11,6 +11,22 @@
 #include "RT_PresetChooser.h"
 
 RT_PresetChooser::RT_PresetChooser(RT_ProcessorInterface *inInterface)
-    : mInterface(inInterface)
+    : RT_Component(inInterface)
 {
+  addAndMakeVisible(mSaveButton);
+  mSaveButton.setButtonText("save preset");
+  addAndMakeVisible(mLoadButton);
+  mLoadButton.setButtonText("load preset");
+  mLoadButton.onClick = [this]() {};
+  addAndMakeVisible(mCurrentPresetLabel);
+  mCurrentPresetLabel.setText("Default", juce::dontSendNotification);
+}
+
+void RT_PresetChooser::paint(juce::Graphics &) {}
+void RT_PresetChooser::resized()
+{
+  auto bounds = getLocalBounds();
+  mSaveButton.setBounds(bounds.removeFromRight(80));
+  mLoadButton.setBounds(bounds.removeFromRight(80));
+  mCurrentPresetLabel.setBounds(bounds);
 }

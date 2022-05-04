@@ -158,6 +158,9 @@ void RTSTFT_Manager::parameterChanged(const juce::String &parameterID,
   //     newValue -= 1.f;
   //   }
   // }
+  if (paramFlavor == RT_SCALE_FACTOR_MOD) {
+    newValue = rt_centop(newValue);
+  }
   rt_set_single_param(p, (rt_param_flavor_t)paramFlavor, newValue);
 }
 

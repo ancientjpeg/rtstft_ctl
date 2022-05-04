@@ -48,8 +48,7 @@ static const std::function snap_legal = [](float start, float end, float val) {
 };
 
 static juce::Array<juce::NormalisableRange<float>> RT_PARAM_RANGES{
-    juce::NormalisableRange<float>(0.5f, 2.f, 0.f,
-                                   std::log(0.5) / std::log(1. / 3.)),
+    juce::NormalisableRange<float>(-2400.f, 2400.f, 0.f),
     juce::NormalisableRange<float>(0.f, 2.f, 0.f),
     juce::NormalisableRange<float>(0.f, 2.f, 0.f),
     juce::NormalisableRange<float>(0.f, 1.f, 0.f),
@@ -76,7 +75,7 @@ static juce::Array<juce::NormalisableRange<float>> RT_PARAM_RANGES{
 
 static const float
     RT_PARAM_DEFAULTS[RT_PARAM_FLAVOR_COUNT] // should be RT_PARAM_FLAVOR_COUNT
-    = {1.f, 1.f, 1.f, 0.f, 0.f, 0.f, 0.f, 1.f};
+    = {0.f, 1.f, 1.f, 0.f, 0.f, 0.f, 0.f, 1.f};
 
 /* property defines */
 static const juce::StringArray RT_MANIP_GUI_IDS = {"Gain", "Gate", "Limit"};
