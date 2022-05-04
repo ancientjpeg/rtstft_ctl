@@ -26,7 +26,7 @@ RT_ProcessorBase::RT_ProcessorBase()
 #else
     :
 #endif
-      mRTSTFTManager(this), mParameterManager(this),
+      mRTSTFTManager(this), mParameterManager(this), mPresetManager(this),
       mPropertyManager(this,
                        {
                            RT_MANIP_GUI_IDS[RT_MANIP_GAIN],
@@ -51,6 +51,10 @@ RT_LookAndFeel::Manager *RT_ProcessorBase::getLookAndFeelManager()
 RT_ParameterManager *RT_ProcessorBase::getParameterManager()
 {
   return &mParameterManager;
+}
+RT_PresetManager *RT_ProcessorBase::getPresetManager()
+{
+  return &mPresetManager;
 }
 RT_PropertyManager *RT_ProcessorBase::getPropertyManager()
 {

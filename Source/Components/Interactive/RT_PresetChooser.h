@@ -12,6 +12,7 @@
 #include "../../Managers/Interface/RT_ProcessorInterface.h"
 #include "../../Managers/OSManagers/RT_FileManager.h"
 #include "../../Managers/StateManagers/RT_PresetManager.h"
+#include "../../Utilities/RT_FileTree.h"
 #include "../Utility/RT_Component.h"
 #include <JuceHeader.h>
 
@@ -24,4 +25,5 @@ public:
 private:
   juce::Label      mCurrentPresetLabel;
   juce::TextButton mLoadButton, mSaveButton;
+  RT_FileTree      mFileTree;
 };

@@ -14,9 +14,10 @@
 class RT_AudioProcessor;
 class RT_ProcessorBase;
 class RT_ParameterManager;
-class RTSTFT_Manager;
+class RT_PresetManager;
 class RT_PropertyManager;
 class RT_FileManager;
+class RTSTFT_Manager;
 
 namespace RT_LookAndFeel {
 class Manager;
@@ -28,8 +29,9 @@ public:
   virtual ~RT_ProcessorInterface() {}
   virtual juce::AudioProcessor    *getProcessor()          = 0;
   virtual RT_LookAndFeel::Manager *getLookAndFeelManager() = 0;
-  virtual RT_ParameterManager     *getParameterManager()   = 0;
-  virtual RTSTFT_Manager          *getRTSTFTManager()      = 0;
-  virtual RT_PropertyManager      *getPropertyManager()    = 0;
   virtual RT_FileManager          *getFileManager()        = 0;
+  virtual RT_ParameterManager     *getParameterManager()   = 0;
+  virtual RT_PresetManager        *getPresetManager()      = 0;
+  virtual RT_PropertyManager      *getPropertyManager()    = 0;
+  virtual RTSTFT_Manager          *getRTSTFTManager()      = 0;
 };

@@ -14,6 +14,7 @@
 #include "Managers/Interface/RT_ProcessorInterface.h"
 #include "Managers/LookAndFeelManagement/RT_LookAndFeelManagement.h"
 #include "Managers/OSManagers/RT_FileManager.h"
+#include "Managers/StateManagers/RT_PresetManager.h"
 #include "Managers/StateManagers/RT_PropertyManager.h"
 #include <JuceHeader.h>
 #include <JucePluginDefines.h>
@@ -26,6 +27,7 @@ protected:
   RTSTFT_Manager          mRTSTFTManager;
   RT_ParameterManager     mParameterManager;
   RT_PropertyManager      mPropertyManager;
+  RT_PresetManager        mPresetManager;
   RT_FileManager          mFileManager;
 
   juce::MemoryBlock       mStateInformation;
@@ -41,6 +43,7 @@ public:
   RT_LookAndFeel::Manager *getLookAndFeelManager() override;
   RTSTFT_Manager          *getRTSTFTManager() override;
   RT_ParameterManager     *getParameterManager() override;
+  RT_PresetManager        *getPresetManager() override;
   RT_PropertyManager      *getPropertyManager() override;
   RT_FileManager          *getFileManager() override;
 

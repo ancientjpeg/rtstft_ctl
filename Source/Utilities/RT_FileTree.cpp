@@ -10,46 +10,67 @@
 
 #include "RT_FileTree.h"
 
-//RT_FileTree::RT_FileTree(juce::File inTreeRootFile, juce::String inFilePattern,
-//                         RT_FileTree *inParent)
-//    : RT_FileTree(inTreeRootFile, inFilePattern, inParent, true)
-//{
-//}
-//RT_FileTree::RT_FileTree(juce::File inTreeRootFile, juce::String inFilePattern,
-//                         RT_FileTree *inParent, bool inIsRoot)
-//    : mFileObject(inTreeRootFile), mFilePattern(inFilePattern),
-//      mParent(inParent), mIsRoot(inIsRoot)
-//{
-//  if (mIsRoot) {
-//  }
-//  mFiles = mFileObject.findChildFiles(2, false, mFilePattern);
-//  for (auto dir : mFileObject.findChildFiles(1, false))
-//    // could be a bit more memory efficient but..
-//    mDirs.add(RT_FileTree(dir, mFilePattern, this, false));
-//}
-//RT_FileTree::~RT_FileTree() {}
-//RT_FileTree &RT_FileTree::operator=(RT_FileTree &&inFileTreeRvRef)
-//{
-//  assert(inFileTreeRvRef.mIsRoot);
-//  mIsRoot      = inFileTreeRvRef.mIsRoot;
-//  mFilePattern = inFileTreeRvRef.mFilePattern;
-//  mFileObject  = inFileTreeRvRef.mFileObject;
-//  mFiles       = std::move(inFileTreeRvRef.mFiles);
-//  mDirs        = std::move(mDirs);
-//}
-//
-//juce::File   RT_FileTree::getDirFileObject() { return mFileObject; }
-//juce::String RT_FileTree::getDirName() { return mFileObject.getFileName(); }
-//RT_FileTree *RT_FileTree::getParent() { return mParent; }
-//
-//juce::StringArray RT_FileTree::getFileNames(bool sort)
-//{
-//  juce::StringArray ret;
-//  for (auto &dir : mDirs) {
-//    ret.add(dir.getDirName());
-//  }
-//  for (auto &file : mFiles) {
-//    ret.add(file.getFileName());
-//  }
-//  return ret;
-//}
+RT_FileTree::RT_FileTree(juce::File inTreeRoot, juce::String inFilePattern)
+    : mTreeRoot(inTreeRoot), mCurrentDir(mTreeRoot), mFilePattern(inFilePattern)
+{
+  _constructTree();
+}
+RT_FileTree::~RT_FileTree() {}
+RT_FileTree &RT_FileTree::operator=(RT_FileTree &&inFileTreeRvRef)
+{
+  mTreeRoot    = inFileTreeRvRef.mTreeRoot;
+  mCurrentDir  = inFileTreeRvRef.mCurrentDir;
+  mFilePattern = inFileTreeRvRef.mFilePattern;
+  mFiles       = std::move(inFileTreeRvRef.mFiles);
+}
+
+juce::File   RT_FileTree::getDirFileObject() { return mCurrentDir; }
+juce::String RT_FileTree::getDirName() { return mCurrentDir.getFileName(); }
+
+const juce::Array<juce::File> &RT_FileTree::getChildFileArray()
+{
+  return mFiles;
+}
+
+juce::Array<RT_FileTree::FileDescription>
+RT_FileTree::getFileDescriptions(bool sort)
+{
+  juce::Array<FileDescription> ret;
+  for (juce::File f : mFiles) {
+    ret.add({f.isDirectory(), f.getFileName()});
+  }
+  if (sort) {
+    FileDescriptionComparator sorter;
+    ret.sort(sorter);
+  }
+}
+
+bool RT_FileTree::traverseUp()
+{
+  if (mCurrentDir != mTreeRoot) {
+    mCurrentDir = mCurrentDir.getParentDirectory();
+    return true;
+  }
+  return false;
+}
+bool RT_FileTree::traverseDown(juce::String inTraversalTargetDir)
+{
+  juce::File targetDir(inTraversalTargetDir);
+  if (targetDir.isDirectory()) {
+    mCurrentDir = targetDir;
+    _constructTree();
+    return true;
+  }
+  return false;
+}
+
+void RT_FileTree::_constructTree()
+{
+  mFiles = mCurrentDir.findChildFiles(4, false, mFilePattern);
+}
+
+int RT_FileTree::FileDescriptionComparator::compareElements(
+    RT_FileTree::FileDescription &f0, RT_FileTree::FileDescription &f1)
+{
+  return f0.fileName.compareNatural(f1.fileName);
+}
