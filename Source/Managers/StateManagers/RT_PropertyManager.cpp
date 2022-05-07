@@ -18,7 +18,20 @@ RT_PropertyManager::RT_PropertyManager(
     : mInterface(inInterface), mCommandHistoryMax(inCommandHistoryMaxSize)
 {
   const rt_params p = mInterface->getRTSTFTManager()->getParamsStruct();
-  mHistoryIterator  = mCommandHistory.begin();
+  mValueTree
+      = {"rtstft_ctl_properties",
+         {
+             {RT_FFT_MODIFIER_IDS[RT_FFT_MODIFIER_FRAME_SIZE], (int)1024},
+             {RT_FFT_MODIFIER_IDS[RT_FFT_MODIFIER_OVERLAP_FACTOR], (int)8},
+             {RT_FFT_MODIFIER_IDS[RT_FFT_MODIFIER_PAD_FACTOR], (int)0},
+             {"manip_multichannel",
+              RT_MULTICHANNEL_MODE_IDS[RT_MULTICHANNEL_MONO]},
+         },
+         {juce::ValueTree("rt_chans", {}, {}),
+          juce::ValueTree("rt_gui_state",
+                          {{"active_manip", ""}, {"active_chan", "0"}}, {})}};
+
+  mHistoryIterator = mCommandHistory.begin();
 }
 
 RT_PropertyManager::~RT_PropertyManager() {}

@@ -30,7 +30,9 @@ public:
   bool         traverseUp();
   bool         traverseDown(juce::String inTraversalTargetDir);
   const juce::Array<juce::File> *const getChildFileArray();
-  juce::StringArray getFilenames(bool inWithSuffixes = false);
+  juce::StringArray       getFilenames(bool inWithSuffixes = false);
+  juce::Array<juce::File> getObjectsForAllFilesRecursive(bool inIncludeDirs
+                                                         = false);
 
 private:
   juce::File              mTreeRoot, mCurrentDir;

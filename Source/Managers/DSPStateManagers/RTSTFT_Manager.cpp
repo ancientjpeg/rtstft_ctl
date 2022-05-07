@@ -87,8 +87,8 @@ juce::String RTSTFT_Manager::getCMDMessage() { return mCMDMessage; }
 void         RTSTFT_Manager::readManipsFromBinary(bool inThreadedFFTUpdate)
 {
   assert(mInitialized);
-  auto        processor = (RT_ProcessorBase *)(mInterface->getProcessor());
-  const void *manipsBinaryPtr = processor->getManipsBinaryPointer();
+  const void *manipsBinaryPtr
+      = mInterface->getPresetManager()->getManipsBinaryPointer();
   assert(manipsBinaryPtr != nullptr);
   int magicNumber = *(int32_t *)manipsBinaryPtr;
   if (magicNumber != ManipsBinaryMagicNumber) {

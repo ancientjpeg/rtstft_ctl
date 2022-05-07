@@ -68,3 +68,17 @@ int RT_FileTree::FileComparator::compareElements(juce::File &f0, juce::File &f1)
 {
   return f0.getFileName().compareNatural(f1.getFileName());
 }
+
+juce::Array<juce::File>
+RT_FileTree::getObjectsForAllFilesRecursive(bool inIncludeDirs)
+{
+  juce::Array<juce::File> ret;
+  for (auto f : mTreeRoot.findChildFiles(juce::File::findFilesAndDirectories
+                                             | juce::File::ignoreHiddenFiles,
+                                         true, mFilePattern)) {
+    if (!f.isDirectory() || inIncludeDirs) {
+      ret.add(f);
+    }
+  }
+  return ret;
+}

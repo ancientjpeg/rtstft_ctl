@@ -14,34 +14,35 @@
 #include "../Interface/RT_ProcessorInterface.h"
 #include <JuceHeader.h>
 
-const static juce::ValueTree scDefaultPresetXML = {
-    "",
-    {},
-    {
-        {"rtstft_ctl_properties",
-         {
-             {RT_FFT_MODIFIER_IDS[RT_FFT_MODIFIER_FRAME_SIZE], (int)1024},
-             {RT_FFT_MODIFIER_IDS[RT_FFT_MODIFIER_OVERLAP_FACTOR], (int)8},
-             {RT_FFT_MODIFIER_IDS[RT_FFT_MODIFIER_PAD_FACTOR], (int)0},
-             {"manip_multichannel",
-              RT_MULTICHANNEL_MODE_IDS[RT_MULTICHANNEL_MONO]},
-         },
-         {juce::ValueTree("rt_chans", {}, {}),
-          juce::ValueTree("rt_gui_state",
-                          {{"active_manip", ""}, {"active_chan", "0"}}, {})}},
-
-    }};
-
 class RT_PresetManager {
 public:
   RT_PresetManager(RT_ProcessorInterface *inInterface);
-  void storePresetInMemory(juce::MemoryBlock &inMem);
-  bool loadPreset(juce::MemoryBlock *inMemPtr = nullptr);
+  void        storePresetInMemory(juce::MemoryBlock &inMem);
+  void        storePresetInMemory(const void *inData, int inSize);
+  bool        loadPreset(juce::MemoryBlock *inMemPtr = nullptr);
+  void        getPreset(juce::MemoryBlock &inDestData);
 
-  int  getXmlBlockSize();
+  int         getXmlBlockSize();
+  const void *getManipsBinaryPointer();
+
+  class Tree {
+  public:
+    Tree(juce::File inPresetsRoot);
+    bool getPresetData(juce::MemoryBlock &inWriteableBlock);
+
+    class Comparator {
+    public:
+      static int compareElements(juce::File &f0, juce::File &f1);
+    };
+
+  private:
+    juce::Array<juce::File> mPresetPaths;
+    void                    _fillPresetPaths(juce::File inPresetDir);
+  };
 
 private:
   RT_ProcessorInterface *mInterface;
-  juce::ValueTree        mActivePresetValueTree;
   juce::MemoryBlock      mActivePresetRawData;
+  Tree                   mPresetsTree;
+  void                   _storeCurrentStateInMemory();
 };

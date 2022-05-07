@@ -9,19 +9,29 @@
 */
 
 #include "RT_PresetManager.h"
+#include "../../Utilities/RT_FileTree.h"
 #include "../DSPStateManagers/RTSTFT_Manager.h"
 #include "../DSPStateManagers/RT_ParameterDefines.h"
 #include "../DSPStateManagers/RT_ParameterManager.h"
+#include "../OSManagers/RT_FileManager.h"
 #include "RT_PropertyManager.h"
 
 RT_PresetManager::RT_PresetManager(RT_ProcessorInterface *inInterface)
-    : mInterface(inInterface), mActivePresetValueTree(), mActivePresetRawData(0)
+    : mInterface(inInterface), mActivePresetRawData(0),
+      mPresetsTree(mInterface->getFileManager()->getPresetsDirectory())
 {
+  _storeCurrentStateInMemory();
 }
 
 void RT_PresetManager::storePresetInMemory(juce::MemoryBlock &inMem)
 {
   mActivePresetRawData = inMem;
+}
+
+void RT_PresetManager::storePresetInMemory(const void *inData, int inSize)
+{
+  mActivePresetRawData.setSize(inSize);
+  mActivePresetRawData.copyFrom(inData, 0, inSize);
 }
 bool RT_PresetManager::loadPreset(juce::MemoryBlock *inMemPtr)
 {
@@ -53,10 +63,70 @@ bool RT_PresetManager::loadPreset(juce::MemoryBlock *inMemPtr)
   rt_man->readManipsFromBinary(false);
   return true;
 }
+
+void RT_PresetManager::getPreset(juce::MemoryBlock &inDestData)
+{
+  _storeCurrentStateInMemory();
+  inDestData = mActivePresetRawData;
+}
+void RT_PresetManager::_storeCurrentStateInMemory()
+{
+  auto paramState = mInterface->getParameterManager()
+                        ->getValueTreeState()
+                        ->copyState()
+                        .createXml();
+  auto propertyState
+      = mInterface->getPropertyManager()->getXMLSerializedProperties();
+  auto state = std::make_unique<juce::XmlElement>("rtstft_ctl_state");
+
+  state->addChildElement(paramState.release());
+  state->addChildElement(propertyState.release());
+
+  juce::AudioProcessor::copyXmlToBinary(*state, mActivePresetRawData);
+  auto size          = ((uint32_t *)mActivePresetRawData.getData())[1];
+  auto manips_stream = juce::MemoryOutputStream(mActivePresetRawData, true);
+  manips_stream.setPosition(size + 9);
+  mInterface->getRTSTFTManager()->writeManipsToBinary(manips_stream);
+}
+
+const void *RT_PresetManager::getManipsBinaryPointer()
+{
+  const char *data = (const char *)mActivePresetRawData.getData();
+  return (const void *)(data + getXmlBlockSize());
+}
+
 int RT_PresetManager::getXmlBlockSize()
 {
   void *data    = mActivePresetRawData.getData();
   int xmlOffset = ((uint32_t *)data)[1] + 9; // includes magic number, size int,
   // and trailing nullterm in XML binary
   return xmlOffset;
+}
+
+//==============================================================================
+
+RT_PresetManager::Tree::Tree(juce::File inPresetsRoot)
+{
+  RT_FileTree tree;
+  mPresetPaths.sort(c, false);
+}
+void RT_PresetManager::Tree::_fillPresetPaths(juce::File inPresetDir)
+{
+  for (auto f : inPresetDir.findChildFiles(juce::File::findFilesAndDirectories
+                                               | juce::File::ignoreHiddenFiles,
+                                           true, "*.rtstftpreset")) {
+    if (!f.isDirectory()) {
+      mPresetPaths.add(f);
+    }
+  }
+}
+
+bool RT_PresetManager::Tree::getPresetData(juce::MemoryBlock &inWriteableBlock)
+{
+}
+
+int RT_PresetManager::Tree::Comparator::compareElements(juce::File &f0,
+                                                        juce::File &f1)
+{
+  return f0.getFileName().compareNatural(f1.getFileName());
 }

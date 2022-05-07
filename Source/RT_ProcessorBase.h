@@ -25,12 +25,11 @@ class RT_ProcessorBase : public juce::AudioProcessor,
 protected:
   RT_LookAndFeel::Manager mLookAndFeelManager;
   RT_FileManager          mFileManager;
-  RT_PresetManager        mPresetManager;
   RT_ParameterManager     mParameterManager;
   RT_PropertyManager      mPropertyManager;
   RTSTFT_Manager          mRTSTFTManager;
+  RT_PresetManager        mPresetManager;
 
-  juce::MemoryBlock       mStateInformation;
   int                     mXMLOffset           = -1;
   bool                    mAwaitingStateUpdate = false;
 
@@ -67,10 +66,9 @@ public:
   void changeProgramName(int index, const juce::String &newName) override;
 
   //==============================================================================
-  void        getStateInformation(juce::MemoryBlock &destData) override;
-  void        setStateInformation(const void *data, int sizeInBytes) override;
-  void        verifyStateIsUpToDate();
-  const void *getManipsBinaryPointer();
+  void getStateInformation(juce::MemoryBlock &destData) override;
+  void setStateInformation(const void *data, int sizeInBytes) override;
+  void verifyStateIsUpToDate();
 
   static const int ManipsBinaryMagicNumber = 0x3f2f4f51;
 

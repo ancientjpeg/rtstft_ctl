@@ -31,7 +31,6 @@ public:
   RT_FileManager() = delete;
   RT_FileManager(RT_ProcessorInterface *inInterface);
   ~RT_FileManager() = default;
-  void                    savePreset(juce::String inPresetName);
   void                    savePreset(juce::String      inPresetName,
                                      juce::MemoryBlock inPreparedMemoryBlock);
   void                    loadPreset(juce::String inPresetName);

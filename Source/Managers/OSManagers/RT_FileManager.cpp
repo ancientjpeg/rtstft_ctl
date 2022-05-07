@@ -34,12 +34,6 @@ void RT_FileManager::validateDirectoryStructure()
   assert(checkDir(mAppPresetsDir));
 }
 
-void RT_FileManager::savePreset(juce::String inPresetName)
-{
-  juce::MemoryBlock block;
-  mInterface->getProcessor()->getStateInformation(block);
-  savePreset(inPresetName, block);
-}
 void RT_FileManager::savePreset(juce::String      inPresetName,
                                 juce::MemoryBlock inPreparedMemoryBlock)
 {

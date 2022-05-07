@@ -26,14 +26,14 @@ RT_ProcessorBase::RT_ProcessorBase()
 #else
     :
 #endif
-      mRTSTFTManager(this), mParameterManager(this), mPresetManager(this),
+      mFileManager(this), mParameterManager(this),
       mPropertyManager(this,
                        {
                            RT_MANIP_GUI_IDS[RT_MANIP_GAIN],
                            RT_MANIP_GUI_IDS[RT_MANIP_GATE],
                            RT_MANIP_GUI_IDS[RT_MANIP_LIMIT],
                        }),
-      mFileManager(this), mStateInformation(nullptr, 0)
+      mRTSTFTManager(this), mPresetManager(this)
 {
   // add RTSTFT obj as parameter listener
   for (int i = 0; i < RT_PARAM_FLAVOR_COUNT; i++) {
@@ -42,6 +42,9 @@ RT_ProcessorBase::RT_ProcessorBase()
   }
   // add RTSTFT obj as property listener
   mPropertyManager.getValueTreeRef().addListener(&mRTSTFTManager);
+
+  // load the default preset
+  mPresetManager.loadPreset();
 }
 
 RT_ProcessorBase::~RT_ProcessorBase() {}
@@ -159,28 +162,12 @@ juce::AudioProcessorEditor *RT_ProcessorBase::createEditor()
 //==============================================================================
 void RT_ProcessorBase::getStateInformation(juce::MemoryBlock &destData)
 {
-  auto paramState
-      = mParameterManager.getValueTreeState()->copyState().createXml();
-  auto propertyState = mPropertyManager.getXMLSerializedProperties();
-  auto state         = std::make_unique<juce::XmlElement>("rtstft_ctl_state");
-
-  state->addChildElement(paramState.release());
-  state->addChildElement(propertyState.release());
-
-  copyXmlToBinary(*state, destData);
-  auto size          = ((uint32_t *)destData.getData())[1];
-  auto manips_stream = juce::MemoryOutputStream(destData, true);
-  manips_stream.setPosition(size + 9);
-  mRTSTFTManager.writeManipsToBinary(manips_stream);
-
-  // TEST!!!!
-  juce::MemoryBlock toFile(destData);
-  getFileManager()->savePreset("test", toFile);
+  mPresetManager.getPreset(destData);
 }
 
 void RT_ProcessorBase::setStateInformation(const void *data, int sizeInBytes)
 {
-  mStateInformation    = juce::MemoryBlock(data, sizeInBytes);
+  mPresetManager.storePresetInMemory(data, sizeInBytes);
   mAwaitingStateUpdate = true;
 }
 
@@ -189,37 +176,6 @@ void RT_ProcessorBase::verifyStateIsUpToDate()
   if (!mAwaitingStateUpdate) {
     return;
   }
-  auto data = mStateInformation.getData();
-  assert(data != nullptr);
-
-  auto state = getXmlFromBinary(data, (int)mStateInformation.getSize());
-  mParameterManager.getValueTreeState()->replaceState(
-      juce::ValueTree::fromXml(*state->getChildByName("PARAMETER_TREE")));
-
-  auto propertiesXml = state->getChildByName("rtstft_ctl_properties");
-  if (!propertiesXml) {
-    mAwaitingStateUpdate = false;
-    return;
-  }
-  auto propertyTree = juce::ValueTree::fromXml(*propertiesXml);
-
-  if (!mPropertyManager.assertTreeCanValidlyReplace(propertyTree)) {
-    mAwaitingStateUpdate = false;
-    return; // keep params, but don't overwrite manips or FFT size
-  }
-  mPropertyManager.replaceState(propertyTree);
-
-  mXMLOffset = ((uint32_t *)data)[1] + 9; // includes magic number, size int,
-                                          // and trailing nullterm in XML binary
-  mRTSTFTManager.readManipsFromBinary(false);
+  assert(mPresetManager.loadPreset());
   mAwaitingStateUpdate = false;
-}
-
-const void *RT_ProcessorBase::getManipsBinaryPointer()
-{
-  if (mXMLOffset == -1) {
-    return nullptr;
-  }
-  const char *data = (const char *)mStateInformation.getData();
-  return (const void *)(data + mXMLOffset);
 }
