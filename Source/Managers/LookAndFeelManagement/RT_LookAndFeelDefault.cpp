@@ -66,14 +66,15 @@ void RT_LookAndFeel::Default::drawButtonBackground(
     juce::Graphics &g, juce::Button &b, const juce::Colour &backgroundColour,
     bool shouldDrawButtonAsHighlighted, bool shouldDrawButtonAsDown)
 {
+  auto cs = getCurrentColourScheme();
   if (shouldDrawButtonAsDown) {
-    g.fillAll(juce::Colour(220, 232, 255));
+    g.fillAll(cs.getUIColour(highlightedFill));
   }
   else if (shouldDrawButtonAsHighlighted) {
-    g.fillAll(juce::Colours::aliceblue);
+    g.fillAll(cs.getUIColour(defaultFill));
   }
   else
-    g.fillAll(backgroundColour);
+    g.fillAll(cs.getUIColour(windowBackground));
 }
 
 void RT_LookAndFeel::Default::drawComboBox(juce::Graphics &g, int width,

@@ -78,10 +78,6 @@
                 resource="0" file="Source/Components/Layout/RT_SpectralDisplayContainer.h"/>
         </GROUP>
         <GROUP id="{07A2DC33-AEA2-1F87-D5B1-31130BD8B1C4}" name="Interactive">
-          <FILE id="Cf7LVc" name="RT_SelectorWidget.cpp" compile="1" resource="0"
-                file="Source/Components/Interactive/RT_SelectorWidget.cpp"/>
-          <FILE id="dTFAE1" name="RT_SelectorWidget.h" compile="0" resource="0"
-                file="Source/Components/Interactive/RT_SelectorWidget.h"/>
           <FILE id="jcUbo6" name="RT_FFTDisplay.cpp" compile="1" resource="0"
                 file="Source/Components/Interactive/RT_FFTDisplay.cpp"/>
           <FILE id="k4DoDH" name="RT_FFTDisplay.h" compile="0" resource="0" file="Source/Components/Interactive/RT_FFTDisplay.h"/>
@@ -98,6 +94,10 @@
                 resource="0" file="Source/Components/Interactive/RT_ValueLinkedSelectorMenu.cpp"/>
           <FILE id="jTRtXo" name="RT_ValueLinkedSelectorMenu.h" compile="0" resource="0"
                 file="Source/Components/Interactive/RT_ValueLinkedSelectorMenu.h"/>
+          <FILE id="zV6hOn" name="RT_ScrollableMenu.cpp" compile="1" resource="0"
+                file="Source/Components/Interactive/RT_ScrollableMenu.cpp"/>
+          <FILE id="goyVNs" name="RT_ScrollableMenu.h" compile="0" resource="0"
+                file="Source/Components/Interactive/RT_ScrollableMenu.h"/>
           <FILE id="BMaYER" name="RT_Sliders.cpp" compile="1" resource="0" file="Source/Components/Interactive/RT_Sliders.cpp"/>
           <FILE id="f9YAr0" name="RT_Sliders.h" compile="0" resource="0" file="Source/Components/Interactive/RT_Sliders.h"/>
         </GROUP>
@@ -167,7 +167,7 @@
   <JUCEOPTIONS JUCE_STRICT_REFCOUNTEDPOINTER="1" JUCE_VST3_CAN_REPLACE_VST2="0"/>
   <EXPORTFORMATS>
     <XCODE_MAC targetFolder="Builds/MacOSX" hardenedRuntime="1" keepCustomXcodeSchemes="1"
-               microphonePermissionNeeded="1" applicationCategory="public.app-category.music">
+               applicationCategory="public.app-category.music">
       <CONFIGURATIONS>
         <CONFIGURATION isDebug="1" name="Debug" targetName="rtstft_ctl"/>
         <CONFIGURATION isDebug="0" name="Release" targetName="rtstft_ctl"/>

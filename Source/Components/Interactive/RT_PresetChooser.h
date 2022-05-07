@@ -14,6 +14,7 @@
 #include "../../Managers/StateManagers/RT_PresetManager.h"
 #include "../../Utilities/RT_FileTree.h"
 #include "../Utility/RT_Component.h"
+#include "RT_ScrollableMenu.h"
 #include <JuceHeader.h>
 
 class RT_PresetChooser : public RT_Component {
@@ -23,7 +24,8 @@ public:
   void resized() override;
 
 private:
-  juce::Label      mCurrentPresetLabel;
-  juce::TextButton mLoadButton, mSaveButton;
-  RT_FileTree      mFileTree;
+  juce::Label       mCurrentPresetLabel;
+  juce::TextButton  mLoadButton, mSaveButton;
+  RT_FileTree       mFileTree;
+  RT_ScrollableMenu mScrollableMenu;
 };

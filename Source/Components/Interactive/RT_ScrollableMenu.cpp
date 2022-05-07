@@ -17,20 +17,53 @@ RT_ScrollableMenu::RT_ScrollableMenu(RT_ProcessorInterface *inInterface,
                                      juce::StringArray      inSelections,
                                      int                    inFontSize)
     : RT_Component(inInterface), mSelections(inSelections),
-      mFontSize(inFontSize)
+      mFontSize(inFontSize), mSelectionIndex(-1), mMousePos(-1.f, -1.f)
 {
 }
 
 RT_ScrollableMenu::~RT_ScrollableMenu() {}
 
-void RT_ScrollableMenu::paint(juce::Graphics &g) {}
-
 void RT_ScrollableMenu::resized()
 {
   auto bounds     = getLocalBounds().withHeight(mFontSize);
   int  nextHeight = bounds.getHeight() + RT_LookAndFeel::widgetBorderSize;
+  mSelectionBounds.clearQuick();
   for (int i = 0; i < mSelections.size(); i++) {
     mSelectionBounds.add(bounds);
     bounds.translate(0, nextHeight);
   }
 }
+
+void RT_ScrollableMenu::paint(juce::Graphics &g)
+{
+  auto lafm = mInterface->getLookAndFeelManager();
+  for (int i = 0; i < mSelections.size(); i++) {
+    auto bounds   = mSelectionBounds[i];
+    bool hasHover = mHasHover && bounds.contains(mMousePos.toInt());
+    auto col      = i == mSelectionIndex
+                        ? lafm->getUIColour(highlightedFill)
+                        : (hasHover ? lafm->getUIColour(defaultFill)
+                                    : lafm->getUIColour(windowBackground));
+    g.setColour(col);
+    g.fillRect(bounds);
+    g.setColour(i == mSelectionIndex ? lafm->getUIColour(highlightedText)
+                                     : lafm->getUIColour(defaultText));
+    g.drawText(mSelections[i], bounds.toFloat(),
+               juce::Justification::centredLeft);
+  }
+}
+
+void RT_ScrollableMenu::setSelections(juce::StringArray inSelections)
+{
+  mSelections = inSelections;
+  resized();
+  repaint();
+}
+
+int RT_ScrollableMenu::select(juce::String inNewSelection)
+{
+  mSelectionIndex = mSelections.indexOf(inNewSelection);
+  return mSelectionIndex;
+}
+
+int RT_ScrollableMenu::getSelectionFromPosition(juce::Point<float> inPos) {}

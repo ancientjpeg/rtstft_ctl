@@ -50,6 +50,14 @@ bool RT_FileTree::traverseDown(juce::String inTraversalTargetDir)
   }
   return false;
 }
+juce::StringArray RT_FileTree::getFilenames(bool inWithSuffixes)
+{
+  juce::StringArray ret;
+  for (auto &f : mFiles) {
+    ret.add(inWithSuffixes ? f.getFileName() : f.getFileNameWithoutExtension());
+  }
+  return ret;
+}
 
 void RT_FileTree::_constructTree()
 {

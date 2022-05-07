@@ -13,7 +13,8 @@
 RT_PresetChooser::RT_PresetChooser(RT_ProcessorInterface *inInterface)
     : RT_Component(inInterface),
       mFileTree(mInterface->getFileManager()->getPresetsDirectory(),
-                "*.rtstftpreset")
+                "*.rtstftpreset"),
+      mScrollableMenu(mInterface)
 {
   addAndMakeVisible(mSaveButton);
   mSaveButton.setButtonText("save preset");
@@ -22,13 +23,18 @@ RT_PresetChooser::RT_PresetChooser(RT_ProcessorInterface *inInterface)
   mLoadButton.onClick = [this]() {};
   addAndMakeVisible(mCurrentPresetLabel);
   mCurrentPresetLabel.setText("Default", juce::dontSendNotification);
+  addAndMakeVisible(mScrollableMenu);
+
+  mScrollableMenu.setSelections(mFileTree.getFilenames());
 }
 
 void RT_PresetChooser::paint(juce::Graphics &g) {}
 void RT_PresetChooser::resized()
 {
-  auto bounds = getLocalBounds();
-  mSaveButton.setBounds(bounds.removeFromRight(80));
-  mLoadButton.setBounds(bounds.removeFromRight(80));
-  mCurrentPresetLabel.setBounds(bounds);
+  auto bounds    = getLocalBounds();
+  auto topBounds = bounds.removeFromTop(20);
+  mSaveButton.setBounds(topBounds.removeFromRight(80));
+  mLoadButton.setBounds(topBounds.removeFromRight(80));
+  mCurrentPresetLabel.setBounds(topBounds);
+  mScrollableMenu.setBounds(bounds);
 }

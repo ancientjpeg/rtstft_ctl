@@ -35,6 +35,13 @@ RT_ProcessorBase::RT_ProcessorBase()
                        }),
       mFileManager(this), mStateInformation(nullptr, 0)
 {
+  // add RTSTFT obj as parameter listener
+  for (int i = 0; i < RT_PARAM_FLAVOR_COUNT; i++) {
+    mParameterManager.getValueTreeState()->addParameterListener(
+        RT_PARAM_IDS[i], &mRTSTFTManager);
+  }
+  // add RTSTFT obj as property listener
+  mPropertyManager.getValueTreeRef().addListener(&mRTSTFTManager);
 }
 
 RT_ProcessorBase::~RT_ProcessorBase() {}

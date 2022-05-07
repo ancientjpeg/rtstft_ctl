@@ -19,15 +19,25 @@
 class RT_ScrollableMenu : public RT_Component {
 public:
   RT_ScrollableMenu(RT_ProcessorInterface *inInterface,
-                    juce::StringArray inSelections, int inFontSize = 12);
+                    juce::StringArray inSelections = {}, int inFontSize = 12);
   ~RT_ScrollableMenu() override;
 
-  void paint(juce::Graphics &) override;
-  void resized() override;
+  void                  resized() override;
+  void                  paint(juce::Graphics &) override;
+
+  void                  setSelections(juce::StringArray inSelections);
+  int                   select(juce::String inNewSelection);
+
+  std::function<void()> onSelection = []() {};
 
 private:
   juce::StringArray                 mSelections;
   juce::Array<juce::Rectangle<int>> mSelectionBounds;
   int                               mFontSize;
+  int                               mSelectionIndex;
+  juce::Point<float>                mMousePos;
+  int                               mTotalHeight;
+  bool                              mHasHover = false;
+  int getSelectionFromPosition(juce::Point<float> inPos);
   JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(RT_ScrollableMenu)
 };

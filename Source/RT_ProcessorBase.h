@@ -24,11 +24,11 @@ class RT_ProcessorBase : public juce::AudioProcessor,
 
 protected:
   RT_LookAndFeel::Manager mLookAndFeelManager;
-  RTSTFT_Manager          mRTSTFTManager;
+  RT_FileManager          mFileManager;
+  RT_PresetManager        mPresetManager;
   RT_ParameterManager     mParameterManager;
   RT_PropertyManager      mPropertyManager;
-  RT_PresetManager        mPresetManager;
-  RT_FileManager          mFileManager;
+  RTSTFT_Manager          mRTSTFTManager;
 
   juce::MemoryBlock       mStateInformation;
   int                     mXMLOffset           = -1;

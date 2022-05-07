@@ -25,7 +25,5 @@ void RT_SettingsDisplay::paintInBorder(juce::Graphics &g) {}
 void RT_SettingsDisplay::resized()
 {
   auto bounds = getBoundsAdj();
-  mPresetChooser.setBounds(bounds.removeFromTop(30));
-  // This method is where you should set the bounds of any child
-  // components that your component contains..
+  mPresetChooser.setBounds(bounds);
 }
