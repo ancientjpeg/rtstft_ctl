@@ -21,6 +21,10 @@ RT_PresetManager::RT_PresetManager(RT_ProcessorInterface *inInterface)
       mPresetsTree(mInterface->getFileManager()->getPresetsDirectory())
 {
   _storeCurrentStateInMemory();
+  auto presetRoot = mInterface->getFileManager()->getPresetsDirectory();
+  if (presetRoot.getNumberOfChildFiles(7, "default.rtstftpreset") <= 0) {
+    writePresetToDisk("default.rtstftpreset");
+  }
 }
 
 void RT_PresetManager::storePresetInMemory(juce::MemoryBlock &inMem)
@@ -88,6 +92,18 @@ void RT_PresetManager::_storeCurrentStateInMemory()
   manips_stream.setPosition(size + 9);
   mInterface->getRTSTFTManager()->writeManipsToBinary(manips_stream);
 }
+void RT_PresetManager::writePresetToDisk(juce::String inPresetName)
+{
+  _storeCurrentStateInMemory();
+  juce::String presetName = inPresetName + ".rtstftpreset";
+  auto         presetsDir = juce::File::addTrailingSeparator(
+              mInterface->getFileManager()->getPresetsDirectory().getFullPathName());
+  juce::File             presetPath(presetsDir + inPresetName);
+  juce::FileOutputStream ostream(presetPath);
+  bool                   success = ostream.write(mActivePresetRawData.getData(),
+                                                 mActivePresetRawData.getSize());
+  assert(success);
+}
 
 const void *RT_PresetManager::getManipsBinaryPointer()
 {
@@ -107,20 +123,23 @@ int RT_PresetManager::getXmlBlockSize()
 
 RT_PresetManager::Tree::Tree(juce::File inPresetsRoot)
 {
-  RT_FileTree tree;
+  RT_FileTree tree(inPresetsRoot, "*.rtstftpreset");
+  mPresetPaths = tree.getObjectsForAllFilesRecursive();
+  Comparator c;
   mPresetPaths.sort(c, false);
 }
-void RT_PresetManager::Tree::_fillPresetPaths(juce::File inPresetDir)
+
+juce::File RT_PresetManager::Tree::findPresetFile(juce::String inPresetName)
 {
-  for (auto f : inPresetDir.findChildFiles(juce::File::findFilesAndDirectories
-                                               | juce::File::ignoreHiddenFiles,
-                                           true, "*.rtstftpreset")) {
-    if (!f.isDirectory()) {
-      mPresetPaths.add(f);
+  int i = 0, depth = rt_log2_floor(mPresetPaths.size()),
+      index = mPresetPaths.size() / 2;
+  while (i++ < depth) {
+    if (mPresetPaths[i].getFileNameWithoutExtension() == inPresetName) {
+      return mPresetPaths[i];
     }
   }
+  return juce::File();
 }
-
 bool RT_PresetManager::Tree::getPresetData(juce::MemoryBlock &inWriteableBlock)
 {
 }

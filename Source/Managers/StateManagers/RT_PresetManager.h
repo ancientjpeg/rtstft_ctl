@@ -19,6 +19,7 @@ public:
   RT_PresetManager(RT_ProcessorInterface *inInterface);
   void        storePresetInMemory(juce::MemoryBlock &inMem);
   void        storePresetInMemory(const void *inData, int inSize);
+  void        writePresetToDisk(juce::String inPresetName);
   bool        loadPreset(juce::MemoryBlock *inMemPtr = nullptr);
   void        getPreset(juce::MemoryBlock &inDestData);
 
@@ -28,7 +29,8 @@ public:
   class Tree {
   public:
     Tree(juce::File inPresetsRoot);
-    bool getPresetData(juce::MemoryBlock &inWriteableBlock);
+    juce::File findPresetFile(juce::String inPresetName);
+    bool       getPresetData(juce::MemoryBlock &inWriteableBlock);
 
     class Comparator {
     public:
@@ -37,7 +39,6 @@ public:
 
   private:
     juce::Array<juce::File> mPresetPaths;
-    void                    _fillPresetPaths(juce::File inPresetDir);
   };
 
 private:
