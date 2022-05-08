@@ -10,7 +10,9 @@
 
 #pragma once
 
+#include "../../Utilities/RT_FileTree.h"
 #include "../Utility/RT_Component.h"
+#include "RT_ScrollableMenu.h"
 #include <JuceHeader.h>
 
 //==============================================================================
@@ -18,26 +20,16 @@
  */
 class RT_FileBrowser : public RT_Component {
 public:
-  RT_FileBrowser(RT_ProcessorInterface *inInterface,
-                 juce::StringArray inSelections = {}, int inFontSize = 12);
+  RT_FileBrowser(RT_ProcessorInterface *inInterface, juce::File inBrowserRoot,
+                 int columnWidth, juce::String inTargetSuffix = "");
   ~RT_FileBrowser() override;
 
-  void                  resized() override;
-  void                  paint(juce::Graphics &) override;
-
-  void                  setSelections(juce::StringArray inSelections);
-  int                   select(juce::String inNewSelection);
-
-  std::function<void()> onSelection = []() {};
+  void resized() override;
+  void paint(juce::Graphics &) override;
 
 private:
-  juce::StringArray                 mSelections;
-  juce::Array<juce::Rectangle<int>> mSelectionBounds;
-  int                               mFontSize;
-  int                               mSelectionIndex;
-  juce::Point<float>                mMousePos;
-  int                               mTotalHeight;
-  bool                              mHasHover = false;
-  int getSelectionFromPosition(juce::Point<float> inPos);
+  int                                 mColumnWidth;
+  RT_FileTree                         mFileTree;
+  juce::OwnedArray<RT_ScrollableMenu> mDirectoryMenus;
   JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(RT_FileBrowser)
 };

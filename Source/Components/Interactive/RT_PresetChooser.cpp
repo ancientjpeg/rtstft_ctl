@@ -13,7 +13,7 @@
 RT_PresetChooser::RT_PresetChooser(RT_ProcessorInterface *inInterface)
     : RT_Component(inInterface),
       mFileTree(mInterface->getFileManager()->getPresetsDirectory(),
-                "*.rtstftpreset"),
+                "*" + sc_PresetSuffix),
       mScrollableMenu(mInterface)
 {
   addAndMakeVisible(mSaveButton);
@@ -27,7 +27,7 @@ RT_PresetChooser::RT_PresetChooser(RT_ProcessorInterface *inInterface)
   mCurrentPresetLabel.setText("Default", juce::dontSendNotification);
   // addAndMakeVisible(mScrollableMenu);
 
-  mScrollableMenu.setSelections(mFileTree.getFilenames());
+  //  mScrollableMenu.setSelections(mFileTree.getFilenames());
 }
 
 void RT_PresetChooser::paint(juce::Graphics &g) {}
@@ -45,7 +45,7 @@ void RT_PresetChooser::loadPreset()
 {
   mFileChooser.reset(new juce::FileChooser(
       "Find ur file", mInterface->getFileManager()->getPresetsDirectory(),
-      "*.rtstftpreset"));
+      "*" + sc_PresetSuffix));
   auto flags = juce::FileBrowserComponent::openMode
                | juce::FileBrowserComponent::canSelectFiles;
   mFileChooser->launchAsync(flags, [this](const juce::FileChooser &fc) {
@@ -59,13 +59,13 @@ void RT_PresetChooser::loadPreset()
 void RT_PresetChooser::savePreset()
 {
   mFileChooser.reset(new juce::FileChooser(
-      "Find ur file", mInterface->getFileManager()->getPresetsDirectory(),
-      "*.rtstftpreset"));
+      "Save a file", mInterface->getFileManager()->getPresetsDirectory(),
+      "*" + sc_PresetSuffix));
   auto flags = juce::FileBrowserComponent::saveMode;
   mFileChooser->launchAsync(flags, [this](const juce::FileChooser &fc) {
     juce::File preset = fc.getResult();
-    if (preset.getFileExtension() != ".rtstftpreset") {
-      preset = preset.withFileExtension(".rtstftpreset");
+    if (preset.getFileExtension() != sc_PresetSuffix) {
+      preset = preset.withFileExtension(sc_PresetSuffix);
     }
     mInterface->getPresetManager()->writePresetToDisk(preset);
   });

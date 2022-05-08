@@ -14,6 +14,8 @@
 #include "../Interface/RT_ProcessorInterface.h"
 #include <JuceHeader.h>
 
+static const juce::String sc_PresetSuffix{".rtstftpreset"};
+
 class RT_PresetManager {
 public:
   RT_PresetManager(RT_ProcessorInterface *inInterface);

@@ -29,6 +29,9 @@ public:
   int                   select(juce::String inNewSelection);
 
   std::function<void()> onSelection = []() {};
+  class Listener {
+    virtual void onNewSelection(juce::String inNewSelection);
+  };
 
 private:
   juce::StringArray                 mSelections;
@@ -39,5 +42,6 @@ private:
   int                               mTotalHeight;
   bool                              mHasHover = false;
   int getSelectionFromPosition(juce::Point<float> inPos);
+  juce::ListenerList<Listener> mListeners;
   JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(RT_ScrollableMenu)
 };
