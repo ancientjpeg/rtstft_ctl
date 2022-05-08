@@ -37,6 +37,7 @@ void RT_ScrollableMenu::resized()
 void RT_ScrollableMenu::paint(juce::Graphics &g)
 {
   auto lafm = mInterface->getLookAndFeelManager();
+  g.fillAll(lafm->getUIColour(widgetBackground));
   for (int i = 0; i < mSelections.size(); i++) {
     auto bounds   = mSelectionBounds[i];
     bool hasHover = mHasHover && bounds.contains(mMousePos.toInt());
@@ -63,7 +64,37 @@ void RT_ScrollableMenu::setSelections(juce::StringArray inSelections)
 int RT_ScrollableMenu::select(juce::String inNewSelection)
 {
   mSelectionIndex = mSelections.indexOf(inNewSelection);
+  if (mSelectionIndex > -1) {
+    onSelection(inNewSelection);
+  }
   return mSelectionIndex;
 }
 
-int RT_ScrollableMenu::getSelectionFromPosition(juce::Point<float> inPos) {}
+void         RT_ScrollableMenu::deselect() { mSelectionIndex = -1; }
+
+juce::String RT_ScrollableMenu::getCurrentSelection()
+{
+  if (mSelectionIndex >= 0) {
+    return mSelections[mSelectionIndex];
+  }
+  return juce::String();
+}
+
+int RT_ScrollableMenu::getSelectionFromPosition(juce::Point<float> inPos)
+{
+  for (int i = 0; i < mSelectionBounds.size(); i++) {
+    const auto &selection = mSelectionBounds[i];
+    if (selection.contains(inPos.roundToInt())) {
+      return i;
+    }
+  }
+  return -1;
+}
+void RT_ScrollableMenu::mouseDown(const juce::MouseEvent &e)
+{
+  mMousePos = e.position;
+  int sel   = getSelectionFromPosition(mMousePos);
+  if (sel > -1) {
+    select(mSelections[sel]);
+  }
+}

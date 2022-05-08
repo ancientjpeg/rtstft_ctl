@@ -31,13 +31,27 @@ RT_FileTree &RT_FileTree::operator=(RT_FileTree &&inFileTreeRvRef)
  *
  * @return True if the operation succeeded, else false.
  */
-bool RT_FileTree::traverseUp()
+RT_FileTree::Directory *RT_FileTree::traverseUp(int by)
 {
-  if (mCurrentDir != mTreeRoot && mDirStack.size() > 1) {
-    mDirStack.removeLast();
-    return true;
+  if (mDirStack.size() > 1) {
+    mDirStack.removeLast(by);
+    return mDirStack.getLast();
   }
-  return false;
+  return nullptr;
+}
+
+/**
+ * @brief pops all objects below the given depth
+ *
+ * @return True if the operation succeeded, else false.
+ */
+RT_FileTree::Directory *RT_FileTree::traverseUpToDepth(int depth)
+{
+  if (mDirStack.size() > 1) {
+    mDirStack.removeRange(depth + 1, mDirStack.size());
+    return mDirStack.getLast();
+  }
+  return nullptr;
 }
 
 /**
@@ -53,7 +67,14 @@ RT_FileTree::Directory *RT_FileTree::traverseDown(juce::File inTargetDir)
       || (inTargetDir.isDirectory()
           && inTargetDir.getParentDirectory()
                  == mDirStack.getLast()->getDir())) {
-    return mDirStack.add(new Directory(inTargetDir, this));
+    return mDirStack.add(new Directory(inTargetDir, this, mDirStack.size()));
+  }
+  return nullptr;
+}
+RT_FileTree::Directory *RT_FileTree::getDirFromDepth(int depth)
+{
+  if (depth < mDirStack.size()) {
+    return mDirStack[depth];
   }
   return nullptr;
 }
@@ -81,9 +102,11 @@ RT_FileTree::getObjectsForAllFilesRecursive(bool inIncludeDirs)
 /*******************       RT_FileTree::Directory          *******************/
 /******************************************************************************/
 
-RT_FileTree::Directory::Directory(juce::File inDir, RT_FileTree *inParentTree)
-    : mDir(inDir), mParentTree(inParentTree),
+RT_FileTree::Directory::Directory(juce::File inDir, RT_FileTree *inParentTree,
+                                  int inDepth)
+    : mDepth(inDepth), mDir(inDir), mParentTree(inParentTree),
       mChildFiles(mDir.findChildFiles(6, false, mParentTree->mFilePattern))
+
 {
   FileComparator c;
   mChildFiles.addArray(mDir.findChildFiles(5, false));
@@ -98,7 +121,7 @@ RT_FileTree::Directory::operator=(Directory &&inDirToMove) noexcept
   mChildFiles = std::move(inDirToMove.mChildFiles);
 }
 
-const juce::Array<juce::File> const RT_FileTree::Directory::getChildFileArray()
+const juce::Array<juce::File> RT_FileTree::Directory::getChildFileArray() const
 {
   const juce::Array<juce::File> ret = mChildFiles;
   return ret;
@@ -111,10 +134,10 @@ RT_FileTree::Directory::getChildFileArrayPtr() const
 juce::File RT_FileTree::Directory::getFileByBasename(juce::String inBasename)
 {
   int        depth = rt_log2_floor(mChildFiles.size());
-  int        pos   = depth / 2, radius, comp;
+  int        pos   = mChildFiles.size() / 2, radius, comp;
   juce::File curr;
-  while (depth-- > 0) {
-    radius = (1 << (depth - 1));
+  while (depth-- >= 0) {
+    radius = (1 << (depth));
     curr   = mChildFiles[pos];
     comp   = inBasename.compareNatural(curr.getFileNameWithoutExtension());
     if (comp == 0) {
@@ -127,5 +150,6 @@ juce::File RT_FileTree::Directory::getFileByBasename(juce::String inBasename)
       pos += radius;
     }
   }
+  return juce::File();
 }
 juce::File RT_FileTree::Directory::getDir() { return mDir; }

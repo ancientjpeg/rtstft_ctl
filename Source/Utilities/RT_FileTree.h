@@ -23,13 +23,15 @@ public:
   using File = std::pair<juce::String, juce::File>;
   class Directory {
   public:
-    Directory(juce::File inDir, RT_FileTree *inParentTree);
-    Directory &operator=(Directory &&inDirToMove) noexcept;
-    Directory &operator=(const Directory &) = delete;
-    const juce::Array<juce::File> const getChildFileArray();
-    const juce::Array<juce::File>      *getChildFileArrayPtr() const;
-    juce::File                          getDir();
-    juce::File getFileByBasename(juce::String inBasename);
+    Directory(juce::File inDir, RT_FileTree *inParentTree, int inDepth);
+    Directory                     &operator=(Directory &&inDirToMove) noexcept;
+    Directory                     &operator=(const Directory &) = delete;
+    const juce::Array<juce::File>  getChildFileArray() const;
+    const juce::Array<juce::File> *getChildFileArrayPtr() const;
+    juce::File                     getDir();
+    juce::File                     getFileByBasename(juce::String inBasename);
+
+    const int                      mDepth;
 
   private:
     juce::File              mDir;
@@ -42,14 +44,16 @@ public:
     static int compareElements(juce::File &f0, juce::File &f1);
   };
 
-  bool                    traverseUp();
+  Directory              *traverseUp(int by = 1);
+  Directory              *traverseUpToDepth(int depth = 0);
   Directory              *traverseDown(juce::File inTargetDir);
+  Directory              *getDirFromDepth(int depth);
   juce::StringArray       getFilenames(bool inWithSuffixes = false);
   juce::Array<juce::File> getObjectsForAllFilesRecursive(bool inIncludeDirs
                                                          = false);
 
 private:
-  juce::File                  mTreeRoot, mCurrentDir;
+  juce::File                  mTreeRoot;
   juce::String                mTargetSuffix, mFilePattern;
   juce::OwnedArray<Directory> mDirStack;
 };

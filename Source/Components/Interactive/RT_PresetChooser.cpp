@@ -9,12 +9,14 @@
 */
 
 #include "RT_PresetChooser.h"
+#include "../../Managers/OSManagers/RT_FileManager.h"
+#include "../../Managers/StateManagers/RT_PresetManager.h"
 
 RT_PresetChooser::RT_PresetChooser(RT_ProcessorInterface *inInterface)
     : RT_Component(inInterface),
-      mFileTree(mInterface->getFileManager()->getPresetsDirectory(),
-                "*" + sc_PresetSuffix),
-      mScrollableMenu(mInterface)
+      mFileBrowser(mInterface,
+                   mInterface->getFileManager()->getPresetsDirectory(), 100,
+                   false, "*" + sc_PresetSuffix)
 {
   addAndMakeVisible(mSaveButton);
   mSaveButton.setButtonText("save preset");
@@ -25,9 +27,7 @@ RT_PresetChooser::RT_PresetChooser(RT_ProcessorInterface *inInterface)
 
   addAndMakeVisible(mCurrentPresetLabel);
   mCurrentPresetLabel.setText("Default", juce::dontSendNotification);
-  // addAndMakeVisible(mScrollableMenu);
-
-  //  mScrollableMenu.setSelections(mFileTree.getFilenames());
+  addAndMakeVisible(mFileBrowser);
 }
 
 void RT_PresetChooser::paint(juce::Graphics &g) {}
@@ -38,7 +38,7 @@ void RT_PresetChooser::resized()
   mSaveButton.setBounds(topBounds.removeFromRight(80));
   mLoadButton.setBounds(topBounds.removeFromRight(80));
   mCurrentPresetLabel.setBounds(topBounds);
-  mScrollableMenu.setBounds(bounds);
+  mFileBrowser.setBounds(bounds);
 }
 
 void RT_PresetChooser::loadPreset()

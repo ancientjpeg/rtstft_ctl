@@ -21,15 +21,31 @@
 class RT_FileBrowser : public RT_Component {
 public:
   RT_FileBrowser(RT_ProcessorInterface *inInterface, juce::File inBrowserRoot,
-                 int columnWidth, juce::String inTargetSuffix = "");
+                 int columnWidth, bool inShowExtensions = true,
+                 juce::String inTargetSuffix = "");
   ~RT_FileBrowser() override;
 
-  void resized() override;
-  void paint(juce::Graphics &) override;
+  void                            resized() override;
+  void                            paint(juce::Graphics &) override;
+
+  std::function<void(juce::File)> onFileClick = [](juce::File f) {};
 
 private:
-  int                                 mColumnWidth;
-  RT_FileTree                         mFileTree;
-  juce::OwnedArray<RT_ScrollableMenu> mDirectoryMenus;
+  class SubMenu {
+  public:
+    SubMenu(RT_FileBrowser *inParent, RT_FileTree::Directory *inTreeDirh);
+    ~SubMenu();
+    void                    onFileClick();
+    RT_FileBrowser         *parent;
+    RT_ScrollableMenu       component;
+    RT_FileTree::Directory *treeDir;
+  };
+
+  int                       mColumnWidth;
+  bool                      mShowExtensions;
+  RT_FileTree               mFileTree;
+  juce::OwnedArray<SubMenu> mDirectoryMenus;
+
+  void pushNewDirToStack(juce::File inNewDeepestDir, int inParentIndex);
   JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(RT_FileBrowser)
 };
