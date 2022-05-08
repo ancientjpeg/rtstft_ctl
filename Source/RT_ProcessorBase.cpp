@@ -51,6 +51,11 @@ RT_ProcessorBase::~RT_ProcessorBase() {}
 //==============================================================================
 juce::AudioProcessor *RT_ProcessorBase::getProcessor() { return this; }
 
+RT_AudioProcessor    *RT_ProcessorBase::getRTProcessor()
+{
+  return (RT_AudioProcessor *)this;
+}
+
 RTSTFT_Manager *RT_ProcessorBase::getRTSTFTManager() { return &mRTSTFTManager; }
 
 RT_LookAndFeel::Manager *RT_ProcessorBase::getLookAndFeelManager()
@@ -171,11 +176,12 @@ void RT_ProcessorBase::setStateInformation(const void *data, int sizeInBytes)
   mAwaitingStateUpdate = true;
 }
 
+void RT_ProcessorBase::notifyOfStateChange() { mAwaitingStateUpdate = true; }
 void RT_ProcessorBase::verifyStateIsUpToDate()
 {
   if (!mAwaitingStateUpdate) {
     return;
   }
-  assert(mPresetManager.loadPreset());
+  mPresetManager._loadPresetInternal();
   mAwaitingStateUpdate = false;
 }

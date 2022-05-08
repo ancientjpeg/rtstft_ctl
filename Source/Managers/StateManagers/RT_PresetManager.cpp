@@ -9,6 +9,7 @@
 */
 
 #include "RT_PresetManager.h"
+#include "../../RT_AudioProcessor.h"
 #include "../../Utilities/RT_FileTree.h"
 #include "../DSPStateManagers/RTSTFT_Manager.h"
 #include "../DSPStateManagers/RT_ParameterDefines.h"
@@ -37,11 +38,15 @@ void RT_PresetManager::storePresetInMemory(const void *inData, int inSize)
   mActivePresetRawData.setSize(inSize);
   mActivePresetRawData.copyFrom(inData, 0, inSize);
 }
-bool RT_PresetManager::loadPreset(juce::MemoryBlock *inMemPtr)
+void RT_PresetManager::loadPreset(juce::MemoryBlock *inMemPtr)
 {
   if (inMemPtr != nullptr) {
     storePresetInMemory(*inMemPtr);
   }
+  mInterface->getRTProcessor()->notifyOfStateChange();
+}
+void RT_PresetManager::_loadPresetInternal()
+{
   void *data = mActivePresetRawData.getData();
   assert(data != nullptr);
 
@@ -51,21 +56,19 @@ bool RT_PresetManager::loadPreset(juce::MemoryBlock *inMemPtr)
       juce::ValueTree::fromXml(*state->getChildByName("PARAMETER_TREE")));
 
   auto propertiesXml = state->getChildByName("rtstft_ctl_properties");
-  if (!propertiesXml) {
-    return false;
+  juce::ValueTree propertyTree;
+  if (propertiesXml) {
+    propertyTree = juce::ValueTree::fromXml(*propertiesXml);
   }
-  auto  propertyTree = juce::ValueTree::fromXml(*propertiesXml);
 
-  auto *rt_man       = mInterface->getRTSTFTManager();
-  auto *prop_man     = mInterface->getPropertyManager();
+  auto *prop_man = mInterface->getPropertyManager();
 
-  if (!prop_man->assertTreeCanValidlyReplace(propertyTree)) {
-    return false; // keep params, but don't overwrite manips or FFT size
+  if (prop_man->assertTreeCanValidlyReplace(propertyTree)) {
+    // return false; // keep params, but don't overwrite manips or FFT size
+    prop_man->replaceState(propertyTree);
   }
-  prop_man->replaceState(propertyTree);
 
-  rt_man->readManipsFromBinary(false);
-  return true;
+  mInterface->getRTSTFTManager()->readManipsFromBinary();
 }
 
 void RT_PresetManager::getPreset(juce::MemoryBlock &inDestData)
@@ -92,17 +95,39 @@ void RT_PresetManager::_storeCurrentStateInMemory()
   manips_stream.setPosition(size + 9);
   mInterface->getRTSTFTManager()->writeManipsToBinary(manips_stream);
 }
+
 void RT_PresetManager::writePresetToDisk(juce::String inPresetName)
 {
-  _storeCurrentStateInMemory();
   juce::String presetName = inPresetName + ".rtstftpreset";
   auto         presetsDir = juce::File::addTrailingSeparator(
               mInterface->getFileManager()->getPresetsDirectory().getFullPathName());
-  juce::File             presetPath(presetsDir + inPresetName);
-  juce::FileOutputStream ostream(presetPath);
-  bool                   success = ostream.write(mActivePresetRawData.getData(),
-                                                 mActivePresetRawData.getSize());
-  assert(success);
+  juce::File presetPath(presetsDir + inPresetName);
+  writePresetToDisk(presetPath);
+}
+void RT_PresetManager::writePresetToDisk(juce::File inPresetPath)
+{
+  _storeCurrentStateInMemory();
+  if (inPresetPath.exists()) {
+    inPresetPath.deleteFile();
+  }
+  juce::FileOutputStream ostream(inPresetPath);
+  if (ostream.openedOk()) {
+    ostream.write(mActivePresetRawData.getData(),
+                  mActivePresetRawData.getSize());
+  }
+}
+
+bool RT_PresetManager::loadPresetFromDisk(juce::File presetFile)
+{
+  if (presetFile.getFileExtension() != ".rtstftpreset") {
+    DBG(presetFile.getFileExtension());
+    return false;
+  }
+  mActivePresetRawData.setSize(0);
+  juce::FileInputStream istream(presetFile);
+  int check = istream.readIntoMemoryBlock(mActivePresetRawData);
+  loadPreset();
+  return true;
 }
 
 const void *RT_PresetManager::getManipsBinaryPointer()

@@ -23,9 +23,13 @@ public:
   void paint(juce::Graphics &) override;
   void resized() override;
 
+  void loadPreset();
+  void savePreset();
+
 private:
-  juce::Label       mCurrentPresetLabel;
-  juce::TextButton  mLoadButton, mSaveButton;
-  RT_FileTree       mFileTree;
-  RT_ScrollableMenu mScrollableMenu;
+  juce::Label                        mCurrentPresetLabel;
+  juce::TextButton                   mLoadButton, mSaveButton;
+  RT_FileTree                        mFileTree;
+  RT_ScrollableMenu                  mScrollableMenu;
+  std::unique_ptr<juce::FileChooser> mFileChooser;
 };

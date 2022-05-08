@@ -103,6 +103,18 @@ void RT_LookAndFeel::Default::drawComboBox(juce::Graphics &g, int width,
   g.strokePath(path, juce::PathStrokeType(widgetBorderSize));
 }
 
+void RT_LookAndFeel::Default::drawButtonText(juce::Graphics   &g,
+                                             juce::TextButton &b,
+                                             bool shouldDrawButtonAsHighlighted,
+                                             bool shouldDrawButtonAsDown)
+{
+  auto bnd = b.getLocalBounds();
+  auto cs  = getCurrentColourScheme();
+  g.setColour(cs.getUIColour(shouldDrawButtonAsDown ? windowBackground
+                                                    : highlightedFill));
+  g.drawText(b.getButtonText(), bnd, juce::Justification::centred);
+}
+
 int RT_LookAndFeel::Default::getPopupMenuBorderSize()
 {
   return widgetBorderSize;

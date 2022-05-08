@@ -66,6 +66,9 @@ public:
                             juce::ComboBox &box) override;
   virtual int  getPopupMenuBorderSize() override;
   virtual int  getMenuWindowFlags() override;
+  virtual void drawButtonText(juce::Graphics &g, juce::TextButton &b,
+                              bool shouldDrawButtonAsHighlighted,
+                              bool shouldDrawButtonAsDown) override;
 };
 
 } // namespace RT_LookAndFeel

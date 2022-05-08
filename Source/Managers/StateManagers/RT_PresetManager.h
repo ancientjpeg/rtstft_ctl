@@ -17,11 +17,14 @@
 class RT_PresetManager {
 public:
   RT_PresetManager(RT_ProcessorInterface *inInterface);
+  void        writePresetToDisk(juce::String inPresetName);
+  void        writePresetToDisk(juce::File inPresetPath);
+  void        getPreset(juce::MemoryBlock &inDestData);
   void        storePresetInMemory(juce::MemoryBlock &inMem);
   void        storePresetInMemory(const void *inData, int inSize);
-  void        writePresetToDisk(juce::String inPresetName);
-  bool        loadPreset(juce::MemoryBlock *inMemPtr = nullptr);
-  void        getPreset(juce::MemoryBlock &inDestData);
+
+  void        loadPreset(juce::MemoryBlock *inMemPtr = nullptr);
+  bool        loadPresetFromDisk(juce::File presetFile);
 
   int         getXmlBlockSize();
   const void *getManipsBinaryPointer();
@@ -41,9 +44,12 @@ public:
     juce::Array<juce::File> mPresetPaths;
   };
 
+  friend class RT_ProcessorBase;
+
 private:
   RT_ProcessorInterface *mInterface;
   juce::MemoryBlock      mActivePresetRawData;
   Tree                   mPresetsTree;
   void                   _storeCurrentStateInMemory();
+  void                   _loadPresetInternal();
 };

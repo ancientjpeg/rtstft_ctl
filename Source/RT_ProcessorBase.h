@@ -39,6 +39,7 @@ public:
 
   //==============================================================================
   juce::AudioProcessor    *getProcessor() override;
+  RT_AudioProcessor       *getRTProcessor() override;
   RT_LookAndFeel::Manager *getLookAndFeelManager() override;
   RTSTFT_Manager          *getRTSTFTManager() override;
   RT_ParameterManager     *getParameterManager() override;
@@ -68,6 +69,8 @@ public:
   //==============================================================================
   void getStateInformation(juce::MemoryBlock &destData) override;
   void setStateInformation(const void *data, int sizeInBytes) override;
+
+  void notifyOfStateChange();
   void verifyStateIsUpToDate();
 
   static const int ManipsBinaryMagicNumber = 0x3f2f4f51;
