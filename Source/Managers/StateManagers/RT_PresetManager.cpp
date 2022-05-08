@@ -125,7 +125,7 @@ bool RT_PresetManager::loadPresetFromDisk(juce::File presetFile)
   }
   mActivePresetRawData.setSize(0);
   juce::FileInputStream istream(presetFile);
-  int check = istream.readIntoMemoryBlock(mActivePresetRawData);
+  istream.readIntoMemoryBlock(mActivePresetRawData);
   loadPreset();
   return true;
 }
