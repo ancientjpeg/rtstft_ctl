@@ -69,6 +69,7 @@ void RT_ScrollableMenu::setSelections(juce::StringArray inSelections)
 int RT_ScrollableMenu::select(juce::String inNewSelection)
 {
   mSelectionIndex = mSelections.indexOf(inNewSelection);
+  repaint();
   if (mSelectionIndex > -1) {
     onSelection(inNewSelection);
   }
@@ -97,9 +98,19 @@ int RT_ScrollableMenu::getSelectionFromPosition(juce::Point<float> inPos)
 }
 void RT_ScrollableMenu::mouseDown(const juce::MouseEvent &e)
 {
-  mMousePos = e.position;
-  int sel   = getSelectionFromPosition(mMousePos);
+  int sel = getSelectionFromPosition(mMousePos);
   if (sel > -1) {
     select(mSelections[sel]);
   }
+}
+void RT_ScrollableMenu::mouseMove(const juce::MouseEvent &e)
+{
+  mMousePos = e.position;
+  mHasHover = true;
+  repaint();
+}
+void RT_ScrollableMenu::mouseExit(const juce::MouseEvent &e)
+{
+  mHasHover = false;
+  repaint();
 }

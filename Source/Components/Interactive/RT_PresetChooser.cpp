@@ -9,6 +9,7 @@
 */
 
 #include "RT_PresetChooser.h"
+#include "../../Managers/LookAndFeelManagement/RT_LookAndFeelManagement.h"
 #include "../../Managers/OSManagers/RT_FileManager.h"
 #include "../../Managers/StateManagers/RT_PresetManager.h"
 
@@ -26,21 +27,31 @@ RT_PresetChooser::RT_PresetChooser(RT_ProcessorInterface *inInterface)
   mLoadButton.onClick = [this]() { loadPreset(); };
 
   addAndMakeVisible(mCurrentPresetLabel);
-  mCurrentPresetLabel.setText("Default", juce::dontSendNotification);
   addAndMakeVisible(mFileBrowser);
   mFileBrowser.onFileClick = [this](juce::File inClickedFile) {
     mInterface->getPresetManager()->loadPresetFromDisk(inClickedFile);
   };
+  mInterface->getPresetManager()->addListener(this);
 }
 
-void RT_PresetChooser::paint(juce::Graphics &g) {}
+void RT_PresetChooser::paint(juce::Graphics &g)
+{
+  g.fillAll(mInterface->getLookAndFeelManager()->getUIColour(widgetBackground));
+}
 void RT_PresetChooser::resized()
 {
   auto bounds    = getLocalBounds();
   auto topBounds = bounds.removeFromTop(20);
   mSaveButton.setBounds(topBounds.removeFromRight(80));
+  topBounds.removeFromRight(RT_LookAndFeel::widgetBorderSize);
   mLoadButton.setBounds(topBounds.removeFromRight(80));
+  topBounds.removeFromRight(RT_LookAndFeel::widgetBorderSize);
   mCurrentPresetLabel.setBounds(topBounds);
+  mCurrentPresetLabel.setColour(
+      juce::Label::backgroundColourId,
+      mInterface->getLookAndFeelManager()->getUIColour(windowBackground));
+
+  bounds.removeFromTop(RT_LookAndFeel::widgetBorderSize);
   mFileBrowser.setBounds(bounds);
 }
 
@@ -72,4 +83,11 @@ void RT_PresetChooser::savePreset()
     }
     mInterface->getPresetManager()->writePresetToDisk(preset);
   });
+}
+
+void RT_PresetChooser::onPresetChange()
+{
+  mCurrentPresetLabel.setText(
+      mInterface->getPresetManager()->getCurrentPresetName(),
+      juce::dontSendNotification);
 }

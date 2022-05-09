@@ -32,6 +32,8 @@ public:
 
   std::function<void(juce::String)> onSelection = [](juce::String s) {};
   void mouseDown(const juce::MouseEvent &e) override;
+  void mouseMove(const juce::MouseEvent &e) override;
+  void mouseExit(const juce::MouseEvent &e) override;
 
 private:
   juce::StringArray                 mSelections;

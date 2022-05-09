@@ -10,11 +10,13 @@
 
 #pragma once
 #include "../../Managers/Interface/RT_ProcessorInterface.h"
+#include "../../Managers/StateManagers/RT_PresetManager.h"
 #include "../Utility/RT_Component.h"
 #include "RT_FileBrowser.h"
 #include <JuceHeader.h>
 
-class RT_PresetChooser : public RT_Component {
+class RT_PresetChooser : public RT_Component,
+                         public RT_PresetManager::Listener {
 public:
   RT_PresetChooser(RT_ProcessorInterface *inInterface);
   void paint(juce::Graphics &) override;
@@ -22,6 +24,7 @@ public:
 
   void loadPreset();
   void savePreset();
+  void onPresetChange() override;
 
 private:
   juce::Label                        mCurrentPresetLabel;
