@@ -31,27 +31,12 @@ public:
   int         getXmlBlockSize();
   const void *getManipsBinaryPointer();
 
-  class Tree {
-  public:
-    Tree(juce::File inPresetsRoot);
-    juce::File findPresetFile(juce::String inPresetName);
-    bool       getPresetData(juce::MemoryBlock &inWriteableBlock);
-
-    class Comparator {
-    public:
-      static int compareElements(juce::File &f0, juce::File &f1);
-    };
-
-  private:
-    juce::Array<juce::File> mPresetPaths;
-  };
-
   friend class RT_ProcessorBase;
 
 private:
   RT_ProcessorInterface *mInterface;
   juce::MemoryBlock      mActivePresetRawData;
-  Tree                   mPresetsTree;
+  juce::File             mActivePresetPath;
   void                   _storeCurrentStateInMemory();
   void                   _loadPresetInternal();
 };

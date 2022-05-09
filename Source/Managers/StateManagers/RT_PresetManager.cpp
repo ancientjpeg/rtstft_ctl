@@ -18,8 +18,7 @@
 #include "RT_PropertyManager.h"
 
 RT_PresetManager::RT_PresetManager(RT_ProcessorInterface *inInterface)
-    : mInterface(inInterface), mActivePresetRawData(0),
-      mPresetsTree(mInterface->getFileManager()->getPresetsDirectory())
+    : mInterface(inInterface), mActivePresetRawData(0)
 {
   _storeCurrentStateInMemory();
   auto presetRoot = mInterface->getFileManager()->getPresetsDirectory();
@@ -142,35 +141,4 @@ int RT_PresetManager::getXmlBlockSize()
   int xmlOffset = ((uint32_t *)data)[1] + 9; // includes magic number, size int,
   // and trailing nullterm in XML binary
   return xmlOffset;
-}
-
-//==============================================================================
-
-RT_PresetManager::Tree::Tree(juce::File inPresetsRoot)
-{
-  RT_FileTree tree(inPresetsRoot, "*.rtstftpreset");
-  mPresetPaths = tree.getObjectsForAllFilesRecursive();
-  Comparator c;
-  mPresetPaths.sort(c, false);
-}
-
-juce::File RT_PresetManager::Tree::findPresetFile(juce::String inPresetName)
-{
-  int i = 0, depth = rt_log2_floor(mPresetPaths.size()),
-      index = mPresetPaths.size() / 2;
-  while (i++ < depth) {
-    if (mPresetPaths[i].getFileNameWithoutExtension() == inPresetName) {
-      return mPresetPaths[i];
-    }
-  }
-  return juce::File();
-}
-bool RT_PresetManager::Tree::getPresetData(juce::MemoryBlock &inWriteableBlock)
-{
-}
-
-int RT_PresetManager::Tree::Comparator::compareElements(juce::File &f0,
-                                                        juce::File &f1)
-{
-  return f0.getFileName().compareNatural(f1.getFileName());
 }
