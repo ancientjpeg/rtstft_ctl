@@ -51,6 +51,8 @@ public:
   juce::StringArray       getFilenames(bool inWithSuffixes = false);
   juce::Array<juce::File> getObjectsForAllFilesRecursive(bool inIncludeDirs
                                                          = false);
+  juce::File              getRoot();
+  int                     getCurrentDepth();
 
 private:
   juce::File                  mTreeRoot;

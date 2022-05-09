@@ -32,16 +32,23 @@ RT_FileBrowser::~RT_FileBrowser() {}
 void RT_FileBrowser::paint(juce::Graphics &g)
 {
   g.fillAll(mInterface->getLookAndFeelManager()->getUIColour(windowBackground));
+  g.setColour(
+      mInterface->getLookAndFeelManager()->getUIColour(widgetBackground));
+  g.fillRect(mBackgroundBounds);
 }
 
 void RT_FileBrowser::resized()
 {
   auto bounds       = getLocalBounds().withWidth(mColumnWidth);
   int  translationX = mColumnWidth + RT_LookAndFeel::widgetBorderSize;
+  int  finalWidth   = 0;
   for (auto menu : mDirectoryMenus) {
     menu->component.setBounds(bounds);
     bounds.translate(translationX, 0);
+    finalWidth += translationX;
   }
+  mBackgroundBounds = mDirectoryMenus[0]->component.getLocalBounds();
+  mBackgroundBounds.setWidth(finalWidth);
 }
 
 RT_FileBrowser::SubMenu::SubMenu(RT_FileBrowser         *inParent,
@@ -56,12 +63,24 @@ RT_FileBrowser::SubMenu::SubMenu(RT_FileBrowser         *inParent,
   }
   component.setSelections(files);
   component.onSelection = [this](juce::String inNewSelection) {
-    juce::File file = treeDir->getFileByBasename(inNewSelection);
+    juce::File file  = treeDir->getFileByBasename(inNewSelection);
+    bool       found = false;
     if (file.isDirectory()) {
-      DBG("DIR");
+      int depth = 0;
+      do {
+        if (file.getParentDirectory()
+            == parent->mFileTree.getDirFromDepth(depth)->getDir()) {
+          found = true;
+          break;
+        }
+      } while (++depth <= parent->mFileTree.getCurrentDepth());
+      assert(found);
+      parent->pushNewDirToStack(file, depth);
+      parent->resized();
+      parent->repaint();
     }
     else if (file.existsAsFile()) {
-      DBG("FILE");
+      parent->onFileClick(file);
     }
     component.deselect();
   };

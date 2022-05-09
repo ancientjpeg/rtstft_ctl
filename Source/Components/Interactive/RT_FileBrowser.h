@@ -46,6 +46,8 @@ private:
   RT_FileTree               mFileTree;
   juce::OwnedArray<SubMenu> mDirectoryMenus;
 
+  juce::Rectangle<int>      mBackgroundBounds;
+
   void pushNewDirToStack(juce::File inNewDeepestDir, int inParentIndex);
   JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(RT_FileBrowser)
 };

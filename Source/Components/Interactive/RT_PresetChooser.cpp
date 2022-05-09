@@ -28,6 +28,9 @@ RT_PresetChooser::RT_PresetChooser(RT_ProcessorInterface *inInterface)
   addAndMakeVisible(mCurrentPresetLabel);
   mCurrentPresetLabel.setText("Default", juce::dontSendNotification);
   addAndMakeVisible(mFileBrowser);
+  mFileBrowser.onFileClick = [this](juce::File inClickedFile) {
+    mInterface->getPresetManager()->loadPresetFromDisk(inClickedFile);
+  };
 }
 
 void RT_PresetChooser::paint(juce::Graphics &g) {}

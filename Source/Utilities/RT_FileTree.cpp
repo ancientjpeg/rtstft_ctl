@@ -97,6 +97,8 @@ RT_FileTree::getObjectsForAllFilesRecursive(bool inIncludeDirs)
   }
   return ret;
 }
+juce::File RT_FileTree::getRoot() { return mTreeRoot; }
+int        RT_FileTree::getCurrentDepth() { return mDirStack.size() - 1; }
 
 /******************************************************************************/
 /*******************       RT_FileTree::Directory          *******************/
@@ -119,6 +121,7 @@ RT_FileTree::Directory::operator=(Directory &&inDirToMove) noexcept
   mDir        = inDirToMove.mDir;
   mParentTree = inDirToMove.mParentTree;
   mChildFiles = std::move(inDirToMove.mChildFiles);
+  return *this;
 }
 
 const juce::Array<juce::File> RT_FileTree::Directory::getChildFileArray() const
