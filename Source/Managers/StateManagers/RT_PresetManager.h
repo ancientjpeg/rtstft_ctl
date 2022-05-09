@@ -19,7 +19,7 @@ static const juce::String sc_PresetSuffix{".rtstftpreset"};
 class RT_PresetManager {
 public:
   RT_PresetManager(RT_ProcessorInterface *inInterface);
-  void         writePresetToDisk(juce::String inPresetName);
+  juce::File   genPresetPathInPresetsDir(juce::String inPresetName);
   void         writePresetToDisk(juce::File inPresetPath);
   void         getPreset(juce::MemoryBlock &inDestData);
   void         storePresetInMemory(juce::MemoryBlock &inMem);
@@ -35,7 +35,7 @@ public:
   friend class RT_ProcessorBase;
   class Listener {
   public:
-    virtual ~Listener() = default;
+    virtual ~Listener()           = default;
     virtual void onPresetChange() = 0;
   };
   void addListener(Listener *l, bool initialNotification = true);

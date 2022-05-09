@@ -21,8 +21,14 @@ RT_PresetManager::RT_PresetManager(RT_ProcessorInterface *inInterface)
     : mInterface(inInterface), mActivePresetRawData(0)
 {
   _storeCurrentStateInMemory();
-  auto presetRoot = mInterface->getFileManager()->getPresetsDirectory();
-  writePresetToDisk("default.rtstftpreset");
+  auto presetRoot        = mInterface->getFileManager()->getPresetsDirectory();
+  auto defaultPresetPath = genPresetPathInPresetsDir("default");
+  if (!defaultPresetPath.existsAsFile()) {
+    writePresetToDisk(defaultPresetPath);
+  }
+  else {
+    loadPresetFromDisk(defaultPresetPath);
+  }
 }
 
 void RT_PresetManager::storePresetInMemory(juce::MemoryBlock &inMem)
@@ -49,13 +55,14 @@ void RT_PresetManager::getPreset(juce::MemoryBlock &inDestData)
   inDestData = mActivePresetRawData;
 }
 
-void RT_PresetManager::writePresetToDisk(juce::String inPresetName)
+juce::File
+RT_PresetManager::genPresetPathInPresetsDir(juce::String inPresetName)
 {
-  juce::String presetName = inPresetName + ".rtstftpreset";
+  juce::String presetName = inPresetName + sc_PresetSuffix;
   auto         presetsDir = juce::File::addTrailingSeparator(
               mInterface->getFileManager()->getPresetsDirectory().getFullPathName());
   juce::File presetPath(presetsDir + inPresetName);
-  writePresetToDisk(presetPath);
+  return presetPath;
 }
 void RT_PresetManager::writePresetToDisk(juce::File inPresetPath)
 {
