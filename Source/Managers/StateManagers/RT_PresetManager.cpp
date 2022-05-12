@@ -86,10 +86,13 @@ bool RT_PresetManager::loadPresetFromDisk(juce::File inPresetFile)
   }
   mActivePresetRawData.setSize(0);
   juce::FileInputStream istream(inPresetFile);
-  istream.readIntoMemoryBlock(mActivePresetRawData);
-  _presetChange(inPresetFile);
-  loadPreset();
-  return true;
+  if (istream.openedOk()) {
+    istream.readIntoMemoryBlock(mActivePresetRawData);
+    _presetChange(inPresetFile);
+    loadPreset();
+    return true;
+  }
+  return false;
 }
 
 const void *RT_PresetManager::getManipsBinaryPointer()
