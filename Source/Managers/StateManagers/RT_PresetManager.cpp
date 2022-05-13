@@ -61,7 +61,7 @@ RT_PresetManager::genPresetPathInPresetsDir(juce::String inPresetName)
   juce::String presetName = inPresetName + sc_PresetSuffix;
   auto         presetsDir = juce::File::addTrailingSeparator(
               mInterface->getFileManager()->getPresetsDirectory().getFullPathName());
-  juce::File presetPath(presetsDir + inPresetName);
+  juce::File presetPath(presetsDir + presetName);
   return presetPath;
 }
 void RT_PresetManager::writePresetToDisk(juce::File inPresetPath)

@@ -34,9 +34,9 @@ RTSTFT_Manager::~RTSTFT_Manager()
 void RTSTFT_Manager::prepareToPlay(double inSampleRate, int inSamplesPerBlock)
 {
   mCurrentSampleRate = inSampleRate;
-  auto checkSamplesPerBlock
-      = RT_Utilities::getNearestPowerOfTwo(inSamplesPerBlock);
-  int numChannels = mInterface->getProcessor()->getChannelCountOfBus(true, 0);
+//  auto checkSamplesPerBlock
+//      = RT_Utilities::getNearestPowerOfTwo(inSamplesPerBlock);
+//  int numChannels = mInterface->getProcessor()->getChannelCountOfBus(true, 0);
   if (inSamplesPerBlock > mCurrentSamplesPerBlock) {
     mCurrentSamplesPerBlock = inSamplesPerBlock;
     mInitialized            = false;

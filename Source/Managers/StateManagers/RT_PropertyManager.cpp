@@ -17,7 +17,6 @@ RT_PropertyManager::RT_PropertyManager(
     int                                 inCommandHistoryMaxSize)
     : mInterface(inInterface), mCommandHistoryMax(inCommandHistoryMaxSize)
 {
-  const rt_params p = mInterface->getRTSTFTManager()->getParamsStruct();
   mValueTree
       = {"rtstft_ctl_properties",
          {

@@ -19,7 +19,7 @@ RT_FileManager::RT_FileManager(RT_ProcessorInterface *inInterface)
 void RT_FileManager::validateDirectoryStructure()
 {
   auto appSupportDir = juce::File::getSpecialLocation(
-      juce::File::userApplicationDataDirectory);
+      juce::File::commonApplicationDataDirectory);
   mAppSupportDir = appSupportDir.getChildFile(sc_RTSTFTAppSupportDirName);
   DBG(mAppSupportDir.getFullPathName());
   auto checkDir = [](juce::File dir) {

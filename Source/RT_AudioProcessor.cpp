@@ -21,7 +21,7 @@ void RT_AudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
 {
   mRTSTFTManager.prepareToPlay(sampleRate, samplesPerBlock);
   verifyStateIsUpToDate();
-  mMidSideBuffer.setSize(getNumInputChannels(),
+  mMidSideBuffer.setSize(getTotalNumInputChannels(),
                          mRTSTFTManager.getParamsStruct()->fft_max);
 }
 
