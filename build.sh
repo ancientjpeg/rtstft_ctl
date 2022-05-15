@@ -3,6 +3,10 @@
 VERSION="0.1.0"
 PLUGIN_DIR="$HOME/Desktop/test"
 PLUGIN_DIR="/Library/Audio/Plug-Ins"
+SUPPORT_DIR="/Library/Application Support/sound_ctl"
+PLUGIN_SUPPORT_DIR="$SUPPORT_DIR/rtstft_ctl"
+PLUGIN_PRESETS_DIR="$PLUGIN_SUPPORT_DIR/presets"
+
 
 mkdir pkg_build
 cd pkg_build
@@ -12,10 +16,26 @@ cd pkg_build
 
 
 
-echo $"======== CREATING TXT FILES  ========\n"
+echo $"======= CREATING BUNDLE FILES =======\n"
 
 echo "Welcome to the rtstft_ctl installer." > readme.txt
-echo "license" > license.txt
+cp ../LICENSE ./LICENSE
+
+
+mkdir scripts
+cat > scripts/preinstall << SCRIPTEND
+if [ ! -d "${PLUGIN_SUPPORT_DIR}" ]
+then
+mkdir -p "${PLUGIN_SUPPORT_DIR}"
+fi
+
+if [ ! -d "${PLUGIN_PRESETS_DIR}" ]
+then
+mkdir -p "${PLUGIN_PRESETS_DIR}"
+fi
+SCRIPTEND
+
+chmod u+x scripts/preinstall
 
 echo $"===== CREATING DISTRIBUTION XML =====\n"
 
@@ -37,19 +57,19 @@ cat > distribution.xml << XMLEND
     <title>rtstft_ctl</title>
     <background file="background" scaling="tofit" alignment="center"/>
     <welcome file="readme.txt"  mime-type="text/plain" />
-    <license file="license.txt" mime-type="text/plain" />
+    <license file="LICENSE" mime-type="text/plain" />
     <choices-outline>
         <line choice="${AU_NAME}"/>
-        <line choice="${VST_NAME}"/>
+        <line choice="${VST3_NAME}"/>
     </choices-outline>
     <choice id="${AU_NAME}" title="Audio Unit" description="rtstft_ctl Audio Unit Installation">
         <pkg-ref id="${AU_ID}"/>
     </choice>
-    <choice id="${VST_NAME}" title="VST3" description="rtstft_ctl VST3 Installation">
-        <pkg-ref id="${VST_ID}"/>
+    <choice id="${VST3_NAME}" title="VST3" description="rtstft_ctl VST3 Installation">
+        <pkg-ref id="${VST3_ID}"/>
     </choice>
     <pkg-ref id="${AU_ID}" version="0.1.0" auth="Root">${AU_NAME}.pkg</pkg-ref>
-	<pkg-ref id="${VST_ID}" version="0.1.0" auth="Root">${VST_NAME}.pkg</pkg-ref>
+	<pkg-ref id="${VST3_ID}" version="0.1.0" auth="Root">${VST3_NAME}.pkg</pkg-ref>
 </installer-gui-script>
 XMLEND
 
@@ -79,6 +99,7 @@ asssemble_pkg() {
     --identifier "$ID" \
     --version $VERSION \
     --install-location "$DEST" \
+    --scripts ./scripts \
     --sign "$PKG_SIG" \
     $NAME.pkg # > /dev/null 2>&1
     echo $"\n"
@@ -89,9 +110,12 @@ asssemble_pkg $VST3_SRC $VST3_DEST $VST3_NAME $VST3_ID
 
 echo $"======== FINAL PACKAGE BUILD ========\n"
 PKG_NAME_FINAL="OSX_rtstft_ctl_"$VERSION".pkg"
-productbuild --sign "$PKG_SIG" --distribution distribution.xml --package-path ./ $PKG_NAME_FINAL # > /dev/null 2>&1
+productbuild --sign "$PKG_SIG" \
+--distribution distribution.xml  \
+--scripts ./scripts \
+--package-path ./ $PKG_NAME_FINAL # > /dev/null 2>&1
 
 echo $"\n============== CLEANUP ==============\n"
 mv $PKG_NAME_FINAL ..
 cd ..
-rm -rf pkg_build
+# rm -rf pkg_build
