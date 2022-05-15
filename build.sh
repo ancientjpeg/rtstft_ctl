@@ -6,33 +6,43 @@ PLUGIN_DIR="/Library/Audio/Plug-Ins"
 SUPPORT_DIR="/Library/Application Support/sound_ctl"
 PLUGIN_SUPPORT_DIR="$SUPPORT_DIR/rtstft_ctl"
 PLUGIN_PRESETS_DIR="$PLUGIN_SUPPORT_DIR/presets"
-
-
-mkdir pkg_build
-cd pkg_build
-
-# https://github.com/kurasu/surge/blob/main/installer_mac/make_installer.sh
-
+PROJUCER=~/JUCE/Projucer.app/Contents/MacOS/Projucer
 
 
 
 echo $"======= CREATING BUNDLE FILES =======\n"
+"$PROJUCER" --resave rtstft_ctl.jucer
+cd Builds/MacOSX
+xcodebuild -project rtstft_ctl.xcodeproj -target "rtstft_ctl - AU" -configuration Release 
+xcodebuild -project rtstft_ctl.xcodeproj -target "rtstft_ctl - VST3" -configuration Release
+cd ../..
+echo $"======= CREATING BUNDLE FILES =======\n"
 
-echo "Welcome to the rtstft_ctl installer." > readme.txt
-cp ../LICENSE ./LICENSE
+mkdir pkg_build
+cd pkg_build
+mkdir resources
+
+cat > resources/readme.txt << README
+Welcome to the rtstft_ctl installer! By default, this \
+package will install both the AU and VST versions of rtstft_ctl, \
+but feel free to customize the installation and exclude one of these \
+in order to save some space on your machine.
+README
+cp ../LICENSE resources/license.txt
 
 
+# https://github.com/kurasu/surge/blob/main/installer_mac/make_installer.sh
 mkdir scripts
 cat > scripts/preinstall << SCRIPTEND
-if [ ! -d "${PLUGIN_SUPPORT_DIR}" ]
-then
+if [ ! -d "${PLUGIN_SUPPORT_DIR}" ]; then
 mkdir -p "${PLUGIN_SUPPORT_DIR}"
 fi
 
-if [ ! -d "${PLUGIN_PRESETS_DIR}" ]
-then
+if [ ! -d "${PLUGIN_PRESETS_DIR}" ]; then
 mkdir -p "${PLUGIN_PRESETS_DIR}"
 fi
+chmod -R 775 "${PLUGIN_SUPPORT_DIR}"
+chmod -R 777 "${PLUGIN_PRESETS_DIR}"
 SCRIPTEND
 
 chmod u+x scripts/preinstall
@@ -57,7 +67,7 @@ cat > distribution.xml << XMLEND
     <title>rtstft_ctl</title>
     <background file="background" scaling="tofit" alignment="center"/>
     <welcome file="readme.txt"  mime-type="text/plain" />
-    <license file="LICENSE" mime-type="text/plain" />
+    <license file="license.txt" mime-type="text/plain" />
     <choices-outline>
         <line choice="${AU_NAME}"/>
         <line choice="${VST3_NAME}"/>
@@ -87,7 +97,7 @@ asssemble_pkg() {
     ID="$4"
     if [ -z $ID ] 
     then 
-        echo "Improper parameters in pkg assembly phase; check the build script."
+        echo $"Missing parameters in pkg assembly phase\n Check the build script."
         exit 1 
     fi
 
@@ -112,10 +122,10 @@ echo $"======== FINAL PACKAGE BUILD ========\n"
 PKG_NAME_FINAL="OSX_rtstft_ctl_"$VERSION".pkg"
 productbuild --sign "$PKG_SIG" \
 --distribution distribution.xml  \
---scripts ./scripts \
+--resources resources \
 --package-path ./ $PKG_NAME_FINAL # > /dev/null 2>&1
 
 echo $"\n============== CLEANUP ==============\n"
 mv $PKG_NAME_FINAL ..
 cd ..
-# rm -rf pkg_build
+rm -rf pkg_build
