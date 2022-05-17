@@ -31,7 +31,7 @@ protected:
   RT_PresetManager        mPresetManager;
 
   int                     mXMLOffset           = -1;
-  bool                    mAwaitingStateUpdate = false;
+  bool                    mGotFirstStateUpdate = false, mAwaitingStateUpdate = false;
 
 public:
   RT_ProcessorBase();

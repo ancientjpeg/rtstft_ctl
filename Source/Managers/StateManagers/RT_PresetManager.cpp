@@ -26,9 +26,6 @@ RT_PresetManager::RT_PresetManager(RT_ProcessorInterface *inInterface)
   if (!defaultPresetPath.existsAsFile()) {
     writePresetToDisk(defaultPresetPath);
   }
-  else {
-    loadPresetFromDisk(defaultPresetPath);
-  }
 }
 
 void RT_PresetManager::storePresetInMemory(juce::MemoryBlock &inMem)
@@ -49,10 +46,25 @@ void RT_PresetManager::loadPreset(juce::MemoryBlock *inMemPtr)
   mInterface->getRTProcessor()->notifyOfStateChange();
 }
 
-void RT_PresetManager::getPreset(juce::MemoryBlock &inDestData)
+/**
+ * @brief Retrieve current state as a new preset in memory
+ *
+ * @param inDestData Block to copy the preset data to.
+ * @param inOverwriteStoredState Normally this function will overwrite the
+ * internal saved state in RT_PresetManager, but we can avoid this behavior if
+ * need be by setting inOverwriteStoredState to False.
+ *
+ */
+void RT_PresetManager::getPreset(juce::MemoryBlock &inDestData,
+                                 bool               inOverwriteStoredState)
 {
-  _storeCurrentStateInMemory();
-  inDestData = mActivePresetRawData;
+  if (inOverwriteStoredState) {
+    _storeCurrentStateInMemory();
+    inDestData = mActivePresetRawData;
+  }
+  else {
+    _storeCurrentStateInMemoryBlock(inDestData);
+  }
 }
 
 juce::File
@@ -125,6 +137,11 @@ void RT_PresetManager::addListener(Listener *l, bool initialNotification)
 
 void RT_PresetManager::_storeCurrentStateInMemory()
 {
+  _storeCurrentStateInMemoryBlock(mActivePresetRawData);
+}
+void RT_PresetManager::_storeCurrentStateInMemoryBlock(juce::MemoryBlock &dest)
+{
+
   auto paramState = mInterface->getParameterManager()
                         ->getValueTreeState()
                         ->copyState()
@@ -136,13 +153,12 @@ void RT_PresetManager::_storeCurrentStateInMemory()
   state->addChildElement(paramState.release());
   state->addChildElement(propertyState.release());
 
-  juce::AudioProcessor::copyXmlToBinary(*state, mActivePresetRawData);
-  auto size          = ((uint32_t *)mActivePresetRawData.getData())[1];
-  auto manips_stream = juce::MemoryOutputStream(mActivePresetRawData, true);
+  juce::AudioProcessor::copyXmlToBinary(*state, dest);
+  auto size          = ((uint32_t *)dest.getData())[1];
+  auto manips_stream = juce::MemoryOutputStream(dest, true);
   manips_stream.setPosition(size + 9);
   mInterface->getRTSTFTManager()->writeManipsToBinary(manips_stream);
 }
-
 void RT_PresetManager::_loadPresetInternal()
 {
   void *data = mActivePresetRawData.getData();

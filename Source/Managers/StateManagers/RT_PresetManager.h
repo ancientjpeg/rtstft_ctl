@@ -21,7 +21,8 @@ public:
   RT_PresetManager(RT_ProcessorInterface *inInterface);
   juce::File   genPresetPathInPresetsDir(juce::String inPresetName);
   void         writePresetToDisk(juce::File inPresetPath);
-  void         getPreset(juce::MemoryBlock &inDestData);
+  void         getPreset(juce::MemoryBlock &inDestData,
+                         bool               inOverwriteStoredState = true);
   void         storePresetInMemory(juce::MemoryBlock &inMem);
   void         storePresetInMemory(const void *inData, int inSize);
 
@@ -46,6 +47,7 @@ private:
   juce::File                   mActivePresetPath;
   juce::ListenerList<Listener> mListenerList;
   void                         _storeCurrentStateInMemory();
-  void                         _loadPresetInternal();
-  void                         _presetChange(juce::File inNewPreset);
+  void _storeCurrentStateInMemoryBlock(juce::MemoryBlock &dest);
+  void _loadPresetInternal();
+  void _presetChange(juce::File inNewPreset);
 };

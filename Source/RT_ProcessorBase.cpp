@@ -173,7 +173,12 @@ void RT_ProcessorBase::getStateInformation(juce::MemoryBlock &destData)
 void RT_ProcessorBase::setStateInformation(const void *data, int sizeInBytes)
 {
   mPresetManager.storePresetInMemory(data, sizeInBytes);
+  mPresetManager.loadPreset();
   mAwaitingStateUpdate = true;
+  if (!mGotFirstStateUpdate) {
+    verifyStateIsUpToDate();
+    mGotFirstStateUpdate = true;
+  }
 }
 
 void RT_ProcessorBase::notifyOfStateChange() { mAwaitingStateUpdate = true; }
