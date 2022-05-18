@@ -24,6 +24,7 @@ RT_FileTree &RT_FileTree::operator=(RT_FileTree &&inFileTreeRvRef)
   mTargetSuffix = inFileTreeRvRef.mTargetSuffix;
   mFilePattern  = inFileTreeRvRef.mFilePattern;
   mDirStack     = std::move(inFileTreeRvRef.mDirStack);
+  return *this;
 }
 
 /**

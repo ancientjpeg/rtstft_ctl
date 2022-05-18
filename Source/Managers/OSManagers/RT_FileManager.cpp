@@ -47,4 +47,3 @@ void       RT_FileManager::loadPreset(juce::String inPresetName) {}
 
 juce::File RT_FileManager::getAppSupportDir() { return mAppSupportDir; }
 juce::File RT_FileManager::getPresetsDirectory() { return mAppPresetsDir; }
-juce::Array<juce::File> RT_FileManager::getAllFilesInDir(juce::File inDir) {}

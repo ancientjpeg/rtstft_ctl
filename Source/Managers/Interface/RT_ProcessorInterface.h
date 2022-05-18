@@ -10,6 +10,7 @@
 
 #pragma once
 #include <JuceHeader.h>
+#include <assert.h>
 
 class RT_AudioProcessor;
 class RT_ProcessorBase;

@@ -36,7 +36,7 @@ RT_ValueLinkedSelectorMenu::RT_ValueLinkedSelectorMenu(
 
 juce::String RT_ValueLinkedSelectorMenu::getActiveSelection()
 {
-  return (juce::String)mLinkedValue.getValue();
+  return mLinkedValue.getValue().toString();
 }
 
 int RT_ValueLinkedSelectorMenu::getActiveSelectionIndex()
