@@ -1,4 +1,7 @@
 Builds
 pkg_build
+.vscode
 *.plist
 *.pkg
+*.exe
+installer

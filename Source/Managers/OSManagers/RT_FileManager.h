@@ -14,6 +14,8 @@
 
 #if defined(__APPLE__)
 #define RT_SUPPORT_FOLDER "Application Support/sound_ctl/rtstft_ctl"
+#elif defined(__WIN32)
+#define RT_SUPPORT_FOLDER "sound_ctl\\rtstft_ctl"
 #else
 #define RT_SUPPORT_FOLDER "sound_ctl/rtstft_ctl"
 #endif
@@ -31,11 +33,12 @@ public:
   RT_FileManager() = delete;
   RT_FileManager(RT_ProcessorInterface *inInterface);
   ~RT_FileManager() = default;
-  void                    savePreset(juce::String      inPresetName,
-                                     juce::MemoryBlock inPreparedMemoryBlock);
-  void                    loadPreset(juce::String inPresetName);
-  juce::File              getAppSupportDir();
-  juce::File              getPresetsDirectory();
+
+  void       savePreset(juce::String      inPresetName,
+                        juce::MemoryBlock inPreparedMemoryBlock);
+  void       loadPreset(juce::String inPresetName);
+  juce::File getAppSupportDir();
+  juce::File getPresetsDirectory();
 
 private:
   juce::File mAppSupportDir, mAppPresetsDir;

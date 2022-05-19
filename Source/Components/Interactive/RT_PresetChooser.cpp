@@ -73,7 +73,7 @@ void RT_PresetChooser::loadPreset()
 void RT_PresetChooser::savePreset()
 {
   mFileChooser.reset(new juce::FileChooser(
-      "Save a file", mInterface->getFileManager()->getPresetsDirectory(),
+      "Save a preset", mInterface->getFileManager()->getPresetsDirectory(),
       "*" + sc_PresetSuffix));
   auto flags = juce::FileBrowserComponent::saveMode;
   mFileChooser->launchAsync(flags, [this](const juce::FileChooser &fc) {

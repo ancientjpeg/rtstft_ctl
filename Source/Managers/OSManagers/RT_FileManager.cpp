@@ -18,11 +18,17 @@ RT_FileManager::RT_FileManager(RT_ProcessorInterface *inInterface)
 
 void RT_FileManager::validateDirectoryStructure()
 {
-  auto appSupportDir = juce::File::getSpecialLocation(
+  juce::File appSupportDir;
+#ifdef _WIN32
+  appSupportDir = juce::File(
+      juce::File::getSpecialLocation(juce::File::userDocumentsDirectory)
+          .getFullPathName());
+#else
+  appSupportDir = juce::File::getSpecialLocation(
       juce::File::commonApplicationDataDirectory);
+#endif
   mAppSupportDir = appSupportDir.getChildFile(sc_RTSTFTAppSupportDirName);
-  DBG(mAppSupportDir.getFullPathName());
-  auto checkDir = [](juce::File dir) {
+  auto checkDir  = [](juce::File dir) {
     if (!dir.exists()) {
       auto result = dir.createDirectory();
       return result.wasOk();
@@ -32,6 +38,9 @@ void RT_FileManager::validateDirectoryStructure()
   assert(checkDir(mAppSupportDir)); // this might be a ticking time bomb lol
   mAppPresetsDir = mAppSupportDir.getChildFile("presets");
   assert(checkDir(mAppPresetsDir));
+  if (!checkDir(mAppPresetsDir)) {
+    exit(1);
+  }
 }
 
 void RT_FileManager::savePreset(juce::String      inPresetName,
