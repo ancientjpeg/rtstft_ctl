@@ -20,7 +20,7 @@ RT_FFTDisplay::RT_FFTDisplay(RT_ProcessorInterface *inInterface)
 #if JUCE_DEBUG
   startTimer(1000 / 15);
 #else
-  startTimer(1000 / 15);
+  startTimer(1000 / 30);
 #endif
 }
 
@@ -39,6 +39,7 @@ void RT_FFTDisplay::paint(juce::Graphics &g)
   }
   paintChannel(g, activeChan, true);
 }
+
 void RT_FFTDisplay::paintChannel(juce::Graphics &g, int inChannelIndex,
                                  bool inIsActiveChannel)
 {
@@ -189,7 +190,9 @@ float RT_FFTDisplay::getDbValNormalized(float dB)
 {
   return (dB - mDbMin) / mDbRange;
 }
+
 float RT_FFTDisplay::yPosNorm(float YPos) { return 1.f - (YPos / getHeight()); }
+
 float RT_FFTDisplay::yPosDenorm(float YPosNormalized)
 {
   return (1.f - YPosNormalized) * getHeight();
@@ -204,6 +207,7 @@ float RT_FFTDisplay::scaleAmpToYPosNormDbScale(float inAmp)
   inAmp = inAmp / mDbRange;
   return inAmp * getHeight();
 }
+
 float RT_FFTDisplay::scaleYPosNormToAmpDbScale(float inYPosNormalized)
 {
   float ret = inYPosNormalized;
@@ -214,6 +218,8 @@ float RT_FFTDisplay::scaleYPosNormToAmpDbScale(float inYPosNormalized)
   ret = rt_dbtoa(ret * getDbRange() + mDbMin);
   return ret;
 }
+
+
 float RT_FFTDisplay::scaleManipAmpToYPosNorm(float inAmp, rt_params p,
                                              rt_manip_flavor_t activeManip)
 {

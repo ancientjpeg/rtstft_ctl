@@ -28,13 +28,13 @@ RT_GUIControlsContainer::RT_GUIControlsContainer(
 {
 
   for (int i = 0; i < RT_PARAM_FLAVOR_COUNT; i++) {
+
+    int numSigFigs = i == RT_SCALE_FACTOR_MOD ? 0 : 2;
     mKnobs.add(std::make_unique<RT_Sliders::LabelledRotaryKnob>(
         RT_PARAM_RANGES.getRawDataPointer() + i, RT_PARAM_IDS[i].toLowerCase(),
-        0.2f));
-    // if (i <= RT_PARAM_GAIN_MOD && i >= RT_PARAM_LIMIT_MOD) {
+        0.2f, numSigFigs));
     auto *k_ptr = mKnobs[i]->getKnobPointer();
     k_ptr->setVelocityModeParameters(5, 1);
-    // }
     mKnobAttachments.add(
         std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(
             *mInterface->getParameterManager()->getValueTreeState(),

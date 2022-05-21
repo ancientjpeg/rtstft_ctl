@@ -33,16 +33,18 @@ void RT_Sliders::RotaryKnob::paint(juce::Graphics &g)
 //==============================================================================
 RT_Sliders::LabelledRotaryKnob::LabelledRotaryKnob(
     const juce::NormalisableRange<float> *inRangePtr,
-    juce::String inLabelString, float inLabelPortion)
+    juce::String inLabelString, float inLabelPortion, int inSigFigs)
     : mLabelString(inLabelString), mLabelPortion(inLabelPortion),
-      mKnob(inRangePtr)
+      mKnob(inRangePtr), mSigFigs(inSigFigs)
 {
   mLabel.addListener(this);
   mLabel.setEditable(false, true, true);
   addAndMakeVisible(mKnob, 0);
   addAndMakeVisible(mLabel);
   mKnob.onValueChange = [this]() {
-    mLabel.setText(juce::String(mKnob.getValue(), 2),
+      auto val = mKnob.getValue();
+      auto str = mSigFigs == 0 ? juce::String((int)val) : juce::String(val, mSigFigs);
+      mLabel.setText(str,
                    juce::dontSendNotification);
   };
   mLabel.setText(juce::String(mKnob.getValue(), 2), juce::dontSendNotification);
@@ -71,7 +73,7 @@ void RT_Sliders::LabelledRotaryKnob::labelTextChanged(
     juce::Label *labelThatHasChanged)
 {
   mKnob.setValue(mNewKnobValue);
-  labelThatHasChanged->setText(juce::String(mKnob.getValue(), 2),
+  labelThatHasChanged->setText(juce::String(mKnob.getValue(), mSigFigs),
                                juce::dontSendNotification);
 }
 void RT_Sliders::LabelledRotaryKnob::editorShown(juce::Label      *l,
