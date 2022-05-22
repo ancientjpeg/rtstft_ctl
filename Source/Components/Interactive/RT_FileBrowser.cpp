@@ -53,16 +53,25 @@ void RT_FileBrowser::resized()
 
 RT_FileBrowser::SubMenu::SubMenu(RT_FileBrowser         *inParent,
                                  RT_FileTree::Directory *inTreeDir)
-    : parent(inParent), component(parent->mInterface), treeDir(inTreeDir)
+    : parent(inParent), component(parent->mInterface, {}, 16),
+      treeDir(inTreeDir)
 {
   juce::StringArray files;
   for (const auto &f : *treeDir->getChildFileArrayPtr()) {
     juce::String s = parent->mShowExtensions ? f.getFileName()
                                              : f.getFileNameWithoutExtension();
-    files.add(s);
+    if (f.isDirectory()) {
+      files.add(s + "/");
+    }
+    else {
+      files.add(s);
+    }
   }
   component.setSelections(files);
   component.onSelection = [this](juce::String inNewSelection) {
+    if (inNewSelection.getLastCharacter() == '/') {
+      inNewSelection = inNewSelection.dropLastCharacters(1);
+    }
     juce::File file  = treeDir->getFileByBasename(inNewSelection);
     bool       found = false;
     if (file.isDirectory()) {

@@ -33,7 +33,7 @@ public:
 private:
   class SubMenu {
   public:
-    SubMenu(RT_FileBrowser *inParent, RT_FileTree::Directory *inTreeDirh);
+    SubMenu(RT_FileBrowser *inParent, RT_FileTree::Directory *inTreeDir);
     ~SubMenu();
     void                    onFileClick();
     RT_FileBrowser         *parent;

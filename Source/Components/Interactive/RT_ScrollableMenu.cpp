@@ -25,7 +25,7 @@ RT_ScrollableMenu::~RT_ScrollableMenu() {}
 
 void RT_ScrollableMenu::resized()
 {
-  auto bounds     = getLocalBounds().withHeight(mFontSize);
+  auto bounds     = getLocalBounds().withHeight((int)(mFontSize * 1.2f));
   int  nextHeight = bounds.getHeight() + RT_LookAndFeel::widgetBorderSize;
   mSelectionBounds.clearQuick();
   for (int i = 0; i < mSelections.size(); i++) {
@@ -54,7 +54,11 @@ void RT_ScrollableMenu::paint(juce::Graphics &g)
     g.fillRect(bounds);
     g.setColour(i == mSelectionIndex ? lafm->getUIColour(highlightedText)
                                      : lafm->getUIColour(defaultText));
-    g.drawText(mSelections[i], bounds.toFloat(),
+    g.setFont(juce::Font(mFontSize));
+    g.drawText(mSelections[i],
+               bounds.toFloat()
+                   .translated(mFontSize * 0.1f, 0)
+                   .withRight(bounds.getRight()),
                juce::Justification::centredLeft);
   }
 }
