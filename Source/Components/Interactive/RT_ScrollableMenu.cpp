@@ -25,7 +25,7 @@ RT_ScrollableMenu::~RT_ScrollableMenu() {}
 
 void RT_ScrollableMenu::resized()
 {
-  auto bounds     = getLocalBounds().withHeight((int)(mFontSize * 1.2f));
+  auto bounds     = getLocalBounds().withHeight(mFontSize * 2);
   int  nextHeight = bounds.getHeight() + RT_LookAndFeel::widgetBorderSize;
   mSelectionBounds.clearQuick();
   for (int i = 0; i < mSelections.size(); i++) {
@@ -57,7 +57,7 @@ void RT_ScrollableMenu::paint(juce::Graphics &g)
     g.setFont(juce::Font(mFontSize));
     g.drawText(mSelections[i],
                bounds.toFloat()
-                   .translated(mFontSize * 0.1f, 0)
+                   .translated(mFontSize * 0.5f, 0)
                    .withRight(bounds.getRight()),
                juce::Justification::centredLeft);
   }

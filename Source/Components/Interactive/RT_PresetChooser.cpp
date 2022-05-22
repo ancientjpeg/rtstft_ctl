@@ -57,9 +57,10 @@ void RT_PresetChooser::resized()
 
 void RT_PresetChooser::loadPreset()
 {
-  mFileChooser.reset(new juce::FileChooser(
-      "Find ur file", mInterface->getFileManager()->getPresetsDirectory(),
-      "*" + sc_PresetSuffix));
+  mFileChooser.reset(
+      new juce::FileChooser("Find a preset on disk",
+                            mInterface->getFileManager()->getPresetsDirectory(),
+                            "*" + sc_PresetSuffix));
   auto flags = juce::FileBrowserComponent::openMode
                | juce::FileBrowserComponent::canSelectFiles;
   mFileChooser->launchAsync(flags, [this](const juce::FileChooser &fc) {

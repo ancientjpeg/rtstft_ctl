@@ -8,7 +8,39 @@ PLUGIN_SUPPORT_DIR="$SUPPORT_DIR/rtstft_ctl"
 PLUGIN_PRESETS_DIR="$PLUGIN_SUPPORT_DIR/presets"
 PROJUCER=~/JUCE/Projucer.app/Contents/MacOS/Projucer
 
+bold=$(tput bold)
+norm=$(tput sgr0)
 
+HELP_STR="\n\
+${bold}NAME:${norm} \n\
+    rtstft_ctl build.sh: \n\
+${bold}OPTIONS:${norm} \n\
+    -p/--presets: location of presets dir to copy into the repository before assembling the installation package\
+"
+
+function error_out() {
+    echo $HELP_STR
+    exit 1
+}
+
+while getopts 'p:f' OPT; do 
+    case "$OPT" in
+    p) 
+        PRESETS_FACTORY_DIR=$OPTARG
+        if [ -d "$OPTARG" ]; then 
+            cp -r "$OPTARG" Resources/Factory
+        else
+            error_out
+        fi
+    ;;
+    f)
+        cp -r "/Library/Application Support/sound_ctl/rtstft_ctl/Factory" Resources/Factory
+    ;;
+    ?) 
+        error_out
+    ;;
+    esac
+done
 
 echo $"======= CREATING BUNDLE FILES =======\n"
 "$PROJUCER" --resave rtstft_ctl.jucer

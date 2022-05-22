@@ -53,7 +53,7 @@ void RT_FileBrowser::resized()
 
 RT_FileBrowser::SubMenu::SubMenu(RT_FileBrowser         *inParent,
                                  RT_FileTree::Directory *inTreeDir)
-    : parent(inParent), component(parent->mInterface, {}, 16),
+    : parent(inParent), component(parent->mInterface, {}, 14),
       treeDir(inTreeDir)
 {
   juce::StringArray files;
