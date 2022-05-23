@@ -28,12 +28,14 @@ while getopts 'p:f' OPT; do
     p) 
         PRESETS_FACTORY_DIR=$OPTARG
         if [ -d "$OPTARG" ]; then 
+            rm -rf Resources/Factory
             cp -r "$OPTARG" Resources/Factory
         else
             error_out
         fi
     ;;
     f)
+        rm -rf Resources/Factory
         cp -r "/Library/Application Support/sound_ctl/rtstft_ctl/Factory" Resources/Factory
     ;;
     ?) 
