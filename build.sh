@@ -92,6 +92,9 @@ VST3_SRC="../Builds/MacOSX/build/Release/"$VST3_NAME
 VST3_DEST=$PLUGIN_DIR"/VST3"
 VST3_ID="com.soundctl.rtstftctl.vst3"
 
+PRESETS_NAME="Presets"
+PRESETS_ID="com.soundctl.rtstftctl.presets"
+
 cat > distribution.xml << XMLEND
 <?xml version="1.0" encoding="UTF-8"?>
 <installer-gui-script>
@@ -103,6 +106,7 @@ cat > distribution.xml << XMLEND
     <choices-outline>
         <line choice="${AU_NAME}"/>
         <line choice="${VST3_NAME}"/>
+        <line choice="${PRESETS_NAME}"/>
     </choices-outline>
     <choice id="${AU_NAME}" title="Audio Unit" description="rtstft_ctl Audio Unit Installation">
         <pkg-ref id="${AU_ID}"/>
@@ -110,8 +114,12 @@ cat > distribution.xml << XMLEND
     <choice id="${VST3_NAME}" title="VST3" description="rtstft_ctl VST3 Installation">
         <pkg-ref id="${VST3_ID}"/>
     </choice>
+    <choice id="${PRESETS_NAME}" title="Presets" description="Install factory preset library">
+        <pkg-ref id="${PRESETS_ID}"/>
+    </choice>
     <pkg-ref id="${AU_ID}" version="0.1.0" auth="Root">${AU_NAME}.pkg</pkg-ref>
 	<pkg-ref id="${VST3_ID}" version="0.1.0" auth="Root">${VST3_NAME}.pkg</pkg-ref>
+    <pkg-ref id="${PRESETS_ID}" version="0.1.0" auth="Root">${PRESETS_NAME}.pkg</pkg-ref>
 </installer-gui-script>
 XMLEND
 
@@ -149,6 +157,16 @@ asssemble_pkg() {
 
 asssemble_pkg $AU_SRC $AU_DEST $AU_NAME $AU_ID
 asssemble_pkg $VST3_SRC $VST3_DEST $VST3_NAME $VST3_ID
+
+pkgbuild \
+--root ../Resources/Factory \
+--version $VERSION \
+--identifier "$PRESETS_ID" \
+--install-location "$PLUGIN_PRESETS_DIR/Factory" \
+--scripts ./scripts \
+--sign "$PKG_SIG" \
+$PRESETS_NAME.pkg
+
 
 echo $"======== FINAL PACKAGE BUILD ========\n"
 PKG_NAME_FINAL="OSX_rtstft_ctl_"$VERSION".pkg"
