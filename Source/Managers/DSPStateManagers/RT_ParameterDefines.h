@@ -69,6 +69,7 @@ enum RT_FFT_MODIFIERS {
   RT_FFT_MODIFIER_PAD_FACTOR,
   RT_FFT_MODIFIERS_COUNT,
 };
+
 static const juce::StringArray RT_FFT_MODIFIER_IDS
     = {"frame_size", "overlap_factor", "pad_factor"};
 
