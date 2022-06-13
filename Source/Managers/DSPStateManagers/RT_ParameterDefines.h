@@ -13,28 +13,23 @@
 #include "../../../RTSTFT/src/rtstft.h"
 #include <JuceHeader.h>
 
-#define RT_DB_MIN (-110.f)
-#define RT_DB_MAX (18.f)
-#define RT_DB_SLIDER_RADIUS (.5f)
+#define RT_MOD_MAGNITUDE (4.f)
+#define RT_MOD_MAGNITUDE_INV (1.f / RT_MOD_MAGNITUDE)
 static const juce::StringArray RT_PARAM_IDS{
-    "Pitch Ratio", "Retention",  "Phase Mod",   "Phase Chaos",
-    "Gain Nudge",  "Gate Nudge", "Limit Nudge", "Dry/Wet"};
+    "Pitch Ratio", "Retention", "Phase Mod", "Phase Chaos",
+    "Gain Mod",    "Gate Mod",  "Limit Mod", "Dry/Wet"};
 static const juce::StringArray RT_PARAM_NAMES{
-    "pitch ratio", "retention",  "phase mod",   "phase chaos",
-    "gain nudge",  "gate nudge", "limit nudge", "dry/wet"};
+    "pitch ratio", "retention", "phase mod", "phase chaos",
+    "gain mod",    "gate mod",  "limit mod", "dry/wet"};
 
-static const std::function from_0_1_log
+static const std::function from_0_1
     = [](float start, float end, float val_0_1) {
-        float ret = val_0_1;
-        ret       = ret * 2.f - 1.f;
-        ret       = ret * RT_DB_SLIDER_RADIUS;
-        return ret;
+        float val_n1_1 = val_0_1 * 2.f - 1.f;
+        return std::powf(RT_MOD_MAGNITUDE, val_n1_1);
       };
 
-static const std::function to_0_1_log = [](float start, float end, float val) {
-  float ret = val / RT_DB_SLIDER_RADIUS;
-  ret       = val * 0.5f + 0.5f;
-  return ret;
+static const std::function to_0_1 = [](float start, float end, float val) {
+  return std::log(val) / std::log(RT_MOD_MAGNITUDE) * 0.5f + 0.5f;
 };
 
 static const std::function snap_legal = [](float start, float end, float val) {
@@ -52,30 +47,18 @@ static juce::Array<juce::NormalisableRange<float>> RT_PARAM_RANGES{
     juce::NormalisableRange<float>(0.f, 2.f, 0.f),
     juce::NormalisableRange<float>(0.f, 2.f, 0.f),
     juce::NormalisableRange<float>(0.f, 1.f, 0.f),
-    juce::NormalisableRange<float>(-RT_DB_SLIDER_RADIUS, RT_DB_SLIDER_RADIUS,
-                                   0.f),
-    juce::NormalisableRange<float>(-RT_DB_SLIDER_RADIUS, RT_DB_SLIDER_RADIUS,
-                                   0.f),
-    juce::NormalisableRange<float>(-RT_DB_SLIDER_RADIUS, RT_DB_SLIDER_RADIUS,
-                                   0.f),
-    // juce::NormalisableRange<float>(-RT_DB_SLIDER_RADIUS, RT_DB_SLIDER_RADIUS,
-    //                                from_0_1_log, to_0_1_log, snap_legal),
-    // juce::NormalisableRange<float>(-RT_DB_SLIDER_RADIUS, RT_DB_SLIDER_RADIUS,
-    //                                from_0_1_log, to_0_1_log, snap_legal),
-    // juce::NormalisableRange<float>(-RT_DB_SLIDER_RADIUS, RT_DB_SLIDER_RADIUS,
-    //                                from_0_1_log, to_0_1_log, snap_legal),
-    // juce::NormalisableRange<float>(RT_DB_MIN, RT_DB_MAX, from_0_1_log,
-    //                                to_0_1_log, snap_legal),
-    // juce::NormalisableRange<float>(RT_DB_MIN, RT_DB_MAX, from_0_1_log,
-    //                                to_0_1_log, snap_legal),
-    // juce::NormalisableRange<float>(RT_DB_MIN, RT_DB_MAX, from_0_1_log,
-    //                                to_0_1_log, snap_legal),
+    juce::NormalisableRange<float>(RT_MOD_MAGNITUDE_INV, RT_MOD_MAGNITUDE,
+                                   from_0_1, to_0_1, snap_legal),
+    juce::NormalisableRange<float>(RT_MOD_MAGNITUDE_INV, RT_MOD_MAGNITUDE,
+                                   from_0_1, to_0_1, snap_legal),
+    juce::NormalisableRange<float>(RT_MOD_MAGNITUDE_INV, RT_MOD_MAGNITUDE,
+                                   from_0_1, to_0_1, snap_legal),
     juce::NormalisableRange<float>(0.f, 1.f, 0.f),
 };
 
 static const float
     RT_PARAM_DEFAULTS[RT_PARAM_FLAVOR_COUNT] // should be RT_PARAM_FLAVOR_COUNT
-    = {0.f, 1.f, 1.f, 0.f, 0.f, 0.f, 0.f, 1.f};
+    = {0.f, 1.f, 1.f, 0.f, 1.f, 1.f, 1.f, 1.f};
 
 /* property defines */
 static const juce::StringArray RT_MANIP_GUI_IDS = {"Gain", "Gate", "Limit"};

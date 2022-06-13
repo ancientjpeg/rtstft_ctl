@@ -94,18 +94,19 @@ void RT_FFTDisplay::paintChannel(juce::Graphics &g, int inChannelIndex,
           if (val <= ampCurr) {
             float contrast = c == activeChan ? .5f : 1.f;
             if (!(m == activeManipFlavor && c == activeChan)) {
-              manipCol = lafm->getUIColour(highlightedFill).contrasting(contrast);
+              manipCol
+                  = lafm->getUIColour(highlightedFill).contrasting(contrast);
             }
           }
           switch ((rt_manip_flavor_t)m) {
           case RT_MANIP_GAIN:
-            val += p->hold->gain_mod;
+            val *= p->hold->gain_mod;
             break;
           case RT_MANIP_GATE:
-            val += p->hold->gate_mod;
+            val *= p->hold->gate_mod;
             break;
           case RT_MANIP_LIMIT:
-            val += p->hold->limit_mod;
+            val *= p->hold->limit_mod;
             break;
           default:
             break;
@@ -219,7 +220,6 @@ float RT_FFTDisplay::scaleYPosNormToAmpDbScale(float inYPosNormalized)
   return ret;
 }
 
-
 float RT_FFTDisplay::scaleManipAmpToYPosNorm(float inAmp, rt_params p,
                                              rt_manip_flavor_t activeManip)
 {
@@ -235,7 +235,7 @@ float RT_FFTDisplay::scaleYPosNormToManipAmp(float             inYPosNormalized,
 {
   float ret = inYPosNormalized;
   ret       = scaleYPosNormToAmpDbScale(inYPosNormalized);
-  ret       = ret -= rt_get_manip_val(p, activeManip);
+  ret       /= rt_get_manip_val(p, activeManip);
   return ret;
 }
 

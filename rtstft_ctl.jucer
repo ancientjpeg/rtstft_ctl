@@ -38,6 +38,7 @@
       <FILE id="WVyz81" name="rt_manip.c" compile="1" resource="0" file="RTSTFT/src/rt_manip.c"/>
       <FILE id="oAktNX" name="rt_math.c" compile="1" resource="0" file="RTSTFT/src/rt_math.c"/>
       <FILE id="DfY97c" name="rt_structs.h" compile="0" resource="0" file="RTSTFT/src/rt_structs.h"/>
+      <FILE id="glKTWx" name="rt_utils.c" compile="1" resource="0" file="RTSTFT/src/rt_utils.c"/>
       <FILE id="f1NQNm" name="rtstft.h" compile="0" resource="0" file="RTSTFT/src/rtstft.h"/>
       <FILE id="ydByaJ" name="tests.c" compile="0" resource="0" file="RTSTFT/src/tests.c"/>
       <FILE id="Nsx6hE" name="wavfile.c" compile="0" resource="0" file="RTSTFT/src/wavfile.c"/>
