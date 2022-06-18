@@ -29,95 +29,68 @@ RT_FFTDisplay::~RT_FFTDisplay() {}
 void RT_FFTDisplay::paint(juce::Graphics &g)
 {
   g.fillAll(mInterface->getLookAndFeelManager()->getUIColour(windowBackground));
-  auto propMan    = mInterface->getPropertyManager();
-  int  activeChan = propMan->getActiveChannelIndex();
-  // paint both even when in mono b/c incoming audio is still stereo
-  for (int i = 0;
-       i < mInterface->getRTSTFTManager()->getParamsStruct()->num_chans; i++) {
-    if (i != activeChan)
-      paintChannel(g, i);
-  }
-  paintChannel(g, activeChan, true);
+  _paintBins(g);
 }
 
-void RT_FFTDisplay::paintChannel(juce::Graphics &g, int inChannelIndex,
-                                 bool inIsActiveChannel)
+// yes, I know this code could be a lot cleaner.
+// I need a dedicated UI programmer ...
+void RT_FFTDisplay::_paintBins(juce::Graphics &g)
 {
-  const rt_params p       = mInterface->getRTSTFTManager()->getParamsStruct();
-  auto            propMan = mInterface->getPropertyManager();
-  bool            mono = propMan->getMultichannelMode() == RT_MULTICHANNEL_MONO;
-  int             activeManipFlavor = propMan->getActiveManipFlavor();
-  if (p == NULL || !p->initialized) {
-    return;
-  }
-  auto  lafm         = mInterface->getLookAndFeelManager();
-  int   maxBars      = 128;
-  int   numAmpsInFFT = rt_manip_len(p);
-  int   barsInWindow = numAmpsInFFT < maxBars ? numAmpsInFFT : maxBars;
-  float width        = 1.f / barsInWindow * getWidth();
-  int   i_incr       = numAmpsInFFT <= maxBars ? 1 : numAmpsInFFT / maxBars;
-
-  for (int i = 0; i < barsInWindow; i++) {
-    float ampCurr = p->chans[inChannelIndex]->framebuf->amp_holder[i * i_incr];
-    float height  = scaleAmpToYPosNormDbScale(ampCurr);
-    float x       = (float)i / barsInWindow * getWidth();
-    g.setColour(inIsActiveChannel ? lafm->getUIColour(highlightedFill)
-                                  : lafm->getUIColour(defaultFill));
-    g.fillRect(x, (float)(getHeight() - height), width, height);
-    x += width * 0.125;
-    if (inIsActiveChannel) {
-      float        manipWidth = width * 0.75;
-      float        val;
-      juce::Colour manipCol;
-      int          activeChan = mono ? 0 : inChannelIndex;
-      for (int m = 0; m <= RT_MANIP_LIMIT; m++) {
-        for (int c = 0; c < p->num_chans; c++) {
-          if (m == activeManipFlavor) {
-            if (c == activeChan) {
-              manipCol = juce::Colour(255, 220, 60);
-            }
-            else if (!mono) {
-              manipCol = lafm->getUIColour(highlightedFill);
-            }
-            else {
-              continue;
-            }
-          }
-          else if (c == activeChan) {
-            manipCol = lafm->getUIColour(defaultFill);
-          }
-          else {
-            continue;
-          }
-          int manip_index = rt_manip_index(p, (rt_manip_flavor_t)m, i * i_incr);
-          val             = p->chans[c]->manip->hold_manips[manip_index];
-          if (val <= ampCurr) {
-            float contrast = c == activeChan ? .5f : 1.f;
-            if (!(m == activeManipFlavor && c == activeChan)) {
-              manipCol
-                  = lafm->getUIColour(highlightedFill).contrasting(contrast);
-            }
-          }
-          switch ((rt_manip_flavor_t)m) {
-          case RT_MANIP_GAIN:
-            val *= p->hold->gain_mod;
-            break;
-          case RT_MANIP_GATE:
-            val *= p->hold->gate_mod;
-            break;
-          case RT_MANIP_LIMIT:
-            val *= p->hold->limit_mod;
-            break;
-          default:
-            break;
-          }
-          float height = scaleManipAmpToYPosNorm(val, p, (rt_manip_flavor_t)m);
-          float manipBarHeight = 2.f;
-          g.setColour(manipCol);
-          g.fillRect(x, (float)(getHeight() - height) - manipBarHeight * 0.5f,
-                     manipWidth, manipBarHeight);
-        }
+  auto p               = mInterface->getRTSTFTManager()->getParamsStruct();
+  auto prop_man        = mInterface->getPropertyManager();
+  auto lafm            = mInterface->getLookAndFeelManager();
+  int  active_chan     = prop_man->getActiveChannelIndex();
+  int  num_amps_in_fft = rt_manip_len(p);
+  int  bins_in_window = num_amps_in_fft < mMaxBins ? num_amps_in_fft : mMaxBins;
+  int  active_manip_flavor = prop_man->getActiveManipFlavor();
+  float width              = 1.f / bins_in_window * getWidth();
+  int   i_incr = num_amps_in_fft <= mMaxBins ? 1 : num_amps_in_fft / mMaxBins;
+  juce::Rectangle<float> bin_rect;
+  // paint channels
+  for (int i = 0; i < bins_in_window; i++) {
+    int   bin_idx = i * i_incr;
+    float left    = manipsIndexToXPos(bin_idx);
+    float active_amp, amp_max = 0.f;
+    for (int c = 0; c < p->num_chans; c++) {
+      float amp;
+      for (int b = 0; b < i_incr; b++) {
+        amp = p->chans[c]->framebuf->amp_holder[bin_idx + b];
       }
+      amp /= i_incr;
+      amp_max = std::max(amp, amp_max);
+      if (c == active_chan) {
+        active_amp = amp;
+      }
+    }
+
+    float amp_max_ypos    = scaleAmpToYPosNormDbScale(amp_max);
+    float active_amp_ypos = scaleAmpToYPosNormDbScale(amp_max);
+    bin_rect.setBounds(left, getHeight(), width, getHeight() - active_amp_ypos);
+    g.setColour(lafm->getUIColour(highlightedFill));
+    g.fillRect(bin_rect);
+    if (amp_max_ypos > active_amp_ypos) {
+      g.setColour(lafm->getUIColour(defaultFill));
+      g.fillRect(bin_rect.withBottom(getHeight() - active_amp_ypos)
+                     .withTop(getHeight() - amp_max_ypos));
+    }
+
+    if (active_manip_flavor < 0) continue;
+    rt_manip_flavor_t flavor = (rt_manip_flavor_t)active_manip_flavor;
+    for (int c = 0; c < p->num_chans; c++) {
+      float manip_ypos;
+      for (int b = 0; b < i_incr; b++) {
+        int manip_index = rt_manip_index(p, flavor, bin_idx + b);
+        manip_ypos      = p->chans[c]->manip->hold_manips[manip_index];
+      }
+      manip_ypos = scaleAmpToYPosNormDbScale(manip_ypos / i_incr);
+      auto col
+          = lafm->getUIColour(c == active_chan ? highlightedFill : defaultFill);
+      if (manip_ypos < active_amp_ypos) {
+        col = col.contrasting();
+      }
+      g.setColour(col);
+      g.fillRect(bin_rect.withBottom(getHeight() - (manip_ypos + 2.f))
+                     .withTop(getHeight() - (manip_ypos - 2.f)));
     }
   }
 }
@@ -224,7 +197,7 @@ float RT_FFTDisplay::scaleManipAmpToYPosNorm(float inAmp, rt_params p,
                                              rt_manip_flavor_t activeManip)
 {
   float ret = inAmp;
-  ret += rt_get_manip_val(p, activeManip);
+  ret += rt_get_manip_mod_val(p, activeManip);
   ret = scaleAmpToYPosNormDbScale(inAmp);
   return ret;
 }
@@ -235,7 +208,7 @@ float RT_FFTDisplay::scaleYPosNormToManipAmp(float             inYPosNormalized,
 {
   float ret = inYPosNormalized;
   ret       = scaleYPosNormToAmpDbScale(inYPosNormalized);
-  ret       /= rt_get_manip_val(p, activeManip);
+  ret /= rt_get_manip_mod_val(p, activeManip);
   return ret;
 }
 

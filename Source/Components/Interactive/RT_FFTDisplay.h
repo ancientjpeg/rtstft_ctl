@@ -19,7 +19,8 @@
 //==============================================================================
 /*
  */
-class RT_FFTDisplay : public RT_Component, public juce::Timer {
+class RT_FFTDisplay : public RT_Component,
+                      public juce::Timer {
 
 public:
   RT_FFTDisplay(RT_ProcessorInterface *inInterface);
@@ -49,13 +50,14 @@ public:
                                 rt_manip_flavor_t activeManip);
 
 private:
-  float              mDbMaxAsAmp;
-  juce::Point<float> mLastDragPos;
-  float              getDbRange();
-  int                mActiveChannelIndexForMouseDown;
+  static const int      mMaxBins = 512;
+  juce::CriticalSection mPaintLock;
+  float                 mDbMaxAsAmp;
+  juce::Point<float>    mLastDragPos;
+  float                 getDbRange();
+  int                   mActiveChannelIndexForMouseDown;
 
-  void               paintChannel(juce::Graphics &g, int inChannelIndex,
-                                  bool inIsActiveChannel = false);
+  void                  _paintBins(juce::Graphics &g);
 
   JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(RT_FFTDisplay)
 };
