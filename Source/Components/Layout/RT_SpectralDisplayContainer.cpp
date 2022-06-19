@@ -56,7 +56,7 @@ void RT_SpectralDisplayContainer::paintInBorder(juce::Graphics &g)
   g.setColour(lafm->getUIColour(windowBackground));
   g.fillRect(dbBounds);
   g.setColour(lafm->getUIColour(outline));
-  for (int i = tickSeparation; i > mFFTDisplay.mDbMin; i -= tickSeparation) {
+  for (int i = RT_DB_MAX - tickSeparation; i > RT_DB_MIN; i -= tickSeparation) {
     juce::String s(i);
     float yPos = (1.f - ((i - RT_DB_MIN) / dbRange)) * dbBounds.getHeight()
                  + dbBounds.getY();

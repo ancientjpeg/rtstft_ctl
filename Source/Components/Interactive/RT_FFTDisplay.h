@@ -50,7 +50,7 @@ public:
                                 rt_manip_flavor_t activeManip);
 
 private:
-  static const int      mMaxBins = 512;
+  static const int      mMaxBins = 128;
   juce::CriticalSection mPaintLock;
   float                 mDbMaxAsAmp;
   juce::Point<float>    mLastDragPos;

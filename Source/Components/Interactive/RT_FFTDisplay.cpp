@@ -43,9 +43,11 @@ void RT_FFTDisplay::_paintBins(juce::Graphics &g)
   int  num_amps_in_fft = rt_manip_len(p);
   int  bins_in_window = num_amps_in_fft < mMaxBins ? num_amps_in_fft : mMaxBins;
   int  active_manip_flavor = prop_man->getActiveManipFlavor();
-  float width              = 1.f / bins_in_window * getWidth();
-  int   i_incr = num_amps_in_fft <= mMaxBins ? 1 : num_amps_in_fft / mMaxBins;
-  juce::Rectangle<float> bin_rect;
+  int  i_incr = num_amps_in_fft <= mMaxBins ? 1 : num_amps_in_fft / mMaxBins;
+
+  juce::Rectangle<float> bin_rect, active_manip_rect;
+  float                  width     = 1.f / bins_in_window * getWidth();
+  float                  reduction = width * 0.1f;
   // paint channels
   for (int i = 0; i < bins_in_window; i++) {
     int   bin_idx = i * i_incr;
@@ -65,7 +67,9 @@ void RT_FFTDisplay::_paintBins(juce::Graphics &g)
 
     float amp_max_ypos    = scaleAmpToYPosNormDbScale(amp_max);
     float active_amp_ypos = scaleAmpToYPosNormDbScale(amp_max);
-    bin_rect.setBounds(left, getHeight(), width, getHeight() - active_amp_ypos);
+    bin_rect.setBounds(left, getHeight() - active_amp_ypos, width,
+                       active_amp_ypos);
+    bin_rect.reduce(reduction, 0);
     g.setColour(lafm->getUIColour(highlightedFill));
     g.fillRect(bin_rect);
     if (amp_max_ypos > active_amp_ypos) {
@@ -75,23 +79,33 @@ void RT_FFTDisplay::_paintBins(juce::Graphics &g)
     }
 
     if (active_manip_flavor < 0) continue;
-    rt_manip_flavor_t flavor = (rt_manip_flavor_t)active_manip_flavor;
-    for (int c = 0; c < p->num_chans; c++) {
-      float manip_ypos;
+    rt_manip_flavor_t flavor  = (rt_manip_flavor_t)active_manip_flavor;
+    float             mod_val = rt_get_manip_mod_val(p, flavor);
+    bool              mono    = prop_man->getMultichannelMode() == 0;
+    juce::Colour      active_manip_col;
+    for (int c = 0; c < (mono ? 1 : p->num_chans); c++) {
+      float manip_ypos = 0.f;
       for (int b = 0; b < i_incr; b++) {
         int manip_index = rt_manip_index(p, flavor, bin_idx + b);
-        manip_ypos      = p->chans[c]->manip->hold_manips[manip_index];
+        manip_ypos      += p->chans[c]->manip->hold_manips[manip_index];
       }
-      manip_ypos = scaleAmpToYPosNormDbScale(manip_ypos / i_incr);
-      auto col
-          = lafm->getUIColour(c == active_chan ? highlightedFill : defaultFill);
+      manip_ypos = scaleAmpToYPosNormDbScale(manip_ypos / i_incr * mod_val);
+      auto col   = lafm->getUIColour(c == active_chan || mono ? highlightedFill
+                                                              : defaultFill);
       if (manip_ypos < active_amp_ypos) {
         col = col.contrasting();
       }
+      auto rect = bin_rect.withBottom(getHeight() - (manip_ypos - 1.f))
+                      .withTop(getHeight() - (manip_ypos + 1.f));
+      if (c == active_chan || mono) {
+        active_manip_col  = col;
+        active_manip_rect = rect;
+      }
       g.setColour(col);
-      g.fillRect(bin_rect.withBottom(getHeight() - (manip_ypos + 2.f))
-                     .withTop(getHeight() - (manip_ypos - 2.f)));
+      g.fillRect(rect);
     }
+    g.setColour(active_manip_col);
+    g.fillRect(active_manip_rect);
   }
 }
 
