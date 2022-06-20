@@ -22,25 +22,27 @@ static const juce::StringArray RT_PARAM_NAMES{
     "pitch ratio", "retention", "phase mod", "phase chaos",
     "gain mod",    "gate mod",  "limit mod", "dry/wet"};
 
-static const std::function from_0_1
+static const std::function<float(float, float, float)> from_0_1
     = [](float start, float end, float val_0_1) {
         float val_n1_1 = val_0_1 * 2.f - 1.f;
         return std::powf(RT_MOD_MAGNITUDE, val_n1_1);
       };
 
-static const std::function to_0_1 = [](float start, float end, float val) {
-  return std::log(val) / std::log(RT_MOD_MAGNITUDE) * 0.5f + 0.5f;
-};
+static const std::function<float(float, float, float)> to_0_1
+    = [](float start, float end, float val) {
+        return std::log(val) / std::log(RT_MOD_MAGNITUDE) * 0.5f + 0.5f;
+      };
 
-static const std::function snap_legal = [](float start, float end, float val) {
-  if (val < start) {
-    return start;
-  }
-  if (val > end) {
-    return end;
-  }
-  return val;
-};
+static const std::function<float(float, float, float)> snap_legal
+    = [](float start, float end, float val) {
+        if (val < start) {
+          return start;
+        }
+        if (val > end) {
+          return end;
+        }
+        return val;
+      };
 
 static juce::Array<juce::NormalisableRange<float>> RT_PARAM_RANGES{
     juce::NormalisableRange<float>(-2400.f, 2400.f, 0.f),

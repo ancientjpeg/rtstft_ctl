@@ -17,7 +17,6 @@
 #include "Managers/StateManagers/RT_PresetManager.h"
 #include "Managers/StateManagers/RT_PropertyManager.h"
 #include <JuceHeader.h>
-#include <JucePluginDefines.h>
 
 class RT_ProcessorBase : public juce::AudioProcessor,
                          public RT_ProcessorInterface {
@@ -30,8 +29,8 @@ protected:
   RTSTFT_Manager          mRTSTFTManager;
   RT_PresetManager        mPresetManager;
 
-  int                     mXMLOffset           = -1;
-  bool                    mGotFirstStateUpdate = false, mAwaitingStateUpdate = false;
+  int                     mXMLOffset = -1;
+  bool mGotFirstStateUpdate = false, mAwaitingStateUpdate = false;
 
 public:
   RT_ProcessorBase();

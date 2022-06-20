@@ -1,4 +1,5 @@
 Builds
+/build
 pkg_build
 .vscode
 *.plist
