@@ -45,11 +45,9 @@ while getopts 'p:f' OPT; do
 done
 
 echo $"======= CREATING BUNDLE FILES =======\n"
-"$PROJUCER" --resave rtstft_ctl.jucer
-cd Builds/MacOSX
-xcodebuild -project rtstft_ctl.xcodeproj -target "rtstft_ctl - AU" -configuration Release 
-xcodebuild -project rtstft_ctl.xcodeproj -target "rtstft_ctl - VST3" -configuration Release
-cd ../..
+cmake -Bbuild -G "Ninja Multi-Config"
+cmake --build build --config Release --target rtstft_ctl_AU
+cmake --build build --config Release --target rtstft_ctl_VST3
 echo $"======= CREATING BUNDLE FILES =======\n"
 
 mkdir pkg_build
@@ -82,15 +80,16 @@ SCRIPTEND
 chmod u+x scripts/preinstall
 
 echo $"===== CREATING DISTRIBUTION XML =====\n"
+BUILD_SRC="../build/rtstft_ctl_artefacts/Release"
 
 AU_NAME="rtstft_ctl.component"
-AU_SRC="../Builds/MacOSX/build/Release/"$AU_NAME
+AU_SRC=$BUILD_SRC"/AU/"$AU_NAME
 AU_DEST=$PLUGIN_DIR"/Components"
 AU_ID="com.soundctl.rtstftctl.au"
 
 
 VST3_NAME="rtstft_ctl.vst3"
-VST3_SRC="../Builds/MacOSX/build/Release/"$VST3_NAME
+VST3_SRC=$BUILD_SRC"/VST3/"$VST3_NAME
 VST3_DEST=$PLUGIN_DIR"/VST3"
 VST3_ID="com.soundctl.rtstftctl.vst3"
 
@@ -126,7 +125,6 @@ cat > distribution.xml << XMLEND
 XMLEND
 
 echo $"======= CREATING SUB-PACKAGES =======\n"
-
 
 
 DIST_SIG="Apple Distribution: Jackson Kaplan"

@@ -13,7 +13,7 @@
 #include "../../../RTSTFT/src/rtstft.h"
 #include <JuceHeader.h>
 
-#define RT_MOD_MAGNITUDE (4.f)
+#define RT_MOD_MAGNITUDE (16.f)
 #define RT_MOD_MAGNITUDE_INV (1.f / RT_MOD_MAGNITUDE)
 static const juce::StringArray RT_PARAM_IDS{
     "Pitch Ratio", "Retention", "Phase Mod", "Phase Chaos",
