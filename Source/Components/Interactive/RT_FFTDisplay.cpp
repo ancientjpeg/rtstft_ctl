@@ -87,7 +87,7 @@ void RT_FFTDisplay::_paintBins(juce::Graphics &g)
       float manip_ypos = 0.f;
       for (int b = 0; b < i_incr; b++) {
         int manip_index = rt_manip_index(p, flavor, bin_idx + b);
-        manip_ypos      += p->chans[c]->manip->hold_manips[manip_index];
+        manip_ypos += p->chans[c]->manip->hold_manips[manip_index];
       }
       manip_ypos = scaleAmpToYPosNormDbScale(manip_ypos / i_incr * mod_val);
       auto col   = lafm->getUIColour(c == active_chan || mono ? highlightedFill

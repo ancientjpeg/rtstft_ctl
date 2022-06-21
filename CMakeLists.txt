@@ -40,6 +40,7 @@ target_compile_definitions(${PROJECT_NAME}
 target_link_libraries(${PROJECT_NAME}
     PRIVATE
         # rtstft_ctl
+        # ${CMAKE_SOURCE_DIR}/RTSTFT/build/lib/librtstft.a
         juce::juce_audio_utils
     # PUBLIC
     #     juce::juce_recommended_config_flags
