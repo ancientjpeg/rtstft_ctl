@@ -24,6 +24,7 @@ juce_add_plugin(rtstft_ctl
 juce_generate_juce_header(${PROJECT_NAME})
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 20)
+set_property(TARGET ${PROJECT_NAME} PROPERTY C_STANDARD 90)
 
 # add source
 file(GLOB_RECURSE Source ${CMAKE_CURRENT_LIST_DIR}/Source/*.cpp ${CMAKE_CURRENT_LIST_DIR}/Source/*.h)
