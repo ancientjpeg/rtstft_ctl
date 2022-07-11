@@ -7,6 +7,9 @@ if (APPLE)
     set(CMAKE_OSX_ARCHITECTURES "arm64;x86_64")
 endif()
 
+
+# set(CMAKE_UNITY_BUILD TRUE)
+set(JUCE_ENABLE_MODULE_SOURCE_GROUPS ON)
 add_subdirectory(JUCE)
 
 juce_add_plugin(${PROJECT_NAME}
