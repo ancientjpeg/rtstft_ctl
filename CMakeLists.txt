@@ -1,11 +1,15 @@
 cmake_minimum_required (VERSION 3.10)
 
 project(rtstft_ctl VERSION 0.1.0)
-    
+
+set(CMAKE_EXPORT_COMPILE_COMMANDS TRUE)
+if (APPLE)
+    set(CMAKE_OSX_ARCHITECTURES "arm64;x86_64")
+endif()
+
 add_subdirectory(JUCE)
 
-
-juce_add_plugin(rtstft_ctl
+juce_add_plugin(${PROJECT_NAME}
     VERSION 0.1.0                     
     # ICON_BIG ...                    
     # ICON_SMALL ...

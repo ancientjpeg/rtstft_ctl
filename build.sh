@@ -6,24 +6,35 @@ PLUGIN_DIR="/Library/Audio/Plug-Ins"
 SUPPORT_DIR="/Library/Application Support/sound_ctl"
 PLUGIN_SUPPORT_DIR="$SUPPORT_DIR/rtstft_ctl"
 PLUGIN_PRESETS_DIR="$PLUGIN_SUPPORT_DIR/presets"
-PROJUCER=~/JUCE/Projucer.app/Contents/MacOS/Projucer
 
 bold=$(tput bold)
 norm=$(tput sgr0)
 
-HELP_STR="\n\
-${bold}NAME:${norm} \n\
-    rtstft_ctl build.sh: \n\
-${bold}OPTIONS:${norm} \n\
-    -p/--presets: location of presets dir to copy into the repository before assembling the installation package\
-"
+function print_help() {
+cat << PRINT_HELP
+
+${bold}NAME:${norm}
+
+    build.sh:
+
+${bold}USAGE:${norm}
+
+    ./build.sh [-p [DIR]] [-f]
+    
+${bold}OPTIONS:${norm}
+    
+    -p [DIR]: location of presets dir to copy into the repository before assembling the installation package\n
+    -f:       copy the default presets factory directory (${PLUGIN_PRESETS_DIR}) into the repository before packaging
+
+PRINT_HELP
+}
 
 function error_out() {
-    echo $HELP_STR
+    print_help
     exit 1
 }
 
-while getopts 'p:f' OPT; do 
+while getopts 'p:fh' OPT; do 
     case "$OPT" in
     p) 
         PRESETS_FACTORY_DIR=$OPTARG
@@ -38,13 +49,17 @@ while getopts 'p:f' OPT; do
         rm -rf Resources/Factory
         cp -r "/Library/Application Support/sound_ctl/rtstft_ctl/Factory" Resources/Factory
     ;;
+    h)
+    print_help
+    exit 0
+    ;;
     ?) 
         error_out
     ;;
     esac
 done
 
-echo $"======= CREATING BUNDLE FILES =======\n"
+echo $"=======  RUNNING CMAKE BUILD  =======\n"
 cmake -Bbuild -G "Ninja Multi-Config"
 cmake --build build --config Release --target rtstft_ctl_AU
 cmake --build build --config Release --target rtstft_ctl_VST3
@@ -62,22 +77,7 @@ in order to save some space on your machine.
 README
 cp ../LICENSE resources/license.txt
 
-
 # https://github.com/kurasu/surge/blob/main/installer_mac/make_installer.sh
-mkdir scripts
-cat > scripts/preinstall << SCRIPTEND
-if [ ! -d "${PLUGIN_SUPPORT_DIR}" ]; then
-mkdir -p "${PLUGIN_SUPPORT_DIR}"
-fi
-
-if [ ! -d "${PLUGIN_PRESETS_DIR}" ]; then
-mkdir -p "${PLUGIN_PRESETS_DIR}"
-fi
-chmod -R 775 "${PLUGIN_SUPPORT_DIR}"
-chmod -R 777 "${PLUGIN_PRESETS_DIR}"
-SCRIPTEND
-
-chmod u+x scripts/preinstall
 
 echo $"===== CREATING DISTRIBUTION XML =====\n"
 BUILD_SRC="../build/rtstft_ctl_artefacts/Release"
@@ -149,7 +149,6 @@ asssemble_pkg() {
     --identifier "$ID" \
     --version $VERSION \
     --install-location "$DEST" \
-    --scripts ./scripts \
     --sign "$PKG_SIG" \
     $NAME.pkg # > /dev/null 2>&1
     echo $"\n"
@@ -163,7 +162,6 @@ pkgbuild \
 --version $VERSION \
 --identifier "$PRESETS_ID" \
 --install-location "$PLUGIN_PRESETS_DIR/Factory" \
---scripts ./scripts \
 --sign "$PKG_SIG" \
 $PRESETS_NAME.pkg
 
