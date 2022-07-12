@@ -19,8 +19,12 @@ RT_Header::RT_Header(RT_ProcessorInterface *inInterface, int inBorderSize)
   // In your constructor, you should add any child components, and
   // initialise any special settings that your component needs.
   addAndMakeVisible(mPluginTitle);
-  mPluginTitle.setText("rtstft_ctl",
-                       juce::NotificationType::dontSendNotification);
+#ifdef JUCE_DEBUG
+  juce::String header = "rtstft_ctl - DEBUG";
+#else
+  juce::String header = "rtstft_ctl";
+#endif
+  mPluginTitle.setText(header, juce::NotificationType::dontSendNotification);
   mPluginTitle.setFont(juce::Font(24, juce::Font::bold));
   mPluginTitle.setEditable(false);
   mPluginSubtitle.setText("sound_ctl",

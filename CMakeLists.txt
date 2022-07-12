@@ -22,7 +22,7 @@ juce_add_plugin(${PROJECT_NAME}
     NEEDS_MIDI_OUTPUT FALSE           
     IS_MIDI_EFFECT FALSE              
     EDITOR_WANTS_KEYBOARD_FOCUS TRUE  
-    COPY_PLUGIN_AFTER_BUILD FALSE      
+    COPY_PLUGIN_AFTER_BUILD TRUE      
     PLUGIN_MANUFACTURER_CODE SCTL     
     PLUGIN_CODE Rtst                  
     FORMATS AU VST3 Standalone      
