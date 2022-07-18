@@ -127,8 +127,8 @@ XMLEND
 echo $"======= CREATING SUB-PACKAGES =======\n"
 
 
-DIST_SIG="Apple Distribution: Jackson Kaplan"
-PKG_SIG="3rd Party Mac Developer Installer: Jackson Kaplan"
+DIST_SIG="Developer ID Application: Jackson Kaplan"
+PKG_SIG="Developer ID Installer: Jackson Kaplan"
 
 asssemble_pkg() {
     SRC="$1"
@@ -142,7 +142,7 @@ asssemble_pkg() {
     fi
 
     cp -r $SRC $NAME
-    codesign -s "$DIST_SIG" $NAME
+    codesign -sf "$DIST_SIG" $NAME
   
     pkgbuild \
     --component "$NAME" \
