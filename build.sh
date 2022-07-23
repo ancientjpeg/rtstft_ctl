@@ -7,11 +7,16 @@ SUPPORT_DIR="/Library/Application Support/sound_ctl"
 PLUGIN_SUPPORT_DIR="$SUPPORT_DIR/rtstft_ctl"
 PLUGIN_PRESETS_DIR="$PLUGIN_SUPPORT_DIR/presets"
 
+DIST_SIG="Developer ID Application: Jackson Kaplan (792TGC726K)"
+PKG_SIG="Developer ID Installer: Jackson Kaplan (792TGC726K)"
+
+INSTALLER_NAME_FINAL="OSX_rtstft_ctl_"$VERSION
+
 bold=$(tput bold)
 norm=$(tput sgr0)
 
 function print_help() {
-cat << PRINT_HELP
+    cat <<PRINT_HELP
 
 ${bold}NAME:${norm}
 
@@ -34,28 +39,37 @@ function error_out() {
     exit 1
 }
 
-while getopts 'p:fh' OPT; do 
+CLEANUP=TRUE
+NOTARIZE=
+
+while getopts 'p:fknh' OPT; do
     case "$OPT" in
-    p) 
+    p)
         PRESETS_FACTORY_DIR=$OPTARG
-        if [ -d "$OPTARG" ]; then 
+        if [ -d "$OPTARG" ]; then
             rm -rf Resources/Factory
             cp -r "$OPTARG" Resources/Factory
         else
             error_out
         fi
-    ;;
+        ;;
     f)
         rm -rf Resources/Factory
         cp -r "/Library/Application Support/sound_ctl/rtstft_ctl/Factory" Resources/Factory
-    ;;
+        ;;
+    k)
+        CLEANUP=
+        ;;
+    n)
+        NOTARIZE=TRUE
+        ;;
     h)
-    print_help
-    exit 0
-    ;;
-    ?) 
+        print_help
+        exit 0
+        ;;
+    ?)
         error_out
-    ;;
+        ;;
     esac
 done
 
@@ -69,7 +83,7 @@ mkdir pkg_build
 cd pkg_build
 mkdir resources
 
-cat > resources/readme.txt << README
+cat >resources/readme.txt <<README
 Welcome to the rtstft_ctl installer! By default, this \
 package will install both the AU and VST versions of rtstft_ctl, \
 but feel free to customize the installation and exclude one of these \
@@ -87,7 +101,6 @@ AU_SRC=$BUILD_SRC"/AU/"$AU_NAME
 AU_DEST=$PLUGIN_DIR"/Components"
 AU_ID="com.soundctl.rtstftctl.au"
 
-
 VST3_NAME="rtstft_ctl.vst3"
 VST3_SRC=$BUILD_SRC"/VST3/"$VST3_NAME
 VST3_DEST=$PLUGIN_DIR"/VST3"
@@ -96,7 +109,7 @@ VST3_ID="com.soundctl.rtstftctl.vst3"
 PRESETS_NAME="Presets"
 PRESETS_ID="com.soundctl.rtstftctl.presets"
 
-cat > distribution.xml << XMLEND
+cat >distribution.xml <<XMLEND
 <?xml version="1.0" encoding="UTF-8"?>
 <installer-gui-script>
     <options/>
@@ -126,31 +139,26 @@ XMLEND
 
 echo $"======= CREATING SUB-PACKAGES =======\n"
 
-
-DIST_SIG="Developer ID Application: Jackson Kaplan"
-PKG_SIG="Developer ID Installer: Jackson Kaplan"
-
 asssemble_pkg() {
     SRC="$1"
     DEST="$2"
     NAME="$3"
     ID="$4"
-    if [ -z $ID ] 
-    then 
+    if [ -z $ID ]; then
         echo $"Missing parameters in pkg assembly phase\n Check the build script."
-        exit 1 
+        exit 1
     fi
 
     cp -r $SRC $NAME
-    codesign -sf "$DIST_SIG" $NAME
-  
+    codesign -fs "$DIST_SIG" $NAME
+
     pkgbuild \
-    --component "$NAME" \
-    --identifier "$ID" \
-    --version $VERSION \
-    --install-location "$DEST" \
-    --sign "$PKG_SIG" \
-    $NAME.pkg # > /dev/null 2>&1
+        --component "$NAME" \
+        --identifier "$ID" \
+        --version $VERSION \
+        --install-location "$DEST" \
+        --sign "$PKG_SIG" \
+        $NAME.pkg # > /dev/null 2>&1
     echo $"\n"
 }
 
@@ -158,22 +166,87 @@ asssemble_pkg $AU_SRC $AU_DEST $AU_NAME $AU_ID
 asssemble_pkg $VST3_SRC $VST3_DEST $VST3_NAME $VST3_ID
 
 pkgbuild \
---root ../Resources/Factory \
---version $VERSION \
---identifier "$PRESETS_ID" \
---install-location "$PLUGIN_PRESETS_DIR/Factory" \
---sign "$PKG_SIG" \
-$PRESETS_NAME.pkg
+    --root ../Resources/Factory \
+    --version $VERSION \
+    --identifier "$PRESETS_ID" \
+    --install-location "$PLUGIN_PRESETS_DIR/Factory" \
+    --sign "$PKG_SIG" \
+    $PRESETS_NAME.pkg
 
+echo $"\n======== FINAL PACKAGE BUILD ========\n"
 
-echo $"======== FINAL PACKAGE BUILD ========\n"
-PKG_NAME_FINAL="OSX_rtstft_ctl_"$VERSION".pkg"
 productbuild --sign "$PKG_SIG" \
---distribution distribution.xml  \
---resources resources \
---package-path ./ $PKG_NAME_FINAL # > /dev/null 2>&1
+    --distribution distribution.xml \
+    --package-path '.' \
+    ./"$INSTALLER_NAME_FINAL".pkg # > /dev/null 2>&1
 
-echo $"\n============== CLEANUP ==============\n"
-mv $PKG_NAME_FINAL ..
+mv "$INSTALLER_NAME_FINAL".pkg ..
+
+function notarize() {
+
+    # https://github.com/surge-synthesizer/surge/blob/main/scripts/installer_mac/make_installer.sh
+    echo $"\n============= NOTARIZE ==============\n"
+
+    if [[ -f "${TARGET_DIR}/$OUTPUT_BASE_FILENAME.dmg" ]]; then
+        rm "${TARGET_DIR}/$OUTPUT_BASE_FILENAME.dmg"
+    fi
+    hdiutil create /tmp/tmp.dmg -ov -volname "$OUTPUT_BASE_FILENAME" -fs HFS+ -srcfolder "${TMPDIR}/Surge XT/"
+    hdiutil convert /tmp/tmp.dmg -format UDZO -o "${TARGET_DIR}/$OUTPUT_BASE_FILENAME.dmg"
+
+    if [[ ! -z $MAC_SIGNING_CERT ]]; then
+        codesign --force -s "$MAC_SIGNING_CERT" --timestamp "${TARGET_DIR}/$OUTPUT_BASE_FILENAME.dmg"
+        codesign -vvv "${TARGET_DIR}/$OUTPUT_BASE_FILENAME.dmg"
+
+        if [ "$XCODE_VERSION" -ge 13 ]; then
+            xcrun notarytool submit "${TARGET_DIR}/$OUTPUT_BASE_FILENAME.dmg" --apple-id ${MAC_SIGNING_ID} --team-id ${MAC_SIGNING_TEAM} --password ${MAC_SIGNING_1UPW} --wait
+        else
+            # but if i dont
+            ruuid=$(xcrun altool --notarize-app --primary-bundle-id "org.surge-synth-team.surge-xt" \
+                --username ${MAC_SIGNING_ID} --password ${MAC_SIGNING_1UPW} --asc-provider ${MAC_SIGNING_TEAM} \
+                --file "${TARGET_DIR}/$OUTPUT_BASE_FILENAME.dmg" 2>&1 | tee altool.out |
+                awk '/RequestUUID/ { print $NF; }')
+            echo "REQUEST UID : $ruuid"
+        fi
+
+        if [[ $ruuid == "" ]]; then
+            echo "could not upload for notarization"
+            cat altool.out
+            exit 1
+        fi
+
+        request_status="in progress"
+        while [[ "$request_status" == "in progress" ]]; do
+            echo -n "waiting... "
+            sleep 10
+            request_full=$(
+                xcrun altool --notarization-info "$ruuid" \
+                    --username "${MAC_SIGNING_ID}" \
+                    --password "${MAC_SIGNING_1UPW}" \
+                    --asc-provider "${MAC_SIGNING_TEAM}" 2>&1
+            )
+            echo $request_full
+
+            request_status=$(xcrun altool --notarization-info "$ruuid" \
+                --username "${MAC_SIGNING_ID}" \
+                --password "${MAC_SIGNING_1UPW}" \
+                --asc-provider "${MAC_SIGNING_TEAM}" 2>&1 |
+                awk -F ': ' '/Status:/ { print $2; }')
+            echo "$request_status"
+        done
+        xcrun stapler staple "${TARGET_DIR}/${OUTPUT_BASE_FILENAME}.dmg"
+    fi
+
+}
+
+if [ -n "$NOTARIZE" ]; then
+    notarize
+fi
+
 cd ..
-rm -rf pkg_build
+
+if [ -n "$CLEANUP" ]; then
+
+    echo $"\n============== CLEANUP ==============\n"
+    rm -rf pkg_build
+
+fi
