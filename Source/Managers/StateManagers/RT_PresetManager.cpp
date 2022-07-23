@@ -38,6 +38,7 @@ void RT_PresetManager::storePresetInMemory(const void *inData, int inSize)
   mActivePresetRawData.setSize(inSize);
   mActivePresetRawData.copyFrom(inData, 0, inSize);
 }
+
 void RT_PresetManager::loadPreset(juce::MemoryBlock *inMemPtr)
 {
   if (inMemPtr != nullptr) {
@@ -88,6 +89,7 @@ void RT_PresetManager::writePresetToDisk(juce::File inPresetPath)
                   mActivePresetRawData.getSize());
   }
   _presetChange(inPresetPath);
+  _refreshListeners();
 }
 
 bool RT_PresetManager::loadPresetFromDisk(juce::File inPresetFile)
@@ -139,9 +141,9 @@ void RT_PresetManager::_storeCurrentStateInMemory()
 {
   _storeCurrentStateInMemoryBlock(mActivePresetRawData);
 }
+
 void RT_PresetManager::_storeCurrentStateInMemoryBlock(juce::MemoryBlock &dest)
 {
-
   auto paramState = mInterface->getParameterManager()
                         ->getValueTreeState()
                         ->copyState()
@@ -159,6 +161,7 @@ void RT_PresetManager::_storeCurrentStateInMemoryBlock(juce::MemoryBlock &dest)
   manips_stream.setPosition(size + 9);
   mInterface->getRTSTFTManager()->writeManipsToBinary(manips_stream);
 }
+
 void RT_PresetManager::_loadPresetInternal()
 {
   void *data = mActivePresetRawData.getData();
@@ -184,8 +187,15 @@ void RT_PresetManager::_loadPresetInternal()
 
   mInterface->getRTSTFTManager()->readManipsFromBinary();
 }
+
 void RT_PresetManager::_presetChange(juce::File inNewPreset)
 {
   mActivePresetPath = inNewPreset;
   mListenerList.call([](RT_PresetManager::Listener &l) { l.onPresetChange(); });
+}
+
+void RT_PresetManager::_refreshListeners()
+{
+  mListenerList.call(
+      [](RT_PresetManager::Listener &l) { l.onPresetDirRefresh(); });
 }

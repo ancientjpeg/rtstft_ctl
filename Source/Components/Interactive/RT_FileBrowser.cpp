@@ -95,6 +95,7 @@ RT_FileBrowser::SubMenu::SubMenu(RT_FileBrowser         *inParent,
   };
   parent->addAndMakeVisible(component);
 }
+
 RT_FileBrowser::SubMenu::~SubMenu()
 {
   parent->removeChildComponent(&component);

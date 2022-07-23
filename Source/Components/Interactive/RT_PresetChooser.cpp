@@ -19,18 +19,21 @@ RT_PresetChooser::RT_PresetChooser(RT_ProcessorInterface *inInterface)
                    mInterface->getFileManager()->getPresetsDirectory(), 100,
                    false, "*" + sc_PresetSuffix)
 {
-  addAndMakeVisible(mSaveButton);
   mSaveButton.setButtonText("save preset");
   mSaveButton.onClick = [this]() { savePreset(); };
-  addAndMakeVisible(mLoadButton);
+  addAndMakeVisible(mSaveButton);
+
   mLoadButton.setButtonText("load preset");
   mLoadButton.onClick = [this]() { loadPreset(); };
+  addAndMakeVisible(mLoadButton);
 
   addAndMakeVisible(mCurrentPresetLabel);
-  addAndMakeVisible(mFileBrowser);
+
   mFileBrowser.onFileClick = [this](juce::File inClickedFile) {
     mInterface->getPresetManager()->loadPresetFromDisk(inClickedFile);
   };
+  addAndMakeVisible(mFileBrowser);
+
   mInterface->getPresetManager()->addListener(this);
 }
 
@@ -92,3 +95,5 @@ void RT_PresetChooser::onPresetChange()
       mInterface->getPresetManager()->getCurrentPresetName(),
       juce::dontSendNotification);
 }
+
+void RT_PresetChooser::onPresetDirRefresh() { repaint(); }

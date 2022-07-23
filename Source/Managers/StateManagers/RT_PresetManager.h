@@ -38,6 +38,7 @@ public:
   public:
     virtual ~Listener()           = default;
     virtual void onPresetChange() = 0;
+    virtual void onPresetDirRefresh(){};
   };
   void addListener(Listener *l, bool initialNotification = true);
 
@@ -50,4 +51,5 @@ private:
   void _storeCurrentStateInMemoryBlock(juce::MemoryBlock &dest);
   void _loadPresetInternal();
   void _presetChange(juce::File inNewPreset);
+  void _refreshListeners();
 };

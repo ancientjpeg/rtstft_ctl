@@ -25,6 +25,7 @@ public:
   void loadPreset();
   void savePreset();
   void onPresetChange() override;
+  void onPresetDirRefresh() override;
 
 private:
   juce::Label                        mCurrentPresetLabel;
