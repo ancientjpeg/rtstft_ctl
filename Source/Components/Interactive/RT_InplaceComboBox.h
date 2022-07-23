@@ -37,6 +37,7 @@ public:
 
   private:
     RT_InplaceComboBox *mParent;
+    int                 mClearSpaceStart;
   };
 
   class Label : public juce::Label {
@@ -59,9 +60,12 @@ public:
 
   juce::Component *getMenuSection() { return (juce::Component *)&mMenuSection; }
   juce::Label     *getLabel() { return &mMainLabel; }
+  bool             isMenuSectionVisible();
 
   void             valueChanged(juce::Value &v) override;
   void             mouseDown(const juce::MouseEvent &event) override;
+
+  std::function<void()> onMenuVisibilityChange = []() {};
 
 private:
   RT_ProcessorInterface  *mInterface;
@@ -143,25 +147,34 @@ void RT_InplaceComboBox<T>::valueChanged(juce::Value &v)
 }
 
 template <typename T>
+bool RT_InplaceComboBox<T>::isMenuSectionVisible()
+{
+  return mMenuSectionVisible;
+}
+
+template <typename T>
 void RT_InplaceComboBox<T>::MenuSection::paint(juce::Graphics &g)
 {
-  auto lafm = mParent->mInterface->getLookAndFeelManager();
-  g.fillAll(lafm->getUIColour(outline));
-  auto border      = juce::BorderSize<int>(RT_LookAndFeel::widgetBorderSize);
-  auto innerBounds = border.subtractedFrom(getLocalBounds());
-  g.setColour(lafm->getUIColour(windowBackground));
-  g.fillRect(innerBounds);
+  g.fillAll(RT_LookAndFeel::BLACK);
+  auto empty_top
+      = mParent->mMenuLabels.getLast()->getBounds().getBottomLeft().getY()
+        + RT_LookAndFeel::PADDING_SMALL;
+
+  g.setColour(RT_LookAndFeel::WHITE);
+  g.fillRect(0, empty_top, getWidth(), getHeight() - empty_top);
 }
 
 template <typename T>
 void RT_InplaceComboBox<T>::MenuSection::resized()
 {
   int  menuItemHeight = std::min<int>(mParent->mIdealMenuItemHeight,
-                                     getHeight() / mParent->mNumOptions);
+                                     getHeight() / mParent->mNumOptions
+                                         - RT_LookAndFeel::PADDING_SMALL);
   auto bounds         = getLocalBounds().withHeight(menuItemHeight);
   for (juce::Label *l : mParent->mMenuLabels) {
     l->setBounds(bounds);
-    bounds.translate(0, menuItemHeight - RT_LookAndFeel::widgetBorderSize);
+    bounds.translate(0, menuItemHeight + RT_LookAndFeel::PADDING_SMALL);
+    mClearSpaceStart = bounds.getHeight();
   }
 }
 
@@ -172,6 +185,7 @@ void RT_InplaceComboBox<T>::mouseDown(const juce::MouseEvent &event)
     mMenuSectionVisible = !mMenuSectionVisible;
     mMenuSection.setVisible(mMenuSectionVisible);
     mMainLabel.repaint();
+    onMenuVisibilityChange();
     return;
   }
   for (juce::Label *l : mMenuLabels) {
@@ -209,29 +223,28 @@ void RT_InplaceComboBox<T>::Label::paint(juce::Graphics &g)
 
   auto border_col_enum = outline;
   auto bg_col_enum     = windowBackground;
+
   if (!mIsTitle) {
     bg_col_enum
         = mSelected ? outline : (mHovered ? defaultFill : windowBackground);
   }
 
   auto text_col_enum = mSelected ? highlightedText : defaultText;
-  g.fillAll(lafm->getUIColour(border_col_enum));
 
+  g.fillAll(lafm->getUIColour(border_col_enum));
   g.setColour(lafm->getUIColour(bg_col_enum));
-  auto border      = juce::BorderSize<int>(RT_LookAndFeel::widgetBorderSize);
-  auto innerBounds = border.subtractedFrom(getLocalBounds());
-  g.fillRect(innerBounds);
+  auto bounds = getLocalBounds();
+  g.fillRect(bounds);
 
   g.setColour(lafm->getUIColour(text_col_enum));
-  g.drawText(getText(), innerBounds.withLeft(innerBounds.getX() + 10),
+  g.drawText(getText(), bounds.withLeft(bounds.getX() + 10),
              juce::Justification::centredLeft);
 
   if (mIsTitle) {
 
-    auto triBounds
-        = innerBounds.withWidth(innerBounds.getHeight())
-              .translated(innerBounds.getWidth() - innerBounds.getHeight(), 0)
-              .toFloat();
+    auto triBounds = bounds.withWidth(bounds.getHeight())
+                         .translated(bounds.getWidth() - bounds.getHeight(), 0)
+                         .toFloat();
     triBounds = triBounds.withSizeKeepingCentre(8, 8);
     juce::Path triPath;
     triPath.startNewSubPath(triBounds.getCentreX(), triBounds.getY());

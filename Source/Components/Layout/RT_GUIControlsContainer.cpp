@@ -43,49 +43,62 @@ RT_GUIControlsContainer::RT_GUIControlsContainer(
   }
 
   mFrameSizeSelector.addAndMakeVisibleWithParent(this);
+  mFrameSizeSelector.onMenuVisibilityChange = [this]() { repaint(); };
   mOverlapSelector.addAndMakeVisibleWithParent(this);
+  mOverlapSelector.onMenuVisibilityChange = [this]() { repaint(); };
 }
 
 void RT_GUIControlsContainer::paint(juce::Graphics &g)
 {
-  g.setColour(
-      mInterface->getLookAndFeelManager()->getUIColour(windowBackground));
-  g.fillRect(getBounds()); // clear the background
+  g.fillAll(RT_LookAndFeel::BLACK);
+  g.setColour(RT_LookAndFeel::WHITE);
+  g.fillRect(mBodyBounds);
+}
+
+void RT_GUIControlsContainer::paintOverChildren(juce::Graphics &g)
+{
+  if (mFrameSizeSelector.isMenuSectionVisible()
+      || mOverlapSelector.isMenuSectionVisible()) {
+    g.setColour(RT_LookAndFeel::BLACK);
+    g.fillRect(mVertDivider);
+  }
 }
 
 void RT_GUIControlsContainer::resized()
 {
-  auto bounds = getLocalBounds();
-  auto comboBoxLabelsBounds
-      = bounds.removeFromTop(40 + RT_LookAndFeel::PADDING_SMALL);
-  auto comboBoxMenusBounds
-      = bounds.withTop(bounds.getY() - RT_LookAndFeel::PADDING_SMALL);
+  auto bounds        = getLocalBounds();
+  auto header_height = 40;
+  auto body_y        = header_height + RT_LookAndFeel::PADDING_SMALL;
+  auto body_height   = bounds.getHeight() - body_y;
+  /* 2x small padding for column separator */
+  auto divider_width  = RT_LookAndFeel::PADDING_SMALL;
+  auto column_0_width = bounds.getWidth() / 2 - divider_width / 2;
+  auto column_1_left  = column_0_width + divider_width;
+  auto column_1_width = bounds.getWidth() - column_1_left;
 
-  auto padding_half = RT_LookAndFeel::PADDING_SMALL;
-  auto combo_width  = getWidth() / 2 - padding_half;
+  mFrameSizeSelector.getLabel()->setBounds(column_1_left, 0, column_1_width,
+                                           header_height);
+  mFrameSizeSelector.getMenuSection()->setBounds(column_1_left, body_y,
+                                                 column_1_width, body_height);
 
-  mFrameSizeSelector.getLabel()->setBounds(
-      comboBoxLabelsBounds.withWidth(combo_width)
-          .withX(getWidth() / 2 + padding_half));
-  mFrameSizeSelector.getMenuSection()->setBounds(
-      comboBoxMenusBounds.withX(mFrameSizeSelector.getLabel()->getX())
-          .withWidth(mFrameSizeSelector.getLabel()->getWidth()));
+  mOverlapSelector.getLabel()->setBounds(0, 0, column_0_width, header_height);
+  mOverlapSelector.getMenuSection()->setBounds(0, body_y, column_0_width,
+                                               body_height);
 
-  mOverlapSelector.getLabel()->setBounds(
-      comboBoxLabelsBounds.withWidth(combo_width));
-  mOverlapSelector.getMenuSection()->setBounds(
-      comboBoxMenusBounds.withWidth(mOverlapSelector.getLabel()->getWidth()));
+  mVertDivider = juce::Rectangle<int>(column_0_width, body_y, divider_width,
+                                      body_height);
 
-  bounds = getLocalBounds()
-               .withTrimmedTop(40 + RT_LookAndFeel::PADDING_SMALL
-                               + RT_LookAndFeel::PADDING_MAIN * 2)
-               .withTrimmedBottom(RT_LookAndFeel::PADDING_MAIN * 3);
-  int knobAreaVertical = bounds.getHeight() / mKnobs.size();
+  mBodyBounds  = getLocalBounds().withY(body_y).withHeight(body_height);
+  int  knobAreaVertical = mBodyBounds.getHeight() / mKnobs.size();
+
+  auto body_bounds = mBodyBounds.withTrimmedTop(RT_LookAndFeel::PADDING_MAIN)
+                         .withTrimmedBottom(2 * RT_LookAndFeel::PADDING_MAIN);
+
   for (int i = 0; i < RT_PARAM_FLAVOR_COUNT; i++) {
-    auto thisBound = bounds.removeFromTop(knobAreaVertical)
-                         .withWidth(bounds.getWidth() / 2);
+    auto thisBound = body_bounds.removeFromTop(knobAreaVertical)
+                         .withWidth(body_bounds.getWidth() / 2);
     if (i & 1) {
-      thisBound.translate(bounds.getWidth() / 2, 0);
+      thisBound.translate(body_bounds.getWidth() / 2, 0);
     }
     else {
     }

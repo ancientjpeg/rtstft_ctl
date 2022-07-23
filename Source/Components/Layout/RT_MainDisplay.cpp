@@ -43,6 +43,5 @@ void RT_MainDisplay::resized()
                             .withTrimmedRight(RT_LookAndFeel::PADDING_MAIN);
   mGUIControlsContainer.setBounds(controlsBounds);
 
-  bounds.removeFromRight(RT_LookAndFeel::PADDING_MAIN);
   mSpectralDisplayContainer.setBounds(bounds);
 }

@@ -25,12 +25,15 @@ public:
   ~RT_GUIControlsContainer() = default;
 
   void paint(juce::Graphics &g) override;
+  void paintOverChildren(juce::Graphics &g) override;
   void resized() override;
 
 private:
   RT_InplaceComboBox<int> mFrameSizeSelector, mOverlapSelector;
   juce::OwnedArray<RT_Sliders::LabelledRotaryKnob> mKnobs;
   juce::OwnedArray<juce::AudioProcessorValueTreeState::SliderAttachment>
-      mKnobAttachments;
+                       mKnobAttachments;
+
+  juce::Rectangle<int> mVertDivider, mBodyBounds;
   JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(RT_GUIControlsContainer)
 };

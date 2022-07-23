@@ -20,7 +20,7 @@ using enum juce::LookAndFeel_V4::ColourScheme::UIColour;
 enum ComponentType { PLUGIN_DEFAULT, NUM_COMPONENT_TYPES };
 static const juce::StringArray ComponentNames = {"Default", "Slider", "Button"};
 static const int               PADDING_APP    = 10;
-static const int               PADDING_MAIN   = 8;
+static const int               PADDING_MAIN   = 6;
 static const int               PADDING_SMALL  = 2;
 static const float             headerHeight   = 80;
 static const float             cmdHeight      = 50;
