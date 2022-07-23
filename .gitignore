@@ -5,4 +5,5 @@ pkg_build
 *.plist
 *.pkg
 *.exe
+*.dmg
 installer

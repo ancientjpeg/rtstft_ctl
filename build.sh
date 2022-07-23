@@ -1,14 +1,17 @@
 #!/bin/sh
 
 VERSION="0.1.0"
+VERSION=$(echo $VERSION | tr '.' '_')
+
 PLUGIN_DIR="$HOME/Desktop/test"
 PLUGIN_DIR="/Library/Audio/Plug-Ins"
 SUPPORT_DIR="/Library/Application Support/sound_ctl"
 PLUGIN_SUPPORT_DIR="$SUPPORT_DIR/rtstft_ctl"
 PLUGIN_PRESETS_DIR="$PLUGIN_SUPPORT_DIR/presets"
+OUTPUT_DIR='..'
 
-DIST_SIG="Developer ID Application: Jackson Kaplan (792TGC726K)"
-PKG_SIG="Developer ID Installer: Jackson Kaplan (792TGC726K)"
+SIGNING_CERT="Developer ID Application: Jackson Kaplan (792TGC726K)"
+INSTALLER_CERT="Developer ID Installer: Jackson Kaplan (792TGC726K)"
 
 INSTALLER_NAME_FINAL="OSX_rtstft_ctl_"$VERSION
 
@@ -150,14 +153,14 @@ asssemble_pkg() {
     fi
 
     cp -r $SRC $NAME
-    codesign -fs "$DIST_SIG" $NAME
+    codesign -fs "$SIGNING_CERT" $NAME
 
     pkgbuild \
         --component "$NAME" \
         --identifier "$ID" \
         --version $VERSION \
         --install-location "$DEST" \
-        --sign "$PKG_SIG" \
+        --sign "$INSTALLER_CERT" \
         $NAME.pkg # > /dev/null 2>&1
     echo $"\n"
 }
@@ -170,71 +173,64 @@ pkgbuild \
     --version $VERSION \
     --identifier "$PRESETS_ID" \
     --install-location "$PLUGIN_PRESETS_DIR/Factory" \
-    --sign "$PKG_SIG" \
+    --sign "$INSTALLER_CERT" \
     $PRESETS_NAME.pkg
 
 echo $"\n======== FINAL PACKAGE BUILD ========\n"
 
-productbuild --sign "$PKG_SIG" \
+PKG_NAME_FINAL="$INSTALLER_NAME_FINAL.pkg"
+
+productbuild --sign "$INSTALLER_CERT" \
     --distribution distribution.xml \
     --package-path '.' \
-    ./"$INSTALLER_NAME_FINAL".pkg # > /dev/null 2>&1
-
-mv "$INSTALLER_NAME_FINAL".pkg ..
+    ./"$PKG_NAME_FINAL" # > /dev/null 2>&1
 
 function notarize() {
 
+    echo $"\n============= GENARATE MANUAL ==============\n"
+
+    DOCS="../RTSTFT/docs"
+    PAPER="RTSTFT_CTL_WHITEPAPER.pdf"
+    make -C "$DOCS" >/dev/null
+    cp "$DOCS/paper.pdf" "./$PAPER"
+    make clean -C "$DOCS"
+
+    TMPDIR="./dmg-tmp"
+    mkdir -p "$TMPDIR"
+
+    mv "./$PAPER" "./$TMPDIR"
+
     # https://github.com/surge-synthesizer/surge/blob/main/scripts/installer_mac/make_installer.sh
+    echo $"\n============ CREATE DMG ============\n"
+
+    DMG_NAME_FINAL="$INSTALLER_NAME_FINAL.dmg"
+
+    mv "./$PKG_NAME_FINAL" "$TMPDIR"
+
+    if [ -f "$OUTPUT_DIR/$DMG_NAME_FINAL" ]; then
+        rm "$OUTPUT_DIR/$DMG_NAME_FINAL"
+    fi
+
+    hdiutil create /tmp/tmp.dmg -ov -volname "$INSTALLER_NAME_FINAL" -fs HFS+ -srcfolder "$TMPDIR"
+    hdiutil convert /tmp/tmp.dmg -format UDZO -o "$OUTPUT_DIR/$DMG_NAME_FINAL"
+
     echo $"\n============= NOTARIZE ==============\n"
 
-    if [[ -f "${TARGET_DIR}/$OUTPUT_BASE_FILENAME.dmg" ]]; then
-        rm "${TARGET_DIR}/$OUTPUT_BASE_FILENAME.dmg"
-    fi
-    hdiutil create /tmp/tmp.dmg -ov -volname "$OUTPUT_BASE_FILENAME" -fs HFS+ -srcfolder "${TMPDIR}/Surge XT/"
-    hdiutil convert /tmp/tmp.dmg -format UDZO -o "${TARGET_DIR}/$OUTPUT_BASE_FILENAME.dmg"
+    if [ -n "$SIGNING_CERT" ]; then
+        codesign -fs "$SIGNING_CERT" --timestamp "$OUTPUT_DIR/$DMG_NAME_FINAL"
+        codesign -vvv "$OUTPUT_DIR/$DMG_NAME_FINAL"
 
-    if [[ ! -z $MAC_SIGNING_CERT ]]; then
-        codesign --force -s "$MAC_SIGNING_CERT" --timestamp "${TARGET_DIR}/$OUTPUT_BASE_FILENAME.dmg"
-        codesign -vvv "${TARGET_DIR}/$OUTPUT_BASE_FILENAME.dmg"
-
-        if [ "$XCODE_VERSION" -ge 13 ]; then
-            xcrun notarytool submit "${TARGET_DIR}/$OUTPUT_BASE_FILENAME.dmg" --apple-id ${MAC_SIGNING_ID} --team-id ${MAC_SIGNING_TEAM} --password ${MAC_SIGNING_1UPW} --wait
+        if [ "$(xcodebuild -version | egrep -o '[0-9]+' | head -n 1)" -ge 13 ]; then
+            xcrun notarytool submit "$OUTPUT_DIR/$DMG_NAME_FINAL" --keychain_profile AC_PASSWORD --wait
         else
-            # but if i dont
-            ruuid=$(xcrun altool --notarize-app --primary-bundle-id "org.surge-synth-team.surge-xt" \
-                --username ${MAC_SIGNING_ID} --password ${MAC_SIGNING_1UPW} --asc-provider ${MAC_SIGNING_TEAM} \
-                --file "${TARGET_DIR}/$OUTPUT_BASE_FILENAME.dmg" 2>&1 | tee altool.out |
-                awk '/RequestUUID/ { print $NF; }')
-            echo "REQUEST UID : $ruuid"
+            echo "Just use XCode 13 god damnit"
+            exit 5
         fi
 
-        if [[ $ruuid == "" ]]; then
-            echo "could not upload for notarization"
-            cat altool.out
-            exit 1
-        fi
-
-        request_status="in progress"
-        while [[ "$request_status" == "in progress" ]]; do
-            echo -n "waiting... "
-            sleep 10
-            request_full=$(
-                xcrun altool --notarization-info "$ruuid" \
-                    --username "${MAC_SIGNING_ID}" \
-                    --password "${MAC_SIGNING_1UPW}" \
-                    --asc-provider "${MAC_SIGNING_TEAM}" 2>&1
-            )
-            echo $request_full
-
-            request_status=$(xcrun altool --notarization-info "$ruuid" \
-                --username "${MAC_SIGNING_ID}" \
-                --password "${MAC_SIGNING_1UPW}" \
-                --asc-provider "${MAC_SIGNING_TEAM}" 2>&1 |
-                awk -F ': ' '/Status:/ { print $2; }')
-            echo "$request_status"
-        done
-        xcrun stapler staple "${TARGET_DIR}/${OUTPUT_BASE_FILENAME}.dmg"
+        xcrun stapler staple "$OUTPUT_DIR/$INSTALLER_NAME_FINAL.dmg"
     fi
+
+    rm -rf "$TMPDIR"
 
 }
 
