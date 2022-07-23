@@ -14,17 +14,17 @@
 #include "../../Managers/Interface/RT_ProcessorInterface.h"
 #include "../Interactive/RT_InplaceComboBox.h"
 #include "../Interactive/RT_Sliders.h"
-#include "../Utility/RT_BorderedComponent.h"
+#include "../Utility/RT_Component.h"
 #include <JuceHeader.h>
 
 //==============================================================================
 
-class RT_GUIControlsContainer : public RT_BorderedComponent {
+class RT_GUIControlsContainer : public RT_Component {
 public:
   RT_GUIControlsContainer(RT_ProcessorInterface *inInterface);
   ~RT_GUIControlsContainer() = default;
 
-  void paintInBorder(juce::Graphics &g) override;
+  void paint(juce::Graphics &g) override;
   void resized() override;
 
 private:

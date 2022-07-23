@@ -17,7 +17,7 @@
 //==============================================================================
 RT_GUIControlsContainer::RT_GUIControlsContainer(
     RT_ProcessorInterface *inInterface)
-    : RT_BorderedComponent(inInterface),
+    : RT_Component(inInterface),
       mFrameSizeSelector(
           mInterface, RT_FFT_MODIFIER_IDS[RT_FFT_MODIFIER_FRAME_SIZE],
           {32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768, 65536},
@@ -46,17 +46,15 @@ RT_GUIControlsContainer::RT_GUIControlsContainer(
   mOverlapSelector.addAndMakeVisibleWithParent(this);
 }
 
-void RT_GUIControlsContainer::paintInBorder(juce::Graphics &g)
+void RT_GUIControlsContainer::paint(juce::Graphics &g)
 {
   g.setColour(
       mInterface->getLookAndFeelManager()->getUIColour(windowBackground));
-  g.fillRect(getBoundsAdj()); // clear the background
+  g.fillRect(getBounds()); // clear the background
 }
 
 void RT_GUIControlsContainer::resized()
 {
-  // This method is where you should set the bounds of any child
-  // components that your component contains..
   auto bounds = getLocalBounds();
   auto comboBoxLabelsBounds
       = bounds.removeFromTop(40 + RT_LookAndFeel::widgetBorderSize);

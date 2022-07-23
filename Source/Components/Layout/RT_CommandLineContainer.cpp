@@ -15,7 +15,7 @@
 //==============================================================================
 RT_CommandLineContainer::RT_CommandLineContainer(
     RT_ProcessorInterface *inInterface, int inBorderSize)
-    : RT_BorderedComponent(inInterface, inBorderSize),
+    : RT_Component(inInterface),
       mCommandLinePrompt("RT_CMD_PROMPT", "user@rt_cmd$"),
       mErrorMessageContainer("RT_CMD_ERROR_BOX", "")
 {
@@ -58,7 +58,7 @@ RT_CommandLineContainer::RT_CommandLineContainer(
   mCommandLineEntry.addKeyListener(this);
 }
 
-void RT_CommandLineContainer::paintInBorder(juce::Graphics &g)
+void RT_CommandLineContainer::paint(juce::Graphics &g)
 {
   using enum juce::LookAndFeel_V4::ColourScheme::UIColour;
   g.setColour(
@@ -67,7 +67,7 @@ void RT_CommandLineContainer::paintInBorder(juce::Graphics &g)
 
 void RT_CommandLineContainer::resized()
 {
-  auto bounds = getBoundsAdj();
+  auto bounds = getBounds();
 
   int  strW   = mCommandLinePrompt.getFont().getStringWidth(
          mCommandLinePrompt.getText());

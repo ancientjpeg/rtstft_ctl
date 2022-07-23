@@ -11,19 +11,19 @@
 #pragma once
 
 #include "../../Managers/Interface/RT_ProcessorInterface.h"
-#include "../Utility/RT_BorderedComponent.h"
+#include "../Utility/RT_Component.h"
 #include <JuceHeader.h>
 
 //==============================================================================
 /*
  */
-class RT_CommandLineContainer : public RT_BorderedComponent,
+class RT_CommandLineContainer : public RT_Component,
                                 public juce::KeyListener {
 public:
   RT_CommandLineContainer(RT_ProcessorInterface *inInterface, int inBorderSize);
   ~RT_CommandLineContainer() override = default;
 
-  void paintInBorder(juce::Graphics &) override;
+  void paint(juce::Graphics &) override;
   void resized() override;
   bool keyPressed(const juce::KeyPress &kp, juce::Component *orig) override;
 

@@ -10,6 +10,7 @@
 
 #include "RT_FFTDisplay.h"
 #include "../../Managers/DSPStateManagers/RTSTFT_Manager.h"
+#include "../../Managers/LookAndFeelManagement/RT_LookAndFeelManagement.h"
 #include "../../Managers/StateManagers/RT_PropertyManager.h"
 #include <algorithm>
 

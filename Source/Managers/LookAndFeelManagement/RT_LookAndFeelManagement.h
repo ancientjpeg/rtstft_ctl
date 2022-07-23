@@ -25,15 +25,21 @@ static const int               widgetBorderSize      = 2;
 static const float             headerHeight          = 80;
 static const float             cmdHeight             = 50;
 static const int               menuItemDefaultHeight = 40;
+
+static const juce::Colour      BLACK  = juce::Colour::fromString("000000");
+static const juce::Colour      GREY_4 = juce::Colour::fromString("333333");
+static const juce::Colour      GREY_3 = juce::Colour::fromString("666666");
+static const juce::Colour      GREY_2 = juce::Colour::fromString("999999");
+static const juce::Colour      GREY_1 = juce::Colour::fromString("CCCCCC");
+static const juce::Colour      WHITE  = juce::Colour::fromString("FFFFFF");
 // UIColour :
 //   windowBackground,  widgetBackground, menuBackground,
 //   outline,           defaultText,      defaultFill,
 //   highlightedText,   highlightedFill,  menuText
 
-static const juce::LookAndFeel_V4::ColourScheme DefaultColourScheme(
-    juce::Colours::white, juce::Colours::black, juce::Colours::white,
-    juce::Colours::black, juce::Colours::black, juce::Colours::grey,
-    juce::Colours::white, juce::Colour(10, 10, 10), juce::Colours::black);
+static const juce::LookAndFeel_V4::ColourScheme
+    DefaultColourScheme(WHITE, BLACK, WHITE, BLACK, BLACK, GREY_2, WHITE,
+                        GREY_4, BLACK);
 
 class Manager {
   std::vector<std::unique_ptr<juce::LookAndFeel_V4::ColourScheme>> mSkins;

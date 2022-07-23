@@ -12,13 +12,13 @@
 
 #include "../Interactive/RT_FFTDisplay.h"
 #include "../Interactive/RT_ValueLinkedSelectorMenu.h"
-#include "../Utility/RT_BorderedComponent.h"
+#include "../Utility/RT_Component.h"
 #include <JuceHeader.h>
 
 //==============================================================================
 /*
  */
-class RT_SpectralDisplayContainer : public RT_BorderedComponent {
+class RT_SpectralDisplayContainer : public RT_Component {
 
   RT_FFTDisplay              mFFTDisplay;
   RT_ValueLinkedSelectorMenu mManipSelector, mChannelModeSelector,
@@ -30,7 +30,7 @@ public:
                               int                    inBorderSize);
   ~RT_SpectralDisplayContainer() override;
 
-  void paintInBorder(juce::Graphics &) override;
+  void paint(juce::Graphics &) override;
   void resized() override;
 
 private:

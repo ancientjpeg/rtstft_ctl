@@ -16,7 +16,7 @@
 //==============================================================================
 RT_SpectralDisplayContainer::RT_SpectralDisplayContainer(
     RT_ProcessorInterface *inInterface, int inBorderSize)
-    : RT_BorderedComponent(inInterface, inBorderSize), mFFTDisplay(mInterface),
+    : RT_Component(inInterface), mFFTDisplay(mInterface),
       mManipSelector(mInterface,
                      mInterface->getPropertyManager()
                          ->getGUIStateTree()
@@ -42,7 +42,7 @@ RT_SpectralDisplayContainer::RT_SpectralDisplayContainer(
 
 RT_SpectralDisplayContainer::~RT_SpectralDisplayContainer() {}
 
-void RT_SpectralDisplayContainer::paintInBorder(juce::Graphics &g)
+void RT_SpectralDisplayContainer::paint(juce::Graphics &g)
 {
   auto lafm = mInterface->getLookAndFeelManager();
   g.setColour(lafm->getUIColour(outline));
@@ -73,7 +73,7 @@ void RT_SpectralDisplayContainer::resized()
 {
   int  rightSectionWidth = 30;
   int  border            = RT_LookAndFeel::widgetBorderSize;
-  auto bounds            = getBoundsAdj();
+  auto bounds            = getBounds();
   auto topBounds         = bounds.removeFromTop(40);
   mManipSelector.setBounds(
       topBounds.removeFromLeft(topBounds.getWidth() * 0.75f));

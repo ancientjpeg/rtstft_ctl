@@ -13,17 +13,17 @@
 
 //==============================================================================
 RT_SettingsDisplay::RT_SettingsDisplay(RT_ProcessorInterface *inInterface)
-    : RT_BorderedComponent(inInterface), mPresetChooser(mInterface)
+    : RT_Component(inInterface), mPresetChooser(mInterface)
 {
   addAndMakeVisible(mPresetChooser);
 }
 
 RT_SettingsDisplay::~RT_SettingsDisplay() {}
 
-void RT_SettingsDisplay::paintInBorder(juce::Graphics &g) {}
+void RT_SettingsDisplay::paint(juce::Graphics &g) {}
 
 void RT_SettingsDisplay::resized()
 {
-  auto bounds = getBoundsAdj();
+  auto bounds = getBounds();
   mPresetChooser.setBounds(bounds);
 }

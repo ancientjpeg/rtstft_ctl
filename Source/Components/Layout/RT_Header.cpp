@@ -13,8 +13,7 @@
 
 //==============================================================================
 RT_Header::RT_Header(RT_ProcessorInterface *inInterface, int inBorderSize)
-    : RT_BorderedComponent(inInterface, inBorderSize),
-      mSettingsMenuButton(mInterface)
+    : RT_Component(inInterface), mSettingsMenuButton(mInterface)
 {
   // In your constructor, you should add any child components, and
   // initialise any special settings that your component needs.
@@ -36,27 +35,21 @@ RT_Header::RT_Header(RT_ProcessorInterface *inInterface, int inBorderSize)
 
 RT_Header::~RT_Header() {}
 
-void RT_Header::paintInBorder(juce::Graphics &g)
+void RT_Header::paint(juce::Graphics &g)
 {
-  /* This demo code just fills the component's background and
-     draws some placeholder text to get you started.
-
-     You should replace everything in this method with your own
-     drawing code..
-  */
   using enum juce::LookAndFeel_V4::ColourScheme::UIColour;
 
   g.setColour((static_cast<juce::LookAndFeel_V4 &>(getLookAndFeel()))
                   .getCurrentColourScheme()
                   .getUIColour(windowBackground)); // clear the background
-  g.fillRect(getBoundsAdj());
+  g.fillRect(getBounds());
 }
 
 void RT_Header::resized()
 {
-  auto bounds = getBoundsAdj();
-  mPluginTitle.setBounds(bounds.removeFromLeft(0.2 * getWidthAdj()));
-  mPluginSubtitle.setBounds(bounds.removeFromLeft(0.7 * getWidthAdj()));
+  auto bounds = getBounds();
+  mPluginTitle.setBounds(bounds.removeFromLeft(0.2 * getWidth()));
+  mPluginSubtitle.setBounds(bounds.removeFromLeft(0.7 * getWidth()));
   mSettingsMenuButton.setBounds(bounds.withSizeKeepingCentre(20, 20));
 }
 

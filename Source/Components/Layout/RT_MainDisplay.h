@@ -18,14 +18,14 @@
 #include <JuceHeader.h>
 
 class RT_MainDisplay : public RT_Component {
-
-  RT_GUIControlsContainer     mGUIControlsContainer;
-  RT_SpectralDisplayContainer mSpectralDisplayContainer;
-  RT_CommandLineContainer     mCommandLineContainer;
-
 public:
   RT_MainDisplay(RT_ProcessorInterface *inInterface);
   ~RT_MainDisplay() override = default;
   void paint(juce::Graphics &g) override;
   void resized() override;
+
+private:
+  RT_GUIControlsContainer     mGUIControlsContainer;
+  RT_SpectralDisplayContainer mSpectralDisplayContainer;
+  RT_CommandLineContainer     mCommandLineContainer;
 };

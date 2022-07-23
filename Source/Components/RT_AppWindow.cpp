@@ -14,7 +14,7 @@
 #include "Layout/RT_SettingsDisplay.h"
 
 RT_AppWindow::RT_AppWindow(RT_ProcessorInterface *inInterface, int inBorderSize)
-    : RT_BorderedComponent(inInterface, inBorderSize),
+    : RT_Component(inInterface),
       mHeader(inInterface, RT_LookAndFeel::widgetBorderSize),
       mMainDisplay(inInterface), mSettingsDisplay(inInterface)
 
@@ -23,12 +23,18 @@ RT_AppWindow::RT_AppWindow(RT_ProcessorInterface *inInterface, int inBorderSize)
   addAndMakeVisible(mMainDisplay);
   addChildComponent(mSettingsDisplay);
   mHeader.addSettingsMenuButtonListener(this);
+
+  setLookAndFeel(&mLookAndFeel);
 }
-void RT_AppWindow::paintInBorder(juce::Graphics &g) {}
+
+RT_AppWindow::~RT_AppWindow() { setLookAndFeel(nullptr); }
+
+void RT_AppWindow::paint(juce::Graphics &g) {}
 
 void RT_AppWindow::resized()
 {
-  auto bounds       = getBoundsAdj();
+  mBaseBounds       = getBounds().reduced(RT_LookAndFeel::mainBorderSize);
+  auto bounds       = mBaseBounds;
   auto headerBounds = bounds.removeFromTop(RT_LookAndFeel::headerHeight);
   auto displayPad   = juce::BorderSize<int>(RT_LookAndFeel::mainPadding);
   auto headerPad    = displayPad;

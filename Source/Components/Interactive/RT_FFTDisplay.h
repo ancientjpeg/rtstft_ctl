@@ -13,7 +13,7 @@
 #include "../../Managers/DSPStateManagers/RTSTFT_Manager.h"
 #include "../../Managers/DSPStateManagers/RT_ParameterDefines.h"
 #include "../../Managers/Interface/RT_ProcessorInterface.h"
-#include "../Utility/RT_BorderedComponent.h"
+#include "../Utility/RT_Component.h"
 #include <JuceHeader.h>
 
 //==============================================================================
