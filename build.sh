@@ -31,8 +31,11 @@ ${bold}USAGE:${norm}
     
 ${bold}OPTIONS:${norm}
     
-    -p [DIR]: location of presets dir to copy into the repository before assembling the installation package\n
-    -f:       copy the default presets factory directory (${PLUGIN_PRESETS_DIR}) into the repository before packaging
+    -p [DIR]:   location of presets dir to copy into the repository before assembling the installation package
+    -f:         copy the default presets factory directory (${PLUGIN_PRESETS_DIR}) into the repository before packaging
+    -k:         keep the pkg_build dir to inspect for debugging purposes
+    -n:         build a dmg and notarize
+    -h:         display this dialog
 
 PRINT_HELP
 }
@@ -50,15 +53,17 @@ while getopts 'p:fknh' OPT; do
     p)
         PRESETS_FACTORY_DIR=$OPTARG
         if [ -d "$OPTARG" ]; then
-            rm -rf Resources/Factory
-            cp -r "$OPTARG" Resources/Factory
+            rm -rf ./Resources/Factory
+            cp -r "$OPTARG" ./Resources/Factory
+            chmod -R 777 ./Resources/Factory
         else
             error_out
         fi
         ;;
     f)
-        rm -rf Resources/Factory
-        cp -r "/Library/Application Support/sound_ctl/rtstft_ctl/Factory" Resources/Factory
+        rm -rf ./Resources/Factory
+        cp -r "/Library/Application Support/sound_ctl/rtstft_ctl/presets/Factory" ./Resources/Factory
+        chmod -R 777 ./Resources/Factory
         ;;
     k)
         CLEANUP=
@@ -140,6 +145,35 @@ cat >distribution.xml <<XMLEND
 </installer-gui-script>
 XMLEND
 
+echo $"========= WRITING SCRIPTS ==========\n"
+
+mkdir scripts
+cat >scripts/postinstall <<CHECK_DIR_END
+#!/bin/sh
+
+echo "running postinstall..." > /tmp/rtstft_install.log
+
+mkdir -p  "/Library/Application Support/sound_ctl/rtstft_ctl/presets"
+chmod -R 777 "/Library/Application Support/sound_ctl/rtstft_ctl/presets"
+
+if [ "\$?" -ne '0' ]; then
+    echo FAILED TO CHMOD PRESET DIRECTORIES!!!
+    echo FAILED TO CHMOD PRESET DIRECTORIES!!!
+    echo FAILED TO CHMOD PRESET DIRECTORIES!!!
+    echo FAILED TO CHMOD PRESET DIRECTORIES!!!
+    echo FAILED TO CHMOD PRESET DIRECTORIES!!!
+    echo FAILED TO CHMOD PRESET DIRECTORIES!!! >> /tmp/rtstft_install.log
+    exit 5
+fi
+
+echo "check_directories done." >> /tmp/rtstft_install.log
+
+exit 0
+
+CHECK_DIR_END
+
+chmod 755 scripts/postinstall
+
 echo $"======= CREATING SUB-PACKAGES =======\n"
 
 asssemble_pkg() {
@@ -161,6 +195,7 @@ asssemble_pkg() {
         --version $VERSION \
         --install-location "$DEST" \
         --sign "$INSTALLER_CERT" \
+        --scripts scripts \
         $NAME.pkg # > /dev/null 2>&1
     echo $"\n"
 }
@@ -174,6 +209,7 @@ pkgbuild \
     --identifier "$PRESETS_ID" \
     --install-location "$PLUGIN_PRESETS_DIR/Factory" \
     --sign "$INSTALLER_CERT" \
+    --scripts scripts \
     $PRESETS_NAME.pkg
 
 echo $"\n======== FINAL PACKAGE BUILD ========\n"
@@ -183,6 +219,7 @@ PKG_NAME_FINAL="$INSTALLER_NAME_FINAL.pkg"
 productbuild --sign "$INSTALLER_CERT" \
     --distribution distribution.xml \
     --package-path '.' \
+    --scripts scripts \
     ./"$PKG_NAME_FINAL" # > /dev/null 2>&1
 
 function notarize() {
@@ -221,10 +258,15 @@ function notarize() {
         codesign -vvv "$OUTPUT_DIR/$DMG_NAME_FINAL"
 
         if [ "$(xcodebuild -version | egrep -o '[0-9]+' | head -n 1)" -ge 13 ]; then
-            xcrun notarytool submit "$OUTPUT_DIR/$DMG_NAME_FINAL" --keychain_profile AC_PASSWORD --wait
+            xcrun notarytool submit "$OUTPUT_DIR/$DMG_NAME_FINAL" --keychain-profile AC_PASSWORD --wait
         else
             echo "Just use XCode 13 god damnit"
             exit 5
+        fi
+
+        if [ "$?" -ne '0' ]; then
+            echo "Notarization failed."
+            exit 17
         fi
 
         xcrun stapler staple "$OUTPUT_DIR/$INSTALLER_NAME_FINAL.dmg"
@@ -236,6 +278,8 @@ function notarize() {
 
 if [ -n "$NOTARIZE" ]; then
     notarize
+else
+    mv $PKG_NAME_FINAL ..
 fi
 
 cd ..
