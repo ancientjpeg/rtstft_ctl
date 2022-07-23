@@ -23,6 +23,7 @@ public:
   void         writePresetToDisk(juce::File inPresetPath);
   void         getPreset(juce::MemoryBlock &inDestData,
                          bool               inOverwriteStoredState = true);
+
   void         storePresetInMemory(juce::MemoryBlock &inMem);
   void         storePresetInMemory(const void *inData, int inSize);
 
