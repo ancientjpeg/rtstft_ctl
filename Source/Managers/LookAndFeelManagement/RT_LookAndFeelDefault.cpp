@@ -74,8 +74,7 @@ void RT_LookAndFeel::Default::drawButtonBackground(
   else if (shouldDrawButtonAsHighlighted) {
     g.setColour(cs.getUIColour(defaultFill));
   }
-  else
-    g.setColour(cs.getUIColour(windowBackground));
+  else g.setColour(cs.getUIColour(windowBackground));
   g.fillRect(bounds);
 }
 
@@ -91,7 +90,7 @@ void RT_LookAndFeel::Default::drawComboBox(juce::Graphics &g, int width,
   juce::Rectangle<float> triBounds
       = bounds.removeFromRight(0.9f * bounds.getWidth());
   int bound = std::min(triBounds.getWidth(), triBounds.getHeight());
-  triBounds = triBounds.withSizeKeepingCentre(bound / 3, bound / 3);
+  triBounds = triBounds.withSizeKeepingCentre(bound / 3.f, bound / 3.f);
   juce::Path path;
   path.startNewSubPath(triBounds.getBottomLeft());
   path.lineTo(triBounds.getBottomRight());
@@ -102,7 +101,7 @@ void RT_LookAndFeel::Default::drawComboBox(juce::Graphics &g, int width,
         juce::MathConstants<float>::pi, triBounds.getCentreX(),
         triBounds.getCentreY()));
   }
-  g.strokePath(path, juce::PathStrokeType(widgetBorderSize));
+  g.strokePath(path, juce::PathStrokeType(PADDING_SMALL));
 }
 
 void RT_LookAndFeel::Default::drawButtonText(juce::Graphics   &g,
@@ -117,8 +116,5 @@ void RT_LookAndFeel::Default::drawButtonText(juce::Graphics   &g,
   g.drawText(b.getButtonText(), bnd, juce::Justification::centred);
 }
 
-int RT_LookAndFeel::Default::getPopupMenuBorderSize()
-{
-  return widgetBorderSize;
-}
+int RT_LookAndFeel::Default::getPopupMenuBorderSize() { return PADDING_SMALL; }
 int RT_LookAndFeel::Default::getMenuWindowFlags() { return 1; }

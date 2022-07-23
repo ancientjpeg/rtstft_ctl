@@ -15,7 +15,7 @@
 
 RT_AppWindow::RT_AppWindow(RT_ProcessorInterface *inInterface, int inBorderSize)
     : RT_Component(inInterface),
-      mHeader(inInterface, RT_LookAndFeel::widgetBorderSize),
+      mHeader(inInterface, RT_LookAndFeel::PADDING_SMALL),
       mMainDisplay(inInterface), mSettingsDisplay(inInterface)
 
 {
@@ -33,14 +33,11 @@ void RT_AppWindow::paint(juce::Graphics &g) {}
 
 void RT_AppWindow::resized()
 {
-  mBaseBounds       = getBounds().reduced(RT_LookAndFeel::mainBorderSize);
+  mBaseBounds       = getBounds().reduced(RT_LookAndFeel::PADDING_APP);
   auto bounds       = mBaseBounds;
   auto headerBounds = bounds.removeFromTop(RT_LookAndFeel::headerHeight);
-  auto displayPad   = juce::BorderSize<int>(RT_LookAndFeel::mainPadding);
-  auto headerPad    = displayPad;
-  headerPad.setBottom(0);
-  mHeader.setBounds(headerPad.subtractedFrom(headerBounds));
-  bounds = displayPad.subtractedFrom(bounds);
+  mHeader.setBounds(headerBounds);
+  bounds.removeFromTop(RT_LookAndFeel::PADDING_MAIN);
   mMainDisplay.setBounds(bounds);
   mSettingsDisplay.setBounds(bounds);
 }

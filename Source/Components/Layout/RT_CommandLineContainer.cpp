@@ -60,14 +60,12 @@ RT_CommandLineContainer::RT_CommandLineContainer(
 
 void RT_CommandLineContainer::paint(juce::Graphics &g)
 {
-  using enum juce::LookAndFeel_V4::ColourScheme::UIColour;
-  g.setColour(
-      getLookAndFeel_V4().getCurrentColourScheme().getUIColour(defaultFill));
+  g.fillAll(RT_LookAndFeel::WHITE);
 }
 
 void RT_CommandLineContainer::resized()
 {
-  auto bounds = getBounds();
+  auto bounds = getLocalBounds();
 
   int  strW   = mCommandLinePrompt.getFont().getStringWidth(
          mCommandLinePrompt.getText());

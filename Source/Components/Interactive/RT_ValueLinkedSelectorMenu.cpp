@@ -80,7 +80,7 @@ void RT_ValueLinkedSelectorMenu::resized()
     for (int i = 0; i < numFields; i++) {
       auto curr = bounds.removeFromTop(fieldHeight);
       mSelectionsBounds.push_back(curr.toFloat());
-      bounds.removeFromTop(RT_LookAndFeel::widgetBorderSize);
+      bounds.removeFromTop(RT_LookAndFeel::PADDING_SMALL);
     }
   }
   else {
@@ -88,7 +88,7 @@ void RT_ValueLinkedSelectorMenu::resized()
     for (int i = 0; i < numFields; i++) {
       auto curr = bounds.removeFromLeft(fieldWidth);
       mSelectionsBounds.push_back(curr.toFloat());
-      bounds.removeFromLeft(RT_LookAndFeel::widgetBorderSize);
+      bounds.removeFromLeft(RT_LookAndFeel::PADDING_SMALL);
     }
   }
 }

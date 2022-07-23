@@ -72,8 +72,8 @@ void RT_SpectralDisplayContainer::paint(juce::Graphics &g)
 void RT_SpectralDisplayContainer::resized()
 {
   int  rightSectionWidth = 30;
-  int  border            = RT_LookAndFeel::widgetBorderSize;
-  auto bounds            = getBounds();
+  int  border            = RT_LookAndFeel::PADDING_SMALL;
+  auto bounds            = getLocalBounds();
   auto topBounds         = bounds.removeFromTop(40);
   mManipSelector.setBounds(
       topBounds.removeFromLeft(topBounds.getWidth() * 0.75f));

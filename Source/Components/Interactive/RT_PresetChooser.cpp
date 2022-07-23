@@ -46,15 +46,15 @@ void RT_PresetChooser::resized()
   auto bounds    = getLocalBounds();
   auto topBounds = bounds.removeFromTop(20);
   mSaveButton.setBounds(topBounds.removeFromRight(80));
-  topBounds.removeFromRight(RT_LookAndFeel::widgetBorderSize);
+  topBounds.removeFromRight(RT_LookAndFeel::PADDING_SMALL);
   mLoadButton.setBounds(topBounds.removeFromRight(80));
-  topBounds.removeFromRight(RT_LookAndFeel::widgetBorderSize);
+  topBounds.removeFromRight(RT_LookAndFeel::PADDING_SMALL);
   mCurrentPresetLabel.setBounds(topBounds);
   mCurrentPresetLabel.setColour(
       juce::Label::backgroundColourId,
       mInterface->getLookAndFeelManager()->getUIColour(windowBackground));
 
-  bounds.removeFromTop(RT_LookAndFeel::widgetBorderSize);
+  bounds.removeFromTop(RT_LookAndFeel::PADDING_SMALL);
   mFileBrowser.setBounds(bounds);
 }
 

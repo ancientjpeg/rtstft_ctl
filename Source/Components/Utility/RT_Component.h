@@ -10,8 +10,8 @@
 
 #pragma once
 #include "../../Managers/Interface/RT_ProcessorInterface.h"
+#include "../../Managers/LookAndFeelManagement/RT_LookAndFeelManagement.h"
 #include <JuceHeader.h>
-
 
 using enum juce::LookAndFeel_V4::ColourScheme::UIColour;
 

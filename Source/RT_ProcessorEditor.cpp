@@ -14,7 +14,7 @@ using enum juce::LookAndFeel_V4::ColourScheme::UIColour;
 RT_ProcessorEditor::RT_ProcessorEditor(RT_ProcessorInterface *inInterface)
     : AudioProcessorEditor(inInterface->getProcessor()),
       mInterface(inInterface),
-      mAppWindow(mInterface, RT_LookAndFeel::mainBorderSize)
+      mAppWindow(mInterface, RT_LookAndFeel::PADDING_APP)
 {
   // Make sure that before the constructor has finished, you've set the
   // editor's size to whatever you need it to be.

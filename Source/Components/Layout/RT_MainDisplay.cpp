@@ -15,8 +15,8 @@ using enum juce::LookAndFeel_V4::ColourScheme::UIColour;
 
 RT_MainDisplay::RT_MainDisplay(RT_ProcessorInterface *inInterface)
     : RT_Component(inInterface), mGUIControlsContainer(mInterface),
-      mSpectralDisplayContainer(mInterface, RT_LookAndFeel::widgetBorderSize),
-      mCommandLineContainer(mInterface, RT_LookAndFeel::widgetBorderSize)
+      mSpectralDisplayContainer(mInterface, RT_LookAndFeel::PADDING_SMALL),
+      mCommandLineContainer(mInterface, RT_LookAndFeel::PADDING_SMALL)
 {
   addAndMakeVisible(mSpectralDisplayContainer);
   addAndMakeVisible(mGUIControlsContainer);
@@ -27,21 +27,22 @@ void RT_MainDisplay::paint(juce::Graphics &g)
 {
   g.fillAll(getLookAndFeel_V4().getCurrentColourScheme().getUIColour(
       windowBackground));
+  g.setColour(RT_LookAndFeel::BLACK);
+  g.fillRect(getLocalBounds());
 }
+
 void RT_MainDisplay::resized()
 {
-  using namespace RT_LookAndFeel;
   auto bounds    = getLocalBounds();
-  int  cmdHeight = RT_LookAndFeel::cmdHeight;
 
-  auto cmdBounds = bounds.removeFromBottom(cmdHeight)
-                       .withTrimmedTop(RT_LookAndFeel::mainPadding)
-                       .reduced(RT_LookAndFeel::mainPadding);
+  auto cmdBounds = bounds.removeFromBottom(RT_LookAndFeel::cmdHeight);
   mCommandLineContainer.setBounds(cmdBounds);
+  bounds.removeFromBottom(RT_LookAndFeel::PADDING_MAIN);
 
-  auto controlsBounds = bounds.removeFromLeft(0.3 * getWidth())
-                            .withTrimmedRight(RT_LookAndFeel::mainPadding);
+  auto controlsBounds = bounds.removeFromLeft(0.3f * getWidth())
+                            .withTrimmedRight(RT_LookAndFeel::PADDING_MAIN);
   mGUIControlsContainer.setBounds(controlsBounds);
 
+  bounds.removeFromRight(RT_LookAndFeel::PADDING_MAIN);
   mSpectralDisplayContainer.setBounds(bounds);
 }

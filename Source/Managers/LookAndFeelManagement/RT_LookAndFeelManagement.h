@@ -19,19 +19,24 @@ using enum juce::LookAndFeel_V4::ColourScheme::UIColour;
 
 enum ComponentType { PLUGIN_DEFAULT, NUM_COMPONENT_TYPES };
 static const juce::StringArray ComponentNames = {"Default", "Slider", "Button"};
-static const int               mainBorderSize = 10;
-static const int               mainPadding    = 8;
-static const int               widgetBorderSize      = 2;
-static const float             headerHeight          = 80;
-static const float             cmdHeight             = 50;
+static const int               PADDING_APP    = 10;
+static const int               PADDING_MAIN   = 8;
+static const int               PADDING_SMALL  = 2;
+static const float             headerHeight   = 80;
+static const float             cmdHeight      = 50;
 static const int               menuItemDefaultHeight = 40;
 
-static const juce::Colour      BLACK  = juce::Colour::fromString("000000");
-static const juce::Colour      GREY_4 = juce::Colour::fromString("333333");
-static const juce::Colour      GREY_3 = juce::Colour::fromString("666666");
-static const juce::Colour      GREY_2 = juce::Colour::fromString("999999");
-static const juce::Colour      GREY_1 = juce::Colour::fromString("CCCCCC");
-static const juce::Colour      WHITE  = juce::Colour::fromString("FFFFFF");
+const juce::Colour             BLACK     = juce::Colour::fromString("FF000000");
+const juce::Colour             GREY_4    = juce::Colour::fromString("FF333333");
+const juce::Colour             GREY_3    = juce::Colour::fromString("FF666666");
+const juce::Colour             GREY_2    = juce::Colour::fromString("FF999999");
+const juce::Colour             GREY_1    = juce::Colour::fromString("FFCCCCCC");
+const juce::Colour             WHITE     = juce::Colour::fromString("FFFFFFFF");
+
+const juce::Colour             DEBUG_RED = juce::Colour::fromString("FFFF0000");
+const juce::Colour DEBUG_GREEN           = juce::Colour::fromString("FF00FF00");
+const juce::Colour DEBUG_BLUE            = juce::Colour::fromString("FF0000FF");
+
 // UIColour :
 //   windowBackground,  widgetBackground, menuBackground,
 //   outline,           defaultText,      defaultFill,

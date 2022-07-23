@@ -42,12 +42,12 @@ void RT_Header::paint(juce::Graphics &g)
   g.setColour((static_cast<juce::LookAndFeel_V4 &>(getLookAndFeel()))
                   .getCurrentColourScheme()
                   .getUIColour(windowBackground)); // clear the background
-  g.fillRect(getBounds());
+  g.fillRect(getLocalBounds());
 }
 
 void RT_Header::resized()
 {
-  auto bounds = getBounds();
+  auto bounds = getLocalBounds();
   mPluginTitle.setBounds(bounds.removeFromLeft(0.2 * getWidth()));
   mPluginSubtitle.setBounds(bounds.removeFromLeft(0.7 * getWidth()));
   mSettingsMenuButton.setBounds(bounds.withSizeKeepingCentre(20, 20));

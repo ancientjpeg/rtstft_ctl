@@ -57,24 +57,29 @@ void RT_GUIControlsContainer::resized()
 {
   auto bounds = getLocalBounds();
   auto comboBoxLabelsBounds
-      = bounds.removeFromTop(40 + RT_LookAndFeel::widgetBorderSize);
+      = bounds.removeFromTop(40 + RT_LookAndFeel::PADDING_SMALL);
   auto comboBoxMenusBounds
-      = bounds.withTop(bounds.getY() - RT_LookAndFeel::widgetBorderSize);
+      = bounds.withTop(bounds.getY() - RT_LookAndFeel::PADDING_SMALL);
 
-  mFrameSizeSelector.getLabel()->setBounds(comboBoxLabelsBounds.removeFromRight(
-      comboBoxLabelsBounds.getWidth() / 2));
+  auto padding_half = RT_LookAndFeel::PADDING_SMALL;
+  auto combo_width  = getWidth() / 2 - padding_half;
+
+  mFrameSizeSelector.getLabel()->setBounds(
+      comboBoxLabelsBounds.withWidth(combo_width)
+          .withX(getWidth() / 2 + padding_half));
   mFrameSizeSelector.getMenuSection()->setBounds(
-      comboBoxMenusBounds.removeFromRight(comboBoxMenusBounds.getWidth() / 2));
+      comboBoxMenusBounds.withX(mFrameSizeSelector.getLabel()->getX())
+          .withWidth(mFrameSizeSelector.getLabel()->getWidth()));
 
-  mOverlapSelector.getLabel()->setBounds(comboBoxLabelsBounds.withWidth(
-      comboBoxLabelsBounds.getWidth() + RT_LookAndFeel::widgetBorderSize));
-  mOverlapSelector.getMenuSection()->setBounds(comboBoxMenusBounds.withWidth(
-      comboBoxLabelsBounds.getWidth() + RT_LookAndFeel::widgetBorderSize));
+  mOverlapSelector.getLabel()->setBounds(
+      comboBoxLabelsBounds.withWidth(combo_width));
+  mOverlapSelector.getMenuSection()->setBounds(
+      comboBoxMenusBounds.withWidth(mOverlapSelector.getLabel()->getWidth()));
 
   bounds = getLocalBounds()
-               .withTrimmedTop(40 + RT_LookAndFeel::widgetBorderSize
-                               + RT_LookAndFeel::mainPadding * 2)
-               .withTrimmedBottom(RT_LookAndFeel::mainPadding * 3);
+               .withTrimmedTop(40 + RT_LookAndFeel::PADDING_SMALL
+                               + RT_LookAndFeel::PADDING_MAIN * 2)
+               .withTrimmedBottom(RT_LookAndFeel::PADDING_MAIN * 3);
   int knobAreaVertical = bounds.getHeight() / mKnobs.size();
   for (int i = 0; i < RT_PARAM_FLAVOR_COUNT; i++) {
     auto thisBound = bounds.removeFromTop(knobAreaVertical)

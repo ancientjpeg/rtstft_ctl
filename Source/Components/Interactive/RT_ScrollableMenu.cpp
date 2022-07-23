@@ -26,7 +26,7 @@ RT_ScrollableMenu::~RT_ScrollableMenu() {}
 void RT_ScrollableMenu::resized()
 {
   auto bounds     = getLocalBounds().withHeight(mFontSize * 2);
-  int  nextHeight = bounds.getHeight() + RT_LookAndFeel::widgetBorderSize;
+  int  nextHeight = bounds.getHeight() + RT_LookAndFeel::PADDING_SMALL;
   mSelectionBounds.clearQuick();
   for (int i = 0; i < mSelections.size(); i++) {
     mSelectionBounds.add(bounds);
@@ -39,7 +39,7 @@ void RT_ScrollableMenu::paint(juce::Graphics &g)
   auto lafm = mInterface->getLookAndFeelManager();
   g.fillAll(lafm->getUIColour(windowBackground));
   auto height = mSelectionBounds.getLast().getBottom()
-                - mSelectionBounds[0].getY() + RT_LookAndFeel::widgetBorderSize;
+                - mSelectionBounds[0].getY() + RT_LookAndFeel::PADDING_SMALL;
   auto bg = mSelectionBounds[0].withHeight(height);
   g.setColour(lafm->getUIColour(widgetBackground));
   g.fillRect(bg);
