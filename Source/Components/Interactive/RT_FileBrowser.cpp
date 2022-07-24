@@ -33,3 +33,17 @@ void RT_FileBrowser::paint(juce::Graphics &g)
 }
 
 void RT_FileBrowser::resized() {}
+
+RT_FileBrowser::DirectorySelector::DirectorySelector(RT_FileBrowser *inParent,
+                                                     juce::File inDirectory)
+    : mParent(inParent), mDirectory(inDirectory)
+{
+  auto files = mDirectory.findChildFiles(
+      juce::File::findFiles | juce::File::ignoreHiddenFiles, false);
+
+  for (auto f : files) {
+    mFileButtons.emplace_back(juce::Label(), f);
+  }
+}
+
+RT_FileBrowser::DirectorySelector::~DirectorySelector() {}

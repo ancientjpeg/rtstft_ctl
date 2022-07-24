@@ -29,9 +29,9 @@ RT_PresetChooser::RT_PresetChooser(RT_ProcessorInterface *inInterface)
 
   addAndMakeVisible(mCurrentPresetLabel);
 
-  // mFileBrowser.onFileClick = [this](juce::File inClickedFile) {
-  //   mInterface->getPresetManager()->loadPresetFromDisk(inClickedFile);
-  // };
+  mFileBrowser.onFileClick = [this](juce::File inClickedFile) {
+    mInterface->getPresetManager()->loadPresetFromDisk(inClickedFile);
+  };
   addAndMakeVisible(mFileBrowser);
 
   mInterface->getPresetManager()->addListener(this);

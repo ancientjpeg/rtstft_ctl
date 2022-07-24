@@ -24,6 +24,6 @@ void RT_SettingsDisplay::paint(juce::Graphics &g) {}
 
 void RT_SettingsDisplay::resized()
 {
-  auto bounds = getBounds();
+  auto bounds = getLocalBounds();
   mPresetChooser.setBounds(bounds);
 }

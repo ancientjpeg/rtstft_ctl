@@ -24,12 +24,31 @@ public:
                  juce::String inTargetSuffix = "");
   ~RT_FileBrowser() override;
 
-  void resized() override;
-  void paint(juce::Graphics &) override;
+  void                            resized() override;
+  void                            paint(juce::Graphics &) override;
+
+  std::function<void(juce::File)> onFileClick = [](juce::File) {};
 
 private:
-  int  mColumnWidth;
-  bool mShowExtensions;
+  class DirectorySelector : public juce::Component {
+  public:
+    DirectorySelector(RT_FileBrowser *inParent, juce::File inDirectory);
+    ~DirectorySelector();
+
+  private:
+    struct FileButton {
+      juce::Label label;
+      juce::File  file;
+    };
+
+    RT_FileBrowser         *mParent;
+    std::vector<FileButton> mFileButtons;
+    juce::File              mDirectory;
+  };
+
+  int                          mColumnWidth;
+  bool                         mShowExtensions;
+  std::list<DirectorySelector> mOpenDirectories;
 
   JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(RT_FileBrowser)
 };
