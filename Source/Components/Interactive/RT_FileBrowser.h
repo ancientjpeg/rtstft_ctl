@@ -30,17 +30,20 @@ public:
   std::function<void(juce::File)> onFileClick = [](juce::File) {};
 
 private:
-  class DirectorySelector : public juce::Component {
+  class DirectorySelector {
   public:
     DirectorySelector(RT_FileBrowser *inParent, juce::File inDirectory);
     ~DirectorySelector();
 
-  private:
+    void addLabelsAsChildren();
+    void setBounds(juce::Rectangle<int> inBounds);
+
     struct FileButton {
-      juce::Label label;
-      juce::File  file;
+      std::unique_ptr<juce::TextButton> button;
+      juce::File                        file;
     };
 
+  private:
     RT_FileBrowser         *mParent;
     std::vector<FileButton> mFileButtons;
     juce::File              mDirectory;
