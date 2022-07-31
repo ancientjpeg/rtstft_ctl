@@ -13,6 +13,7 @@
 #include "../Utility/RT_Component.h"
 #include "RT_ScrollableMenu.h"
 #include <JuceHeader.h>
+#include <vector>
 
 //==============================================================================
 /*
@@ -26,32 +27,27 @@ public:
 
   void                            resized() override;
   void                            paint(juce::Graphics &) override;
+  void                            setNewTailDirectory(juce::File inDirectory);
 
   std::function<void(juce::File)> onFileClick = [](juce::File) {};
 
 private:
-  class DirectorySelector {
-  public:
-    DirectorySelector(RT_FileBrowser *inParent, juce::File inDirectory);
-    ~DirectorySelector();
-
-    void addLabelsAsChildren();
-    void setBounds(juce::Rectangle<int> inBounds);
-
-    struct FileButton {
-      std::unique_ptr<juce::TextButton> button;
-      juce::File                        file;
-    };
-
-  private:
-    RT_FileBrowser         *mParent;
-    std::vector<FileButton> mFileButtons;
-    juce::File              mDirectory;
+  struct Directory;
+  struct FileButton {
+    Directory                        *parent_dir;
+    std::unique_ptr<juce::TextButton> button;
+    juce::File                        file;
   };
 
-  int                          mColumnWidth;
-  bool                         mShowExtensions;
-  std::list<DirectorySelector> mOpenDirectories;
+  struct Directory {
+    juce::File              path;
+    std::vector<FileButton> file_buttons;
+    juce::Rectangle<int>    empty_space;
+  };
+
+  int                    mColumnWidth;
+  bool                   mShowExtensions;
+  std::vector<Directory> mOpenDirectories;
 
   JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(RT_FileBrowser)
 };

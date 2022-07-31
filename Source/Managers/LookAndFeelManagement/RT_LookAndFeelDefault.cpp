@@ -32,7 +32,7 @@ void RT_LookAndFeel::Default::drawRotarySlider(juce::Graphics &g, int x, int y,
   auto  bounds          = s.getLocalBounds();
   auto  center          = bounds.getCentre();
   int   radiusFromCenter
-      = std::min(bounds.getHeight(), bounds.getWidth()) / 2 * 0.8f;
+      = std::min(bounds.getHeight(), bounds.getWidth()) / 2.f * 0.8f;
   int        radiusFromBounds = (bounds.getHeight() - 2 * radiusFromCenter) / 2;
   int        lineLength_2     = radiusFromCenter * 0.1f;
   juce::Path knobPath;
@@ -113,6 +113,7 @@ void RT_LookAndFeel::Default::drawButtonText(juce::Graphics   &g,
   auto cs  = getCurrentColourScheme();
   g.setColour(cs.getUIColour(shouldDrawButtonAsDown ? windowBackground
                                                     : highlightedFill));
+  g.setFont(juce::Font(RT_LookAndFeel::BUTTON_FONT_HEIGHT));
   g.drawText(b.getButtonText(), bnd, juce::Justification::centred);
 }
 
