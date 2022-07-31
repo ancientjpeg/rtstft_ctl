@@ -85,15 +85,15 @@ void RT_GUIControlsContainer::resized()
   mOverlapSelector.getMenuSection()->setBounds(0, body_y, column_0_width,
                                                body_height);
 
-  mVertDivider = juce::Rectangle<int>(column_0_width, body_y, divider_width,
+  mVertDivider     = juce::Rectangle<int>(column_0_width, body_y, divider_width,
                                       body_height);
 
-  mBodyBounds  = getLocalBounds().withY(body_y).withHeight(body_height);
-  int  knobAreaVertical = mBodyBounds.getHeight() / mKnobs.size();
+  mBodyBounds      = getLocalBounds().withY(body_y).withHeight(body_height);
 
   auto body_bounds = mBodyBounds.withTrimmedTop(RT_LookAndFeel::PADDING_MAIN)
                          .withTrimmedBottom(2 * RT_LookAndFeel::PADDING_MAIN);
 
+  int knobAreaVertical = mBodyBounds.getHeight() / mKnobs.size();
   for (int i = 0; i < RT_PARAM_FLAVOR_COUNT; i++) {
     auto thisBound = body_bounds.removeFromTop(knobAreaVertical)
                          .withWidth(body_bounds.getWidth() / 2);

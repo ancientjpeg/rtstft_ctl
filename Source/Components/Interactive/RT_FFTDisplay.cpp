@@ -56,11 +56,10 @@ void RT_FFTDisplay::_paintBins(juce::Graphics &g)
     float left    = manipsIndexToXPos(bin_idx);
     float active_amp, amp_max = 0.f;
     for (int c = 0; c < p->num_chans; c++) {
-      float amp;
+      float amp = 0.f;
       for (int b = 0; b < i_incr; b++) {
-        amp = p->chans[c]->framebuf->amp_holder[bin_idx + b];
+        amp = std::max(p->chans[c]->framebuf->amp_holder[bin_idx + b], amp);
       }
-      amp /= i_incr;
       amp_max = std::max(amp, amp_max);
       if (c == active_chan) {
         active_amp = amp;
