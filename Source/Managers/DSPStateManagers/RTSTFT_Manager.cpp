@@ -153,13 +153,13 @@ void RTSTFT_Manager::parameterChanged(const juce::String &parameterID,
   int paramFlavor = RT_PARAM_IDS.indexOf(parameterID);
   if (paramFlavor < 0 || paramFlavor >= RT_PARAM_FLAVOR_COUNT) {
     // error handling here...
+    jassertfalse;
+    return;
   }
-  // else if (paramFlavor >= RT_PARAM_GAIN_MOD
-  //          && paramFlavor <= RT_PARAM_LIMIT_MOD) {
-  //   if (paramFlavor == RT_PARAM_GATE_MOD) {
-  //     newValue -= 1.f;
-  //   }
-  // }
+  else if (paramFlavor >= RT_PARAM_GAIN_MOD
+           && paramFlavor <= RT_PARAM_LIMIT_MOD) {
+    newValue = rt_dbtoa(newValue);
+  }
   if (paramFlavor == RT_SCALE_FACTOR_MOD) {
     newValue = rt_centop(newValue);
   }
