@@ -70,6 +70,11 @@ while getopts 'p:fknh' OPT; do
         ;;
     n)
         NOTARIZE=TRUE
+        git branch | fgrep '*' | fgrep main >/dev/null 2>&1
+        if [ "$?" -ne "0" ]; then
+            echo "ERROR: Don't try to notarize a non-main build!"
+            exit 1
+        fi
         ;;
     h)
         print_help
