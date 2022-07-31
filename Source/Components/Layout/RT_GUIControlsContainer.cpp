@@ -93,8 +93,8 @@ void RT_GUIControlsContainer::resized()
   auto body_bounds = mBodyBounds.withTrimmedTop(RT_LookAndFeel::PADDING_MAIN)
                          .withTrimmedBottom(2 * RT_LookAndFeel::PADDING_MAIN);
 
-  int knobAreaVertical = mBodyBounds.getHeight() / mKnobs.size();
-  for (int i = 0; i < RT_PARAM_FLAVOR_COUNT; i++) {
+  int knobAreaVertical = body_bounds.getHeight() / mKnobs.size();
+  for (int i = 0; i < mKnobs.size(); i++) {
     auto thisBound = body_bounds.removeFromTop(knobAreaVertical)
                          .withWidth(body_bounds.getWidth() / 2);
     if (i & 1) {
