@@ -41,6 +41,7 @@ void RT_PresetChooser::paint(juce::Graphics &g)
 {
   g.fillAll(mInterface->getLookAndFeelManager()->getUIColour(widgetBackground));
 }
+
 void RT_PresetChooser::resized()
 {
   auto bounds    = getLocalBounds();
@@ -92,8 +93,13 @@ void RT_PresetChooser::savePreset()
 void RT_PresetChooser::onPresetChange()
 {
   mCurrentPresetLabel.setText(
-      mInterface->getPresetManager()->getCurrentPresetName(),
+      juce::String("current preset: ")
+          + mInterface->getPresetManager()->getCurrentPresetName(),
       juce::dontSendNotification);
 }
 
-void RT_PresetChooser::onPresetDirRefresh() { repaint(); }
+void RT_PresetChooser::onPresetDirRefresh()
+{
+  mFileBrowser.resized();
+  repaint();
+}

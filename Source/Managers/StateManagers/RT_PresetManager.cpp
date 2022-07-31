@@ -25,6 +25,9 @@ RT_PresetManager::RT_PresetManager(RT_ProcessorInterface *inInterface)
   if (!defaultPresetPath.existsAsFile()) {
     writePresetToDisk(defaultPresetPath);
   }
+  else {
+    _presetChange(defaultPresetPath);
+  }
 }
 
 void RT_PresetManager::storePresetInMemory(juce::MemoryBlock &inMem)
