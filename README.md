@@ -2,6 +2,13 @@
 
 A companion plugin to the [RTSTFT](https://github.com/ancientjpeg/RTSTFT) library, built in JUCE.
 
+# TODO
+
+- [ ] implement spectrum display zoom
+- [ ] implement -a (add) flag for gain, gate and limit
+- [ ] ???
+- [ ] profit
+
 # Compilation
 
 You will require an installation of [JUCE](https://juce.com/get-juce), including the Projucer, to build this project. Further, you will need to initialize this project's submodules. A full setup of the rtstft_ctl build folder can be done by executing these commands:
