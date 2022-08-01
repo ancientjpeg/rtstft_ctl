@@ -2,11 +2,11 @@
 
 set PROJUCER="Projucer.exe"
 
-"C:\\JUCE\"%PROJUCER% --resave rtstft_ctl.jucer
-msbuild  "Builds\VisualStudio2022\rtstft_ctl.sln" -p:Configuration=Release
+cmake -Bbuild -G "Visual Studio 17 2022"
+cmake --build build --target rtstft_ctl_VST3 --config Release
 mkdir installer
 cd installer
-COPY "..\Builds\VisualStudio2022\x64\Release\VST3\rtstft_ctl.vst3" .
+echo D|xcopy /e /y "..\build\rtstft_ctl_artefacts\Release\VST3\rtstft_ctl.vst3\" rtstft_ctl.vst3
 COPY ..\win_installer.iss .
 iscc win_installer.iss
 COPY Output\rtstft_ctl-windows.exe ..\rtstft_ctl-windows.exe
