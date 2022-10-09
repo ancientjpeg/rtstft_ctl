@@ -31,11 +31,11 @@ ${bold}USAGE:${norm}
     
 ${bold}OPTIONS:${norm}
     
-    -p [DIR]:   location of presets dir to copy into the repository before assembling the installation package
-    -f:         copy the default presets factory directory (${PLUGIN_PRESETS_DIR}/Factory) into the repository before packaging
-    -k:         keep the pkg_build dir to inspect for debugging purposes
-    -n:         build a dmg and notarize
-    -h:         display this dialog
+    -p [DIR]    location of presets dir to copy into the repository before assembling the installation package
+    -f          copy the default presets factory directory (${PLUGIN_PRESETS_DIR}/Factory) into the repository before packaging
+    -k          keep the pkg_build dir to inspect for debugging purposes
+    -n          build a dmg and notarize
+    -h          display this dialog
 
 PRINT_HELP
 }
@@ -229,7 +229,7 @@ productbuild --sign "$INSTALLER_CERT" \
 
 function notarize() {
 
-    echo $"\n============= GENARATE MANUAL ==============\n"
+    echo $"\n========= GENARATE MANUAL =========\n"
 
     DOCS="../RTSTFT/docs"
     PAPER="RTSTFT_CTL_WHITEPAPER.pdf"
