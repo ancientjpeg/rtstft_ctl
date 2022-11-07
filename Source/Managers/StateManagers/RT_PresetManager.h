@@ -43,14 +43,22 @@ public:
   };
   void addListener(Listener *l, bool initialNotification = true);
 
+  /**
+   * @brief Stores current state in a memory block in the rtstft_ctl preset
+   * format.
+   * @details Writing the output memory block directly
+   *
+   * @param dest output memory block
+   */
+  void storeCurrentStateInMemoryBlock(juce::MemoryBlock &dest);
+
 private:
   RT_ProcessorInterface       *mInterface;
   juce::MemoryBlock            mActivePresetRawData;
   juce::File                   mActivePresetPath;
   juce::ListenerList<Listener> mListenerList;
   void                         _storeCurrentStateInMemory();
-  void _storeCurrentStateInMemoryBlock(juce::MemoryBlock &dest);
-  void _loadPresetInternal();
-  void _presetChange(juce::File inNewPreset);
-  void _refreshListeners();
+  void                         _loadPresetInternal();
+  void                         _presetChange(juce::File inNewPreset);
+  void                         _refreshListeners();
 };

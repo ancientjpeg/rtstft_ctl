@@ -66,7 +66,7 @@ void RT_PresetManager::getPreset(juce::MemoryBlock &inDestData,
     inDestData = mActivePresetRawData;
   }
   else {
-    _storeCurrentStateInMemoryBlock(inDestData);
+    storeCurrentStateInMemoryBlock(inDestData);
   }
 }
 
@@ -141,10 +141,10 @@ void RT_PresetManager::addListener(Listener *l, bool initialNotification)
 
 void RT_PresetManager::_storeCurrentStateInMemory()
 {
-  _storeCurrentStateInMemoryBlock(mActivePresetRawData);
+  storeCurrentStateInMemoryBlock(mActivePresetRawData);
 }
 
-void RT_PresetManager::_storeCurrentStateInMemoryBlock(juce::MemoryBlock &dest)
+void RT_PresetManager::storeCurrentStateInMemoryBlock(juce::MemoryBlock &dest)
 {
   auto paramState = mInterface->getParameterManager()
                         ->getValueTreeState()
@@ -158,8 +158,11 @@ void RT_PresetManager::_storeCurrentStateInMemoryBlock(juce::MemoryBlock &dest)
   state->addChildElement(propertyState.release());
 
   juce::AudioProcessor::copyXmlToBinary(*state, dest);
-  auto size          = ((uint32_t *)dest.getData())[1];
+  auto size          = ((uint32_t *)
+                   dest.getData())[1]; /* the size of the XML written so far */
+
   auto manips_stream = juce::MemoryOutputStream(dest, true);
+
   manips_stream.setPosition(size + 9);
   mInterface->getRTSTFTManager()->writeManipsToBinary(manips_stream);
 }
@@ -183,7 +186,7 @@ void RT_PresetManager::_loadPresetInternal()
   auto *prop_man = mInterface->getPropertyManager();
 
   if (prop_man->assertTreeCanValidlyReplace(propertyTree)) {
-    // return false; // keep params, but don't overwrite manips or FFT size
+    // return false; /* keep params, but don't overwrite manips or FFT size */
     prop_man->replaceState(propertyTree);
   }
 
