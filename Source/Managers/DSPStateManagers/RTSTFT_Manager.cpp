@@ -1,12 +1,13 @@
-/*
-  ==============================================================================
-
-    RTSTFT_Manager.cpp
-    Created: 19 Mar 2022 2:08:48pm
-    Author:  Jackson Kaplan
-
-  ==============================================================================
-*/
+/**
+ * @file RTSTFT_Manager.cpp
+ * @author Jackson Wyatt Kaplan (JwyattK@gmail.com)
+ * @brief
+ * @version 0.1
+ * @date 2022-11-06
+ *
+ * @copyright Copyright (c) 2022
+ *
+ */
 
 #include "RTSTFT_Manager.h"
 #include "../../RT_AudioProcessor.h"
@@ -53,7 +54,10 @@ void RTSTFT_Manager::processBlock(juce::AudioBuffer<float> &buffer)
   rt_cycle(p, buffer.getArrayOfWritePointers(), buffer.getNumSamples());
 }
 
-void RTSTFT_Manager::releaseResources() { rt_flush(p); }
+void RTSTFT_Manager::releaseResources()
+{
+  rt_flush(p);
+}
 
 void RTSTFT_Manager::resetParamsStruct(int inFFTSize, int inOverlapFactor)
 {
@@ -74,18 +78,27 @@ void RTSTFT_Manager::resetParamsStruct(int inFFTSize, int inOverlapFactor)
   // implement a re-update here
 }
 
-const rt_params RTSTFT_Manager::getParamsStruct() { return p; }
+const rt_params RTSTFT_Manager::getParamsStruct()
+{
+  return p;
+}
 
-void            RTSTFT_Manager::executeCMDCommand(juce::String inCMDString)
+void RTSTFT_Manager::executeCMDCommand(juce::String inCMDString)
 {
   mCMDErrorState = rt_parse_and_execute(p, inCMDString.toRawUTF8());
   mCMDMessage    = juce::String(p->parser.error_msg_buffer);
 }
 
-int          RTSTFT_Manager::getCMDErrorState() { return mCMDErrorState; }
-juce::String RTSTFT_Manager::getCMDMessage() { return mCMDMessage; }
+int RTSTFT_Manager::getCMDErrorState()
+{
+  return mCMDErrorState;
+}
+juce::String RTSTFT_Manager::getCMDMessage()
+{
+  return mCMDMessage;
+}
 
-void         RTSTFT_Manager::readManipsFromBinary(bool inThreadedFFTUpdate)
+void RTSTFT_Manager::readManipsFromBinary(bool inThreadedFFTUpdate)
 {
   assert(mInitialized);
   const void *manipsBinaryPtr
@@ -115,8 +128,10 @@ void RTSTFT_Manager::writeManipsToBinary(juce::MemoryOutputStream &stream)
   }
 }
 
-void RTSTFT_Manager::changeFFTSize(int inNewFrameSize, int inNewOverlapFactor,
-                                   int inNewPadFactor, bool threaded)
+void RTSTFT_Manager::changeFFTSize(int  inNewFrameSize,
+                                   int  inNewOverlapFactor,
+                                   int  inNewPadFactor,
+                                   bool threaded)
 {
   assert(juce::isPowerOfTwo(inNewFrameSize)
          && inNewFrameSize * (1 << inNewPadFactor) <= p->fft_max
@@ -145,7 +160,9 @@ void RTSTFT_Manager::awaitFFTSizeChange()
   assert(mFFTSetterThread.waitForThreadToExit(5000));
 }
 
-void RTSTFT_Manager::changeMultichannelMode(RT_MULTICHANNEL_MODES inNewMode) {}
+void RTSTFT_Manager::changeMultichannelMode(RT_MULTICHANNEL_MODES inNewMode)
+{
+}
 
 void RTSTFT_Manager::parameterChanged(const juce::String &parameterID,
                                       float               newValue)

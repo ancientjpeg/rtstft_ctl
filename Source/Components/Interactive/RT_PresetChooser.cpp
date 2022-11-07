@@ -1,3 +1,13 @@
+/**
+ * @file RT_PresetChooser.cpp
+ * @author Jackson Wyatt Kaplan (JwyattK@gmail.com)
+ * @brief
+ * @version 0.1
+ * @date 2022-05-03
+ *
+ * @copyright Copyright (c) 2022
+ *
+ */
 /*
   ==============================================================================
 
@@ -16,8 +26,10 @@
 RT_PresetChooser::RT_PresetChooser(RT_ProcessorInterface *inInterface)
     : RT_Component(inInterface),
       mFileBrowser(mInterface,
-                   mInterface->getFileManager()->getPresetsDirectory(), 100,
-                   false, "*" + sc_PresetSuffix)
+                   mInterface->getFileManager()->getPresetsDirectory(),
+                   100,
+                   false,
+                   "*" + sc_PresetSuffix)
 {
   mSaveButton.setButtonText("save preset");
   mSaveButton.onClick = [this]() { savePreset(); };
