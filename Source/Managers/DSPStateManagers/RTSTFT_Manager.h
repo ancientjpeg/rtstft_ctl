@@ -34,8 +34,10 @@ public:
                                    float               newValue) override;
   void valueTreePropertyChanged(juce::ValueTree &treeWhosePropertyHasChanged,
                                 const juce::Identifier &property) override;
-  void changeFFTSize(int inNewFrameSize, int inNewOverlapFactor,
-                     int inNewPadFactor = 0, bool threaded = false);
+  void changeFFTSize(int  inNewFrameSize,
+                     int  inNewOverlapFactor,
+                     int  inNewPadFactor = 0,
+                     bool threaded       = false);
   void awaitFFTSizeChange();
   void executeCMDCommand(juce::String inCMDString);
   int  getCMDErrorState();

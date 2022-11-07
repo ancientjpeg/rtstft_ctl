@@ -13,19 +13,25 @@
 #include "../../Managers/StateManagers/RT_PropertyManager.h"
 
 RT_ValueLinkedSelectorMenu::RT_ValueLinkedSelectorMenu(
-    RT_ProcessorInterface *inInterface, const juce::Value &inValueToLink,
+    RT_ProcessorInterface              *inInterface,
+    const juce::Value                  &inValueToLink,
     std::initializer_list<juce::String> inPossibleSelections,
-    bool inUseNullSelection, bool inIsVertical)
-    : RT_ValueLinkedSelectorMenu(inInterface, inValueToLink,
+    bool                                inUseNullSelection,
+    bool                                inIsVertical)
+    : RT_ValueLinkedSelectorMenu(inInterface,
+                                 inValueToLink,
                                  juce::StringArray(inPossibleSelections),
-                                 inUseNullSelection, inIsVertical)
+                                 inUseNullSelection,
+                                 inIsVertical)
 {
 }
 
 RT_ValueLinkedSelectorMenu::RT_ValueLinkedSelectorMenu(
-    RT_ProcessorInterface *inInterface, const juce::Value &inValueToLink,
-    const juce::StringArray inPossibleSelections, bool inUseNullSelection,
-    bool inIsVertical)
+    RT_ProcessorInterface  *inInterface,
+    const juce::Value      &inValueToLink,
+    const juce::StringArray inPossibleSelections,
+    bool                    inUseNullSelection,
+    bool                    inIsVertical)
     : RT_Component(inInterface), mPossibleSelections(inPossibleSelections),
       mLinkedValue(inValueToLink), mUseNullSelection(inUseNullSelection),
       mVertical(inIsVertical)

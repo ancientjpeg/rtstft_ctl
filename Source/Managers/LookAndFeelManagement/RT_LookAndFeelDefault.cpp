@@ -17,8 +17,11 @@ RT_LookAndFeel::Default::Default(
   setDefaultLookAndFeel(this);
 }
 
-void RT_LookAndFeel::Default::drawRotarySlider(juce::Graphics &g, int x, int y,
-                                               int width, int height,
+void RT_LookAndFeel::Default::drawRotarySlider(juce::Graphics &g,
+                                               int             x,
+                                               int             y,
+                                               int             width,
+                                               int             height,
                                                float sliderPosProportional,
                                                float rotaryStartAngle,
                                                float rotaryEndAngle,
@@ -63,8 +66,11 @@ juce::Label *RT_LookAndFeel::Default::createSliderTextBox(juce::Slider &s)
 }
 
 void RT_LookAndFeel::Default::drawButtonBackground(
-    juce::Graphics &g, juce::Button &b, const juce::Colour &backgroundColour,
-    bool shouldDrawButtonAsHighlighted, bool shouldDrawButtonAsDown)
+    juce::Graphics     &g,
+    juce::Button       &b,
+    const juce::Colour &backgroundColour,
+    bool                shouldDrawButtonAsHighlighted,
+    bool                shouldDrawButtonAsDown)
 {
   auto cs     = getCurrentColourScheme();
   auto bounds = b.getLocalBounds();
@@ -78,10 +84,14 @@ void RT_LookAndFeel::Default::drawButtonBackground(
   g.fillRect(bounds);
 }
 
-void RT_LookAndFeel::Default::drawComboBox(juce::Graphics &g, int width,
-                                           int height, bool isButtonDown,
-                                           int buttonX, int buttonY,
-                                           int buttonW, int buttonH,
+void RT_LookAndFeel::Default::drawComboBox(juce::Graphics &g,
+                                           int             width,
+                                           int             height,
+                                           bool            isButtonDown,
+                                           int             buttonX,
+                                           int             buttonY,
+                                           int             buttonW,
+                                           int             buttonH,
                                            juce::ComboBox &box)
 {
   auto scheme = getCurrentColourScheme();
@@ -117,5 +127,11 @@ void RT_LookAndFeel::Default::drawButtonText(juce::Graphics   &g,
   g.drawText(b.getButtonText(), bnd, juce::Justification::centred);
 }
 
-int RT_LookAndFeel::Default::getPopupMenuBorderSize() { return PADDING_SMALL; }
-int RT_LookAndFeel::Default::getMenuWindowFlags() { return 1; }
+int RT_LookAndFeel::Default::getPopupMenuBorderSize()
+{
+  return PADDING_SMALL;
+}
+int RT_LookAndFeel::Default::getMenuWindowFlags()
+{
+  return 1;
+}

@@ -33,7 +33,9 @@ void RT_Sliders::RotaryKnob::paint(juce::Graphics &g)
 //==============================================================================
 RT_Sliders::LabelledRotaryKnob::LabelledRotaryKnob(
     const juce::NormalisableRange<float> *inRangePtr,
-    juce::String inLabelString, float inLabelPortion, int inSigFigs)
+    juce::String                          inLabelString,
+    float                                 inLabelPortion,
+    int                                   inSigFigs)
     : mLabelString(inLabelString), mLabelPortion(inLabelPortion),
       mKnob(inRangePtr), mSigFigs(inSigFigs)
 {
@@ -42,10 +44,10 @@ RT_Sliders::LabelledRotaryKnob::LabelledRotaryKnob(
   addAndMakeVisible(mKnob, 0);
   addAndMakeVisible(mLabel);
   mKnob.onValueChange = [this]() {
-      auto val = mKnob.getValue();
-      auto str = mSigFigs == 0 ? juce::String((int)val) : juce::String(val, mSigFigs);
-      mLabel.setText(str,
-                   juce::dontSendNotification);
+    auto val = mKnob.getValue();
+    auto str
+        = mSigFigs == 0 ? juce::String((int)val) : juce::String(val, mSigFigs);
+    mLabel.setText(str, juce::dontSendNotification);
   };
   mLabel.setText(juce::String(mKnob.getValue(), 2), juce::dontSendNotification);
 }

@@ -53,7 +53,9 @@ void RT_GearButton::paint(juce::Graphics &g)
   g.setColour(lafm->getUIColour(windowBackground));
   g.fillPath(internalHolePath);
 }
-void RT_GearButton::resized() {}
+void RT_GearButton::resized()
+{
+}
 void RT_GearButton::mouseDown(const juce::MouseEvent &e)
 {
   mActive       = !mActive;

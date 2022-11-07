@@ -27,9 +27,14 @@ RT_AppWindow::RT_AppWindow(RT_ProcessorInterface *inInterface, int inBorderSize)
   setLookAndFeel(&mLookAndFeel);
 }
 
-RT_AppWindow::~RT_AppWindow() { setLookAndFeel(nullptr); }
+RT_AppWindow::~RT_AppWindow()
+{
+  setLookAndFeel(nullptr);
+}
 
-void RT_AppWindow::paint(juce::Graphics &g) {}
+void RT_AppWindow::paint(juce::Graphics &g)
+{
+}
 
 void RT_AppWindow::resized()
 {

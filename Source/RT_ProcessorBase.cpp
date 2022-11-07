@@ -47,16 +47,24 @@ RT_ProcessorBase::RT_ProcessorBase()
   mPresetManager.loadPreset();
 }
 
-RT_ProcessorBase::~RT_ProcessorBase() {}
+RT_ProcessorBase::~RT_ProcessorBase()
+{
+}
 //==============================================================================
-juce::AudioProcessor *RT_ProcessorBase::getProcessor() { return this; }
+juce::AudioProcessor *RT_ProcessorBase::getProcessor()
+{
+  return this;
+}
 
-RT_AudioProcessor    *RT_ProcessorBase::getRTProcessor()
+RT_AudioProcessor *RT_ProcessorBase::getRTProcessor()
 {
   return (RT_AudioProcessor *)this;
 }
 
-RTSTFT_Manager *RT_ProcessorBase::getRTSTFTManager() { return &mRTSTFTManager; }
+RTSTFT_Manager *RT_ProcessorBase::getRTSTFTManager()
+{
+  return &mRTSTFTManager;
+}
 
 RT_LookAndFeel::Manager *RT_ProcessorBase::getLookAndFeelManager()
 {
@@ -76,12 +84,18 @@ RT_PropertyManager *RT_ProcessorBase::getPropertyManager()
   return &mPropertyManager;
 }
 
-RT_FileManager *RT_ProcessorBase::getFileManager() { return &mFileManager; }
+RT_FileManager *RT_ProcessorBase::getFileManager()
+{
+  return &mFileManager;
+}
 
 //==============================================================================
-const juce::String RT_ProcessorBase::getName() const { return JucePlugin_Name; }
+const juce::String RT_ProcessorBase::getName() const
+{
+  return JucePlugin_Name;
+}
 
-bool               RT_ProcessorBase::acceptsMidi() const
+bool RT_ProcessorBase::acceptsMidi() const
 {
 #if JucePlugin_WantsMidiInput
   return true;
@@ -108,20 +122,31 @@ bool RT_ProcessorBase::isMidiEffect() const
 #endif
 }
 
-double RT_ProcessorBase::getTailLengthSeconds() const { return 0.0; }
+double RT_ProcessorBase::getTailLengthSeconds() const
+{
+  return 0.0;
+}
 
-int    RT_ProcessorBase::getNumPrograms()
+int RT_ProcessorBase::getNumPrograms()
 {
   return 1; // NB: some hosts don't cope very well if you tell them there are 0
             // programs, so this should be at least 1, even if you're not really
             // implementing programs.
 }
 
-int                RT_ProcessorBase::getCurrentProgram() { return 0; }
+int RT_ProcessorBase::getCurrentProgram()
+{
+  return 0;
+}
 
-void               RT_ProcessorBase::setCurrentProgram(int index) {}
+void RT_ProcessorBase::setCurrentProgram(int index)
+{
+}
 
-const juce::String RT_ProcessorBase::getProgramName(int index) { return {}; }
+const juce::String RT_ProcessorBase::getProgramName(int index)
+{
+  return {};
+}
 
 void RT_ProcessorBase::changeProgramName(int index, const juce::String &newName)
 {
@@ -181,7 +206,10 @@ void RT_ProcessorBase::setStateInformation(const void *data, int sizeInBytes)
   }
 }
 
-void RT_ProcessorBase::notifyOfStateChange() { mAwaitingStateUpdate = true; }
+void RT_ProcessorBase::notifyOfStateChange()
+{
+  mAwaitingStateUpdate = true;
+}
 void RT_ProcessorBase::verifyStateIsUpToDate()
 {
   if (!mAwaitingStateUpdate) {

@@ -15,9 +15,10 @@
 
 //==============================================================================
 RT_FileBrowser::RT_FileBrowser(RT_ProcessorInterface *inInterface,
-                               juce::File inBrowserRoot, int inColumnWidth,
-                               bool         inShowExtensions,
-                               juce::String inTargetSuffix)
+                               juce::File             inBrowserRoot,
+                               int                    inColumnWidth,
+                               bool                   inShowExtensions,
+                               juce::String           inTargetSuffix)
 
     : RT_Component(inInterface), mColumnWidth(inColumnWidth),
       mShowExtensions(inShowExtensions)
@@ -25,7 +26,9 @@ RT_FileBrowser::RT_FileBrowser(RT_ProcessorInterface *inInterface,
   setNewTailDirectory(inBrowserRoot);
 }
 
-RT_FileBrowser::~RT_FileBrowser() {}
+RT_FileBrowser::~RT_FileBrowser()
+{
+}
 
 void RT_FileBrowser::paint(juce::Graphics &g)
 {

@@ -15,7 +15,8 @@
 
 //==============================================================================
 RT_SpectralDisplayContainer::RT_SpectralDisplayContainer(
-    RT_ProcessorInterface *inInterface, int inBorderSize)
+    RT_ProcessorInterface *inInterface,
+    int                    inBorderSize)
     : RT_Component(inInterface), mFFTDisplay(mInterface),
       mManipSelector(mInterface,
                      mInterface->getPropertyManager()
@@ -27,12 +28,16 @@ RT_SpectralDisplayContainer::RT_SpectralDisplayContainer(
           mInterface->getPropertyManager()
               ->getValueTreeRef()
               .getPropertyAsValue("manip_multichannel", nullptr),
-          RT_MULTICHANNEL_MODE_IDS, false, true),
+          RT_MULTICHANNEL_MODE_IDS,
+          false,
+          true),
       mChannelSelector(mInterface,
                        mInterface->getPropertyManager()
                            ->getGUIStateTree()
                            .getPropertyAsValue("active_chan", nullptr),
-                       {"0", "1"}, false, true)
+                       {"0", "1"},
+                       false,
+                       true)
 {
   addAndMakeVisible(mFFTDisplay);
   addAndMakeVisible(mManipSelector);
@@ -40,7 +45,9 @@ RT_SpectralDisplayContainer::RT_SpectralDisplayContainer(
   addAndMakeVisible(mChannelSelector);
 }
 
-RT_SpectralDisplayContainer::~RT_SpectralDisplayContainer() {}
+RT_SpectralDisplayContainer::~RT_SpectralDisplayContainer()
+{
+}
 
 void RT_SpectralDisplayContainer::paint(juce::Graphics &g)
 {

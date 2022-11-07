@@ -30,8 +30,9 @@ class LabelledRotaryKnob : public juce::Component,
 
 public:
   LabelledRotaryKnob(const juce::NormalisableRange<float> *inRangePtr,
-                     juce::String inLabelString, float inLabelPortion = 0.1f,
-                     int inSigFigs = 2);
+                     juce::String                          inLabelString,
+                     float inLabelPortion = 0.1f,
+                     int   inSigFigs      = 2);
   void          resized() override;
   juce::Slider *getKnobPointer();
   void          labelTextChanged(juce::Label *labelThatHasChanged) override;

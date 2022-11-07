@@ -44,9 +44,11 @@ public:
   float yPosDenorm(float YPosNormalized);
   float scaleAmpToYPosNormDbScale(float inAmp);
   float scaleYPosNormToAmpDbScale(float inYPos);
-  float scaleManipAmpToYPosNorm(float inAmp, rt_params p,
+  float scaleManipAmpToYPosNorm(float             inAmp,
+                                rt_params         p,
                                 rt_manip_flavor_t activeManip);
-  float scaleYPosNormToManipAmp(float inYPosNormalized, rt_params p,
+  float scaleYPosNormToManipAmp(float             inYPosNormalized,
+                                rt_params         p,
                                 rt_manip_flavor_t activeManip);
 
 private:

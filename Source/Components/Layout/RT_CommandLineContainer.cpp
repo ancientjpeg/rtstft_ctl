@@ -14,7 +14,8 @@
 
 //==============================================================================
 RT_CommandLineContainer::RT_CommandLineContainer(
-    RT_ProcessorInterface *inInterface, int inBorderSize)
+    RT_ProcessorInterface *inInterface,
+    int                    inBorderSize)
     : RT_Component(inInterface),
       mCommandLinePrompt("RT_CMD_PROMPT", "user@rt_cmd$"),
       mErrorMessageContainer("RT_CMD_ERROR_BOX", "")

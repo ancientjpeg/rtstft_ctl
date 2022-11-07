@@ -31,7 +31,9 @@ public:
 
   class MenuSection : public juce::Component {
   public:
-    MenuSection(RT_InplaceComboBox *parent) : mParent(parent) {}
+    MenuSection(RT_InplaceComboBox *parent) : mParent(parent)
+    {
+    }
     void paint(juce::Graphics &g) override;
     void resized() override;
 
@@ -42,8 +44,10 @@ public:
 
   class Label : public juce::Label {
   public:
-    Label(RT_InplaceComboBox *inParent, bool isTitle = false,
-          juce::String inID = {}, juce::String inText = {})
+    Label(RT_InplaceComboBox *inParent,
+          bool                isTitle = false,
+          juce::String        inID    = {},
+          juce::String        inText  = {})
         : juce::Label(inID, inText), mParent(inParent), mIsTitle(isTitle)
     {
     }
@@ -58,12 +62,18 @@ public:
     bool                mIsTitle;
   };
 
-  juce::Component *getMenuSection() { return (juce::Component *)&mMenuSection; }
-  juce::Label     *getLabel() { return &mMainLabel; }
-  bool             isMenuSectionVisible();
+  juce::Component *getMenuSection()
+  {
+    return (juce::Component *)&mMenuSection;
+  }
+  juce::Label *getLabel()
+  {
+    return &mMainLabel;
+  }
+  bool                  isMenuSectionVisible();
 
-  void             valueChanged(juce::Value &v) override;
-  void             mouseDown(const juce::MouseEvent &event) override;
+  void                  valueChanged(juce::Value &v) override;
+  void                  mouseDown(const juce::MouseEvent &event) override;
 
   std::function<void()> onMenuVisibilityChange = []() {};
 

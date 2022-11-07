@@ -19,7 +19,8 @@
 class RT_ScrollableMenu : public RT_Component {
 public:
   RT_ScrollableMenu(RT_ProcessorInterface *inInterface,
-                    juce::StringArray inSelections = {}, int inFontSize = 20);
+                    juce::StringArray      inSelections = {},
+                    int                    inFontSize   = 20);
   ~RT_ScrollableMenu() override;
 
   void         resized() override;

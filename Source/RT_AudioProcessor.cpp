@@ -14,7 +14,9 @@ RT_AudioProcessor::RT_AudioProcessor()
   assert(getChannelCountOfBus(true, 0) == getChannelCountOfBus(false, 0));
 }
 
-RT_AudioProcessor::~RT_AudioProcessor() {}
+RT_AudioProcessor::~RT_AudioProcessor()
+{
+}
 
 //==============================================================================
 void RT_AudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
@@ -62,7 +64,8 @@ RT_AudioProcessor::readBufferToMidSide(juce::AudioBuffer<float> &buffer)
 }
 
 void RT_AudioProcessor::writeMidSideToBuffer(
-    juce::AudioBuffer<float> &buffer, juce::AudioBuffer<float> &midsideBuf)
+    juce::AudioBuffer<float> &buffer,
+    juce::AudioBuffer<float> &midsideBuf)
 {
   for (int i = 0; i < buffer.getNumSamples(); i++) {
     float m = midsideBuf.getSample(0, i);

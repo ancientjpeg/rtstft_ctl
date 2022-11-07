@@ -21,7 +21,9 @@ RT_ScrollableMenu::RT_ScrollableMenu(RT_ProcessorInterface *inInterface,
 {
 }
 
-RT_ScrollableMenu::~RT_ScrollableMenu() {}
+RT_ScrollableMenu::~RT_ScrollableMenu()
+{
+}
 
 void RT_ScrollableMenu::resized()
 {
@@ -80,7 +82,10 @@ int RT_ScrollableMenu::select(juce::String inNewSelection)
   return mSelectionIndex;
 }
 
-void         RT_ScrollableMenu::deselect() { mSelectionIndex = -1; }
+void RT_ScrollableMenu::deselect()
+{
+  mSelectionIndex = -1;
+}
 
 juce::String RT_ScrollableMenu::getCurrentSelection()
 {

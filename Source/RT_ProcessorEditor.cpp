@@ -26,7 +26,9 @@ RT_ProcessorEditor::RT_ProcessorEditor(RT_ProcessorInterface *inInterface)
   setSize(950, 750);
 }
 
-RT_ProcessorEditor::~RT_ProcessorEditor() {}
+RT_ProcessorEditor::~RT_ProcessorEditor()
+{
+}
 
 //==============================================================================
 void RT_ProcessorEditor::paint(juce::Graphics &g)
@@ -37,4 +39,7 @@ void RT_ProcessorEditor::paint(juce::Graphics &g)
   g.fillAll(colScheme.getUIColour(outline));
 }
 
-void RT_ProcessorEditor::resized() { mAppWindow.setBounds(getBounds()); }
+void RT_ProcessorEditor::resized()
+{
+  mAppWindow.setBounds(getBounds());
+}

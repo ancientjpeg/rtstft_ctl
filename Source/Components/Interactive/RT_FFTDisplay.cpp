@@ -26,7 +26,9 @@ RT_FFTDisplay::RT_FFTDisplay(RT_ProcessorInterface *inInterface)
 #endif
 }
 
-RT_FFTDisplay::~RT_FFTDisplay() {}
+RT_FFTDisplay::~RT_FFTDisplay()
+{
+}
 
 void RT_FFTDisplay::paint(juce::Graphics &g)
 {
@@ -130,7 +132,10 @@ void RT_FFTDisplay::resized()
   // components that your component contains..
 }
 
-void RT_FFTDisplay::timerCallback() { repaint(); }
+void RT_FFTDisplay::timerCallback()
+{
+  repaint();
+}
 
 void RT_FFTDisplay::mouseDown(const juce::MouseEvent &event)
 {
@@ -180,7 +185,10 @@ float RT_FFTDisplay::getDbValNormalized(float dB)
   return (dB - mDbMin) / mDbRange;
 }
 
-float RT_FFTDisplay::yPosNorm(float YPos) { return 1.f - (YPos / getHeight()); }
+float RT_FFTDisplay::yPosNorm(float YPos)
+{
+  return 1.f - (YPos / getHeight());
+}
 
 float RT_FFTDisplay::yPosDenorm(float YPosNormalized)
 {
@@ -208,7 +216,8 @@ float RT_FFTDisplay::scaleYPosNormToAmpDbScale(float inYPosNormalized)
   return ret;
 }
 
-float RT_FFTDisplay::scaleManipAmpToYPosNorm(float inAmp, rt_params p,
+float RT_FFTDisplay::scaleManipAmpToYPosNorm(float             inAmp,
+                                             rt_params         p,
                                              rt_manip_flavor_t activeManip)
 {
   float ret = inAmp;
@@ -227,4 +236,7 @@ float RT_FFTDisplay::scaleYPosNormToManipAmp(float             inYPosNormalized,
   return ret;
 }
 
-float RT_FFTDisplay::getDbRange() { return mDbMax - mDbMin; }
+float RT_FFTDisplay::getDbRange()
+{
+  return mDbMax - mDbMin;
+}

@@ -33,10 +33,15 @@ RT_PropertyManager::RT_PropertyManager(
   mHistoryIterator = mCommandHistory.begin();
 }
 
-RT_PropertyManager::~RT_PropertyManager() {}
+RT_PropertyManager::~RT_PropertyManager()
+{
+}
 
-juce::ValueTree &RT_PropertyManager::getValueTreeRef() { return mValueTree; }
-juce::ValueTree  RT_PropertyManager::getChansTree()
+juce::ValueTree &RT_PropertyManager::getValueTreeRef()
+{
+  return mValueTree;
+}
+juce::ValueTree RT_PropertyManager::getChansTree()
 {
   return mValueTree.getChild(0);
 }
@@ -47,12 +52,14 @@ juce::ValueTree RT_PropertyManager::getGUIStateTree()
 
 int RT_PropertyManager::getActiveManipFlavor()
 {
-  auto active = (juce::String)getGUIStateTree().getProperty("active_manip").toString();
+  auto active
+      = (juce::String)getGUIStateTree().getProperty("active_manip").toString();
   return RT_MANIP_GUI_IDS.indexOf(active);
 }
 int RT_PropertyManager::getMultichannelMode()
 {
-  auto active = (juce::String)mValueTree.getProperty("manip_multichannel").toString();
+  auto active
+      = (juce::String)mValueTree.getProperty("manip_multichannel").toString();
   return RT_MULTICHANNEL_MODE_IDS.indexOf(active);
 }
 int RT_PropertyManager::getActiveChannelIndex()
@@ -123,7 +130,8 @@ bool RT_PropertyManager::assertTreeCanValidlyReplace(
 }
 
 bool RT_PropertyManager::assertValueTreesHaveCompatibleLayout(
-    juce::ValueTree &inTemplateTree, juce::ValueTree &inComparisonTree)
+    juce::ValueTree &inTemplateTree,
+    juce::ValueTree &inComparisonTree)
 {
   for (int i = 0; i < inTemplateTree.getNumProperties(); i++) {
     if (!inComparisonTree.hasProperty(inTemplateTree.getPropertyName(i))) {
@@ -135,8 +143,7 @@ bool RT_PropertyManager::assertValueTreesHaveCompatibleLayout(
     auto comparisonSubTree
         = inComparisonTree.getChildWithName(templateSubTree.getType());
     if (!comparisonSubTree.isValid()) {
-      if (templateSubTree.getType().toString() == "rt_gui_state")
-        continue;
+      if (templateSubTree.getType().toString() == "rt_gui_state") continue;
       return false;
     }
     if (!assertValueTreesHaveCompatibleLayout(templateSubTree,

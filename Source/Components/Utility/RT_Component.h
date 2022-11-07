@@ -25,7 +25,9 @@ protected:
   }
 
 public:
-  RT_Component(RT_ProcessorInterface *inInterface) : mInterface(inInterface) {}
+  RT_Component(RT_ProcessorInterface *inInterface) : mInterface(inInterface)
+  {
+  }
   virtual ~RT_Component() override = default;
 
 private:

@@ -52,7 +52,15 @@ void RT_FileManager::savePreset(juce::String      inPresetName,
   jassert(writeStatus);
 }
 
-void       RT_FileManager::loadPreset(juce::String inPresetName) {}
+void RT_FileManager::loadPreset(juce::String inPresetName)
+{
+}
 
-juce::File RT_FileManager::getAppSupportDir() { return mAppSupportDir; }
-juce::File RT_FileManager::getPresetsDirectory() { return mAppPresetsDir; }
+juce::File RT_FileManager::getAppSupportDir()
+{
+  return mAppSupportDir;
+}
+juce::File RT_FileManager::getPresetsDirectory()
+{
+  return mAppPresetsDir;
+}

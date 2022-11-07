@@ -19,12 +19,14 @@ RT_GUIControlsContainer::RT_GUIControlsContainer(
     RT_ProcessorInterface *inInterface)
     : RT_Component(inInterface),
       mFrameSizeSelector(
-          mInterface, RT_FFT_MODIFIER_IDS[RT_FFT_MODIFIER_FRAME_SIZE],
+          mInterface,
+          RT_FFT_MODIFIER_IDS[RT_FFT_MODIFIER_FRAME_SIZE],
           {32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768, 65536},
           RT_LookAndFeel::menuItemDefaultHeight),
       mOverlapSelector(mInterface,
                        RT_FFT_MODIFIER_IDS[RT_FFT_MODIFIER_OVERLAP_FACTOR],
-                       {2, 4, 8, 16}, RT_LookAndFeel::menuItemDefaultHeight)
+                       {2, 4, 8, 16},
+                       RT_LookAndFeel::menuItemDefaultHeight)
 {
 
   for (int i = 0; i < RT_PARAM_FLAVOR_COUNT; i++) {

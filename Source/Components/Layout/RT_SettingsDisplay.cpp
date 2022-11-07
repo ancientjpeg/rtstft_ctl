@@ -18,9 +18,13 @@ RT_SettingsDisplay::RT_SettingsDisplay(RT_ProcessorInterface *inInterface)
   addAndMakeVisible(mPresetChooser);
 }
 
-RT_SettingsDisplay::~RT_SettingsDisplay() {}
+RT_SettingsDisplay::~RT_SettingsDisplay()
+{
+}
 
-void RT_SettingsDisplay::paint(juce::Graphics &g) {}
+void RT_SettingsDisplay::paint(juce::Graphics &g)
+{
+}
 
 void RT_SettingsDisplay::resized()
 {

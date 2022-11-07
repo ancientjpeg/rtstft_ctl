@@ -33,7 +33,9 @@ RT_Header::RT_Header(RT_ProcessorInterface *inInterface, int inBorderSize)
   addAndMakeVisible(mSettingsMenuButton);
 }
 
-RT_Header::~RT_Header() {}
+RT_Header::~RT_Header()
+{
+}
 
 void RT_Header::paint(juce::Graphics &g)
 {

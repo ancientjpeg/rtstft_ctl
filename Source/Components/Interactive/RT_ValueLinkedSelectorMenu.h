@@ -19,9 +19,11 @@ class RT_ValueLinkedSelectorMenu : public RT_Component,
                                    public juce::Value::Listener {
 public:
   RT_ValueLinkedSelectorMenu(
-      RT_ProcessorInterface *inInterface, const juce::Value &inValueToLink,
+      RT_ProcessorInterface              *inInterface,
+      const juce::Value                  &inValueToLink,
       std::initializer_list<juce::String> inPossibleSelections,
-      bool inUseNullSelection = true, bool inIsVertical = false);
+      bool                                inUseNullSelection = true,
+      bool                                inIsVertical       = false);
   RT_ValueLinkedSelectorMenu(RT_ProcessorInterface  *inInterface,
                              const juce::Value      &inValueToLink,
                              const juce::StringArray inPossibleSelections,

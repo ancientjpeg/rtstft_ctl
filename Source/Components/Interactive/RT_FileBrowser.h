@@ -20,9 +20,11 @@
  */
 class RT_FileBrowser : public RT_Component {
 public:
-  RT_FileBrowser(RT_ProcessorInterface *inInterface, juce::File inBrowserRoot,
-                 int columnWidth, bool inShowExtensions = true,
-                 juce::String inTargetSuffix = "");
+  RT_FileBrowser(RT_ProcessorInterface *inInterface,
+                 juce::File             inBrowserRoot,
+                 int                    columnWidth,
+                 bool                   inShowExtensions = true,
+                 juce::String           inTargetSuffix   = "");
   ~RT_FileBrowser() override;
 
   void                            resized() override;
