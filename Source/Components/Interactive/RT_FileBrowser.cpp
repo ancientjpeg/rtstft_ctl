@@ -93,7 +93,7 @@ void RT_FileBrowser::setNewTailDirectory(juce::File inDirectory)
     auto name
         = mShowExtensions ? f.getFileName() : f.getFileNameWithoutExtension();
     if (f.isDirectory()) {
-      name += juce::String(" [DIR]");
+      name = juce::String("[DIR] ") + name;
     }
 
     auto *button = new_fb.button.get();
